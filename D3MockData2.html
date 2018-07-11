@@ -7,9 +7,17 @@
     <!-- <link rel="stylesheet" type="text/css" href="sequences.css"/> -->
 </head>
 <body>
+<svg>
+    <div id="name">
+        <div id ="number">
+
+        </div>
+    </div>
+</svg>
+
 D3 Visualization for Mock Data
 <script>
-d3.csv("./data.csv", function(error, data) {
+d3.csv("./catsheet.csv", function(error, data) {
   if (error) throw error;
   // var json = buildHierarchy(csv);
   // var csv = d3.csv.parseRows(data);
@@ -23,7 +31,7 @@ function buildHierarchy(data) {
   var jsons = {}; //create object of json files
   var currArticle = "Article_" + data[0]["Article ID"];
   var root = {"name": "CATEGORIES", "children": []}
-  for (var i = 1; i < data.length; i++) { //article ID column
+  for (var i = 0; i < data.length; i++) { //article ID column
     if ("Article_" + data[i]["Article ID"] !== currArticle) {
       //adds the current article to jsons, resets root to an empty object
       jsons[currArticle] = root;
@@ -86,20 +94,7 @@ function userFindIndex(data, val) {
 }
 //drawing Visualization
 function createVisualization(article) {
-  //paste visualization code here
-}
-
-
-
-</script>
-<svg>
-</svg>
-
-</body>
-
-<!-- <script>
-
-    // Variables
+  // Variables
     var width = 500;
     var height = 500;
     var radius = Math.min(width, height) / 2;
@@ -117,7 +112,7 @@ function createVisualization(article) {
         .size([2 * Math.PI, radius]);
 
     // Find data root
-    var root = d3.hierarchy(nodeData)
+    var root = d3.hierarchy(article)
         .sum(function (d) { return d.size});
 
     // Size arcs
@@ -129,11 +124,107 @@ function createVisualization(article) {
         .outerRadius(function (d) { return d.y1 });
 
     // Put it all together
-    g.selectAll('path')
-        .data(root.descendants())
-        .enter().append('path')
-        .attr("display", function (d) { return d.depth ? null : "none"; })
-        .attr("d", arc)
-        .style('stroke', '#fff')
-        .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); });
-</script> -->
+
+  var red = 220;
+  var green = 220;
+  var blue = 220;
+
+  function colorFinder(d) {
+    var retcolor;
+    if (d.data.children) {
+            //console.log(d.data.name);
+        if (d.data.name === "Reasoning") {
+                   return d3.rgb(red, 10, 40);
+            } else if (d.data.name === "Evidence") {
+               retcolor = d3.rgb(30, green, 10);
+            } else {
+               retcolor = d3.rgb(50, 120, 255);
+            }
+        }   else {
+            //console.log(d.parent.data.name);
+            if (d.parent.data.name === "Reasoning") {
+                red -= 10;
+                retcolor = d3.rgb(red, 40, 10);
+            } else if (d.parent.data.name === "Evidence") {
+                green -= 10;
+                retcolor = d3.rgb(30, green, 10);
+            } else {
+                blue -= 10;
+                retcolor = d3.rgb(50, 120, blue);
+            }
+        }
+        return retcolor;
+  }
+
+  var sum = 0;
+  var total = checkTotal(article);
+  console.log(total)
+
+  function checkTotal(d) {
+    var top = 0;
+    console.log(d.children.length)
+    for (i = 0; i < d.children.length; i += 1) {
+        console.log(d.children[i])
+        for (j = 0; j < d.children[i].children.length; j += 1) {
+            console.log(d.children[i].children[j].size)
+            top += d.children[i].children[j].size;
+        }
+    }
+    return top;
+  };
+
+  g.selectAll('g')
+            .data(root.descendants())
+            .enter().append('g').attr("class", "node").append('path')
+            .attr("display", function (d) { return d.depth ? null : "none"; })
+            .attr("d", arc)
+            .on('mouseover',function(d) {
+                g.selectAll(".center-text")
+                    .style("display", "none")
+                d3.select(this)
+      	            .transition()
+      	            .duration(500)
+      	            .attr('stroke-width',3)
+      	        checkSum(d)
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", -50)
+                    .attr("y", 0)
+                    .style("font-size", 18)
+                    .html(sum + " point(s) from ")
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", -50)
+                    .attr("y", 20)
+                    .style("font-size", 18)
+                    .html(d.data.name)
+            })
+            .on('mouseout',function (d) {
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .attr('stroke-width',1)
+                g.selectAll(".center-text")
+                    .style("display", "none")
+                sum = 0;
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", -50)
+                    .attr("y", -5)
+                    .style("font-size", 18)
+                    .html(total + " Total Credibility Points")
+            })
+            .style('stroke', 'black')
+            .style("fill", colorFinder);
+
+  function checkSum(d) {
+    if (d.data.children) {
+        for (i = 0; i < d.data.children.length; i += 1) {
+            sum += d.data.children[i].size;
+        }
+    } else {
+        sum = d.data.size;
+    }};
+  }
+</script>
+</body>
