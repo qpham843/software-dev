@@ -11,12 +11,13 @@ D3 Visualization for Mock Data
 <script>
 d3.csv("./data.csv", function(error, data) {
   if (error) throw error;
-  console.log(data);
   // var json = buildHierarchy(csv);
   // var csv = d3.csv.parseRows(data);
   var articles = buildHierarchy(data);
-  // console.log(csv[1]);
+  var article1 = articles["Article_1"];
+  createVisualization(article1);
 });
+
 
 function buildHierarchy(data) {
   var jsons = {}; //create object of json files
@@ -49,7 +50,6 @@ function buildHierarchy(data) {
 
   }
   jsons[currArticle] = root;
-  console.log(jsons);
   // console.log(jsons["Article_1"]["children"][0]["children"]);
   return jsons; //object of json files for each article
 };
@@ -85,6 +85,9 @@ function userFindIndex(data, val) {
   return data.map(function(e) {return e.name}).indexOf(val);
 }
 //drawing Visualization
+function createVisualization(article) {
+  //paste visualization code here
+}
 
 
 
