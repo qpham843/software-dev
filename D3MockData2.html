@@ -65,9 +65,25 @@ function checkIn(data, cat, catName) {
 }
 
 function findIndex(data, currRow, val) {
+  /* data takes in the specified information up until the indexing action
+  so for example:  if you wanted the Reasoning index, you would put
+  root["children"] for data
+  currRow is the current row you are on in the CSV.  so for the loop above,
+  input data[i], or for row 10, input data[10]
+  val is the criteria you want, so "Reasoning", or "Credibilty Indicator Category"
+  */
   return data.map(function(e) {return e.name}).indexOf(currRow[val]);
 }
 
+function userFindIndex(data, val) {
+  /* data:  specified information up until the indexing action
+  ex: root["children"]
+  val:  criteria desired, ex "Reasoning"
+  example:
+  userFindIndex(articles["Article_1"]["children"], "Reasoning");
+  */
+  return data.map(function(e) {return e.name}).indexOf(val);
+}
 //drawing Visualization
 
 
