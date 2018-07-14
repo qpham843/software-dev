@@ -174,20 +174,43 @@ function createVisualization(article) {
   };
 
 
+//This dictionary maps data nodes to paths.
+var dataToPath = new Map();
+
 //This is the visualization creation in its entirety.
   g.selectAll('g')
             .data(root.descendants())
-            .enter().append('g').attr("class", "node").append('path')
+            .enter()
+            .append('g')
+            .attr("class", "node")
+            .append('path')
             .attr("display", function (d) { return d.depth ? null : "none"; })
             .attr("d", arc)
+            //For each path, map it to the corresponding data.
+            .each(function(d){
+                var curPath = this;
+                dataToPath.set(d, curPath);
+            })
+
+  //This is all the mouse animation code.
+  g.selectAll('path')
             //On mouse entering, highlight path, clear old text, create new text.
             .on('mouseover',function(d) {
                 g.selectAll(".center-text")
                     .style("display", "none")
+                d3.selectAll("path")
+                    .transition()
+                    .style("opacity", 0.5)
                 d3.select(this)
       	            .transition()
-      	            .duration(500)
-      	            .attr('stroke-width',3)
+      	            .duration(300)
+      	            .attr('stroke-width',5)
+      	            .style("opacity", 1)
+      	        d3.select(dataToPath.get(d.parent))
+      	            .transition()
+      	            .duration(300)
+      	            .attr('stroke-width',5)
+      	            .style("opacity", 1)
       	        //This code creates the text in the center of the model.
       	        checkSum(d)
                 g.append("text")
@@ -203,12 +226,13 @@ function createVisualization(article) {
                     .style("font-size", 18)
                     .html(d.data.name)
             })
-            //On mouse exiting, remove highlight and clear all text and display the total value.
+            //On mouse exiting, remove all highlights and clear all text and display the total value.
             .on('mouseout',function (d) {
-                d3.select(this)
+                d3.selectAll("path")
                     .transition()
-                    .duration(500)
-                    .attr('stroke-width',1)
+                    .duration(200)
+                    .attr('stroke-width', 2)
+                    .style("opacity", 1)
                 g.selectAll(".center-text")
                     .style("display", "none")
                 sum = 0;
@@ -217,9 +241,10 @@ function createVisualization(article) {
                     .attr("x", -50)
                     .attr("y", -5)
                     .style("font-size", 18)
-                    .html(total + " Total Credibility Points")
+                    .html((100 - total) + "% Credibility Score")
             })
-            .style('stroke', 'black')
+            .style('stroke', 'white')
+            .attr('stroke-width', 2)
             .style("fill", colorFinder);
 
 //This function calculates the sum of the child nodes of a category. Used for "Reasoning", "Evidence", "Language".

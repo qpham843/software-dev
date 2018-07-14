@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4853b394-3c44-455a-8720-d100cdf73e4e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/D3MockData2.html" afterPath="$PROJECT_DIR$/D3MockData2.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,8 +16,8 @@
       <file leaf-file-name="D3MockData2.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/D3MockData2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="210" column="43" lean-forward="false" selection-start-line="210" selection-start-column="43" selection-end-line="210" selection-end-column="43" />
+            <state relative-caret-position="2073">
+              <caret line="151" column="49" lean-forward="true" selection-start-line="151" selection-start-column="49" selection-end-line="151" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -47,6 +46,7 @@
     <findStrings>
       <find>\\</find>
       <find>console</find>
+      <find>path</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -303,8 +303,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/D3MockData2.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="210" column="43" lean-forward="false" selection-start-line="210" selection-start-column="43" selection-end-line="210" selection-end-column="43" />
+        <state relative-caret-position="2073">
+          <caret line="151" column="49" lean-forward="true" selection-start-line="151" selection-start-column="49" selection-end-line="151" selection-end-column="49" />
           <folding />
         </state>
       </provider>
