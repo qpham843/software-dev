@@ -8,11 +8,6 @@
 </head>
 <body>
 <svg>
-    <div id="name">
-        <div id ="number">
-
-        </div>
-    </div>
 </svg>
 
 D3 Visualization for Mock Data
@@ -97,8 +92,8 @@ function userFindIndex(data, val) {
 //drawing Visualization
 function createVisualization(article) {
   // Variables
-    var width = 500;
-    var height = 500;
+    var width = 700;
+    var height = 700;
     var radius = Math.min(width, height) / 2;
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -217,16 +212,31 @@ var dataToPath = new Map();
       	        checkSum(d)
                 g.append("text")
                     .attr("class", "center-text")
-                    .attr("x", -50)
-                    .attr("y", 0)
-                    .style("font-size", 18)
-                    .html(sum + " point(s) from ")
+                    .attr("x", 0)
+                    .attr("y", -10)
+                    .style("font-size", 40)
+                    .style("text-anchor", "middle")
+                    .html(sum)
                 g.append("text")
                     .attr("class", "center-text")
-                    .attr("x", -50)
+                    .attr("x", 0)
                     .attr("y", 20)
-                    .style("font-size", 18)
+                    .style("text-anchor", "middle")
+                    .style("font-size", function() {
+                        if (d.data.name.length < 18) {
+                            return 24;
+                        } else if (d.data.name.length < 22) {
+                            return 22;
+                        } else if (d.data.name.length < 27) {
+                            return 20;
+                        } else if (d.data.name.length < 32) {
+                            return 16;
+                        } else {
+                            return 12;
+                        }
+                    })
                     .html(d.data.name)
+
             })
             //On mouse exiting, remove all highlights and clear all text and display the total value.
             .on('mouseout',function (d) {
@@ -240,11 +250,18 @@ var dataToPath = new Map();
                 sum = 0;
                 g.append("text")
                     .attr("class", "center-text")
-                    .attr("x", -50)
-                    .attr("y", -5)
+                    .attr("x", 0)
+                    .attr("y", -10)
+                    .style("font-size", 40)
+                    .style("text-anchor", "middle")
+                    .html((100 - total) + "%")
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", 0)
+                    .attr("y", 20)
                     .style("font-size", 18)
-                    .html((100 - total) + "% Credibility Score")
-
+                    .style("text-anchor", "middle")
+                    .html("Credibility Score")
             })
             .style('stroke', 'white')
             .attr('stroke-width', 2)
