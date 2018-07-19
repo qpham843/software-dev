@@ -4,7 +4,7 @@
    <script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css"
           href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
-    <!-- <link rel="stylesheet" type="text/css" href="sequences.css"/> -->
+    <link rel="stylesheet" type="text/css" href="sequences.css"/>
 </head>
 <body>
 <svg>
@@ -17,7 +17,7 @@
 
 D3 Visualization for Mock Data
 <script>
-d3.csv("./catsheet.csv", function(error, data) {
+d3.csv("catsheet.csv", function(error, data) {
   if (error) throw error;
   // var json = buildHierarchy(csv);
   // var csv = d3.csv.parseRows(data);
@@ -53,7 +53,7 @@ function buildHierarchy(data) {
     var cinIndex = findIndex(cin,data[i],  "Credibility Indicator Name");
 
     // cin.map(function(e) {return e.name}).indexOf(data[i]["Credibility Indicator Name"]);
-    cin[cinIndex]["size"] += Math.abs(parseInt(data[i]["Points"]));
+    cin[cinIndex]["size"] += Math.abs(parseInt(data[i]["Points"])); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
 
 
   }
@@ -92,6 +92,8 @@ function userFindIndex(data, val) {
   */
   return data.map(function(e) {return e.name}).indexOf(val);
 }
+
+
 //drawing Visualization
 function createVisualization(article) {
   // Variables
@@ -127,32 +129,32 @@ function createVisualization(article) {
 
 
 //These variables set the starting color for the categories "Reasoning", "Evidence", "Language".
-  var red = 220;
-  var green = 220;
-  var blue = 220;
+  var red = 239;
+  var green = 165;
+  var blue = 230;
 
 //This function determines the color of a category based on its parent, or name.
   function colorFinder(d) {
     var retcolor;
     if (d.data.children) {
         if (d.data.name === "Reasoning") {
-                   return d3.rgb(red, 10, 40);
+                   return d3.rgb(red, 92, 84);
             } else if (d.data.name === "Evidence") {
-               retcolor = d3.rgb(30, green, 10);
+               retcolor = d3.rgb(0, green, 150);
             } else {
-               retcolor = d3.rgb(50, 120, 255);
+               retcolor = d3.rgb(43, 82, blue);
             }
         }   else {
         //The children node colors are based on the colors of their parents.
             if (d.parent.data.name === "Reasoning") {
-                red -= 10;
-                retcolor = d3.rgb(red, 40, 10);
+                red = 237;
+                retcolor = d3.rgb(red, 134, 88);
             } else if (d.parent.data.name === "Evidence") {
-                green -= 10;
-                retcolor = d3.rgb(30, green, 10);
+                green = 201;
+                retcolor = d3.rgb(53, green, 136);
             } else {
-                blue -= 10;
-                retcolor = d3.rgb(50, 120, blue);
+                blue = 178;
+                retcolor = d3.rgb(71, 112, blue);
             }
         }
         return retcolor;
@@ -242,6 +244,7 @@ var dataToPath = new Map();
                     .attr("y", -5)
                     .style("font-size", 18)
                     .html((100 - total) + "% Credibility Score")
+
             })
             .style('stroke', 'white')
             .attr('stroke-width', 2)
