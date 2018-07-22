@@ -93,8 +93,8 @@ function userFindIndex(data, val) {
 //drawing Visualization
 function createVisualization(article) {
   // Variables
-    var width = 700;
-    var height = 700;
+    var width = 300;
+    var height = 300;
     var radius = Math.min(width, height) / 2;
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -131,29 +131,27 @@ function createVisualization(article) {
 
 //This function determines the color of a category based on its parent, or name.
   function colorFinder(d) {
-    var retcolor;
     if (d.data.children) {
         if (d.data.name === "Reasoning") {
-                   return d3.rgb(red, 92, 84);
+               return d3.rgb(red, 92, 84);
             } else if (d.data.name === "Evidence") {
-               retcolor = d3.rgb(0, green, 150);
+               return d3.rgb(0, green, 150);
             } else {
-               retcolor = d3.rgb(43, 82, blue);
+               return d3.rgb(43, 82, blue);
             }
         }   else {
         //The children node colors are based on the colors of their parents.
+            if (d.data.size > 0) {
+                return d3.rgb(211,211,211);
+            }
             if (d.parent.data.name === "Reasoning") {
-                red = 237;
-                retcolor = d3.rgb(red, 134, 88);
+                return d3.rgb(237, 134, 88);
             } else if (d.parent.data.name === "Evidence") {
-                green = 201;
-                retcolor = d3.rgb(53, green, 136);
+                return d3.rgb(53, 201, 136);
             } else {
-                blue = 178;
-                retcolor = d3.rgb(71, 112, blue);
+                return d3.rgb(71, 112, 178);
             }
         }
-        return retcolor;
   }
 
 //These variables ensure that the total value is accurate.
@@ -199,10 +197,41 @@ var tooltip = d3.select("body")
 	.style("visibility", "hidden")
 	.text(curData);
 
+//This is the visualization toggle.
+var visOn = false;
+
+function resetVis() {
+    d3.selectAll("path")
+        .transition()
+        .duration(200)
+        .attr('stroke-width', 2)
+        .style("opacity", 1)
+    g.selectAll(".center-text")
+        .style("display", "none")
+    sum = 0;
+    g.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 0)
+        .style("font-size", 36)
+        .style("text-anchor", "middle")
+        .html((100 + total) + "%")
+    g.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 25)
+        .style("font-size", 18)
+        .style("text-anchor", "middle")
+        .html("Credibility")
+    }
+
+resetVis();
+
   //This is all the mouse animation code.
   g.selectAll('path')
             //On mouse entering, highlight path, clear old text, create new text.
-            .on('mouseover',function(d) {
+       .on('click',function(d) {
+                if (visOn == false) {
                 g.selectAll(".center-text")
                     .style("display", "none")
                 d3.selectAll("path")
@@ -222,62 +251,25 @@ var tooltip = d3.select("body")
       	        checkSum(d)
                 g.append("text")
                     .attr("class", "center-text")
-                    .attr("x", 0)
-                    .attr("y", -10)
+                    .attr("x", -5)
+                    .attr("y", 10)
                     .style("font-size", 40)
                     .style("text-anchor", "middle")
                     .html(sum)
-                g.append("text")
-                    .attr("class", "center-text")
-                    .attr("x", 0)
-                    .attr("y", 20)
-                    .style("text-anchor", "middle")
-                    .style("font-size", function() {
-                        if (d.data.name.length < 18) {
-                            return 24;
-                        } else if (d.data.name.length < 22) {
-                            return 22;
-                        } else if (d.data.name.length < 27) {
-                            return 20;
-                        } else if (d.data.name.length < 32) {
-                            return 16;
-                        } else {
-                            return 12;
-                        }
-                    })
-                    .html(d.data.name)
                 tooltip.text(d.data.name);
                 tooltip.style("visibility", "visible");
                 tooltip.style("font-size", "20px");
+                visOn = true;
+       } else {
+                if (visOn == true) {
+                    visOn = false;
+                }
+                    resetVis();
+                    tooltip.style("visibility", "hidden")
+                }
 
             })
             .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-            //On mouse exiting, remove all highlights and clear all text and display the total value.
-            .on('mouseout',function (d) {
-                d3.selectAll("path")
-                    .transition()
-                    .duration(200)
-                    .attr('stroke-width', 2)
-                    .style("opacity", 1)
-                g.selectAll(".center-text")
-                    .style("display", "none")
-                sum = 0;
-                g.append("text")
-                    .attr("class", "center-text")
-                    .attr("x", 0)
-                    .attr("y", -10)
-                    .style("font-size", 40)
-                    .style("text-anchor", "middle")
-                    .html((100 + total) + "%")
-                g.append("text")
-                    .attr("class", "center-text")
-                    .attr("x", 0)
-                    .attr("y", 20)
-                    .style("font-size", 18)
-                    .style("text-anchor", "middle")
-                    .html("Credibility Score")
-                tooltip.style("visibility", "hidden")
-            })
             .style('stroke', 'white')
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
