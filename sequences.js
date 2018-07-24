@@ -1,20 +1,290 @@
-//Dimensions of sunburst
-var width = 500;
-var height = 500;
-var radius = Math.min(width, height) / 2;
-var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-//parse csv to json
-d3.text("sequences.csv", function(text) {
-    var csv = d3.csv.parseRows(text);
-    console.log(csv);
-//    var json = buildHierarchy(csv);
-//    createVisualization(json);
+d3.csv("catsheet.csv", function(error, data) {
+  if (error) throw error;
+  // var json = buildHierarchy(csv);
+  // var csv = d3.csv.parseRows(data);
+  var articles = buildHierarchy(data);
+  var article1 = articles["Article_1"];
+  createVisualization(article1);
 });
-//
-//function buildHierarchy(csv) {
-//    var root = {"name": "root", "children": []};
-//    for (var i = 0; i < csv.length; i++) {
-//
-//    }
-//}
+
+
+function buildHierarchy(data) {
+  var jsons = {}; //create object of json files
+  var currArticle = "Article_" + data[0]["Article ID"];
+  var root = {"name": "CATEGORIES", "children": []}
+  for (var i = 0; i < data.length; i++) { //article ID column
+    if ("Article_" + data[i]["Article ID"] !== currArticle) {
+      //adds the current article to jsons, resets root to an empty object
+      jsons[currArticle] = root;
+      currArticle = "Article_" + data[i]["Article ID"];
+      var root = {"name": "CATEGORIES", "children": []}
+    }
+    if (!checkIn(root["children"], data[i]["Credibilty Indicator Category"], "name")) { //credibility column
+      //adds a new category to the list of CATEGORIES if it doesn't exist
+      root["children"].push({"name": data[i]["Credibilty Indicator Category"], "children": []});
+    }
+    var categoryIndex = findIndex(root["children"], data[i], "Credibilty Indicator Category");
+
+    // .map(function(e) {return e.name}).indexOf(data[i]["Credibilty Indicator Category"]);
+    var cin = root["children"][categoryIndex]["children"]
+    if (!checkIn(cin, data[i]["Credibility Indicator Name"], "name")) { //initializes credibility indicator name and score
+      //only adds category if it exists
+      cin.push({"name": data[i]["Credibility Indicator Name"], "size": 0});
+    }
+    var cinIndex = findIndex(cin,data[i],  "Credibility Indicator Name");
+
+    // cin.map(function(e) {return e.name}).indexOf(data[i]["Credibility Indicator Name"]);
+    cin[cinIndex]["size"] += parseInt(data[i]["Points"]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
+
+
+  }
+  jsons[currArticle] = root;
+  // console.log(jsons["Article_1"]["children"][0]["children"]);
+  return jsons; //object of json files for each article
+};
+
+function checkIn(data, cat, catName) {
+  //checks to see if a category exists already
+  for (var i = 0; i < data.length; i++) {
+    if (data[i][catName] === cat) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function findIndex(data, currRow, val) {
+  /* data takes in the specified information up until the indexing action
+  so for example:  if you wanted the Reasoning index, you would put
+  root["children"] for data
+  currRow is the current row you are on in the CSV.  so for the loop above,
+  input data[i], or for row 10, input data[10]
+  val is the criteria you want, so "Reasoning", or "Credibilty Indicator Category"
+  */
+  return data.map(function(e) {return e.name}).indexOf(currRow[val]);
+}
+
+function userFindIndex(data, val) {
+  /* data:  specified information up until the indexing action
+  ex: root["children"]
+  val:  criteria desired, ex "Reasoning"
+  example:
+  userFindIndex(articles["Article_1"]["children"], "Reasoning");
+  */
+  return data.map(function(e) {return e.name}).indexOf(val);
+}
+
+
+//drawing Visualization
+function createVisualization(article) {
+  // Variables
+    var chartDiv = document.getElementById("chart"); //resizes with css
+
+    var width = 300;
+    var height = 300;
+    var radius = Math.min(width, height) / 2;
+    var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    // Create the "graph" element.
+    var g = d3.select('svg')
+    .attr("preserveAspectRatio", "xMinYMin meet")
+        // .attr("viewBox", "0 0 250 250")
+        // .classed("svg-content", true)
+
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+    // Partitition
+    var partition = d3.partition()
+        .size([2 * Math.PI, radius]);
+
+    // Find data root
+    var root = d3.hierarchy(article)
+        .sum(function (d) { return Math.abs(d.size)});
+
+    // Size arcs
+    partition(root);
+    var arc = d3.arc()
+        .startAngle(function (d) { return d.x0 })
+        .endAngle(function (d) { return d.x1 })
+        .innerRadius(function (d) { return d.y0 })
+        .outerRadius(function (d) { return d.y1 });
+
+    // Put it all together
+
+
+//These variables set the starting color for the categories "Reasoning", "Evidence", "Language".
+  var red = 239;
+  var green = 165;
+  var blue = 230;
+
+//This function determines the color of a category based on its parent, or name.
+  function colorFinder(d) {
+    if (d.data.children) {
+        if (d.data.name === "Reasoning") {
+               return d3.rgb(red, 92, 84);
+            } else if (d.data.name === "Evidence") {
+               return d3.rgb(0, green, 150);
+            } else {
+               return d3.rgb(43, 82, blue);
+            }
+        }   else {
+        //The children node colors are based on the colors of their parents.
+            if (d.data.size > 0) {
+                return d3.rgb(211,211,211);
+            }
+            if (d.parent.data.name === "Reasoning") {
+                return d3.rgb(237, 134, 88);
+            } else if (d.parent.data.name === "Evidence") {
+                return d3.rgb(53, 201, 136);
+            } else {
+                return d3.rgb(71, 112, 178);
+            }
+        }
+  }
+
+//These variables ensure that the total value is accurate.
+  var sum = 0;
+  var total = checkTotal(article);
+
+//This function returns the total number of points in the Credibility Report.
+  function checkTotal(d) {
+    var top = 0;
+    for (i = 0; i < d.children.length; i += 1) {
+        for (j = 0; j < d.children[i].children.length; j += 1) {
+            top += d.children[i].children[j].size;
+        }
+    }
+    return top;
+  };
+
+
+//This dictionary maps data nodes to paths.
+var dataToPath = new Map();
+
+//This is the visualization creation in its entirety.
+  g.selectAll('g')
+            .data(root.descendants())
+            .enter()
+            .append('g')
+            .attr("class", "node")
+            .append('path')
+            .attr("display", function (d) { return d.depth ? null : "none"; })
+            .attr("d", arc)
+            //For each path, map it to the corresponding data.
+            .each(function(d){
+                var curPath = this;
+                dataToPath.set(d, curPath);
+            })
+
+//This adds a floating textbox describing the category.
+var curData = "a tooltip";
+var tooltip = d3.select("body")
+	.append("div")
+	.style("position", "absolute")
+	.style("z-index", "10")
+	.style("visibility", "hidden")
+	.text(curData);
+
+
+function resetVis() {
+    d3.selectAll("path")
+        .transition()
+        .duration(200)
+        .attr('stroke-width', 2)
+        .style("opacity", 1)
+    g.selectAll(".center-text")
+        .style("display", "none")
+    sum = 0;
+    g.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 0)
+        .style("font-size", 36)
+        .style("text-anchor", "middle")
+        .html((100 + total) + "%")
+    g.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 25)
+        .style("font-size", 18)
+        .style("text-anchor", "middle")
+        .html("Credibility")
+    }
+
+resetVis();
+
+  //This is all the mouse animation code.
+  g.selectAll('path')
+            //On mouse entering, highlight path, clear old text, create new text.
+            .on('mouseover',function(d) {
+                g.selectAll(".center-text")
+                    .style("display", "none")
+                d3.selectAll("path")
+                    .transition()
+                    .style("opacity", 0.5)
+                d3.select(this)
+      	            .transition()
+      	            .duration(300)
+      	            .attr('stroke-width',5)
+      	            .style("opacity", 1)
+      	        d3.select(dataToPath.get(d.parent))
+      	            .transition()
+      	            .duration(300)
+      	            .attr('stroke-width',5)
+      	            .style("opacity", 1)
+      	        //This code creates the text in the center of the model.
+      	        checkSum(d)
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", 0)
+                    .attr("y", -10)
+                    .style("font-size", 40)
+                    .style("text-anchor", "middle")
+                    .html(sum)
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", 0)
+                    .attr("y", 20)
+                    .style("text-anchor", "middle")
+                    .style("font-size", function() {
+                        if (d.data.name.length < 18) {
+                            return 24;
+                        } else if (d.data.name.length < 22) {
+                            return 22;
+                        } else if (d.data.name.length < 27) {
+                            return 20;
+                        } else if (d.data.name.length < 32) {
+                            return 16;
+                        } else {
+                            return 12;
+                        }
+                    })
+                    .html(d.data.name)
+                tooltip.text(d.data.name);
+                tooltip.style("visibility", "visible");
+                tooltip.style("font-size", "20px");
+
+            })
+            .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            //On mouse exiting, remove all highlights and clear all text and display the total value.
+            .on('mouseout',function (d) {
+                resetVis();
+                tooltip.style("visibility", "hidden")
+            })
+            .style('stroke', 'white')
+            .attr('stroke-width', 2)
+            .style("fill", colorFinder);
+
+//This function calculates the sum of the child nodes of a category. Used for "Reasoning", "Evidence", "Language".
+  function checkSum(d) {
+    if (d.data.children) {
+        for (i = 0; i < d.data.children.length; i += 1) {
+            sum += d.data.children[i].size;
+        }
+    } else {
+        sum = d.data.size;
+    }};
+  }
