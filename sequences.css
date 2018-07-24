@@ -75,24 +75,30 @@ p {
     left: 0;
 
 }
-.navbar {
+#header {
+  height: 50px;
   background-color: rgb(83, 83, 89);
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
   font-family: 'Open Sans', sans-serif;
   color: white;
   font-size: 35px;
   padding-left: 10px;
-  width: 100%;
-}
-.footer {
-  width: 100%;
 
-  clear: both;
-   position: auto;
-   background-color: rgb(83, 83, 89);
-   height: 46px;
-   overflow: hidden;
-   display: block;
-   bottom: 0;
-   width: 100%;
+}
+#spacer {
+  height: 50px;
+}
+
+#footer
+{
+    height: 50px;
+    background-color: rgb(83, 83, 89);
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
 }
 }
