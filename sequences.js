@@ -9,37 +9,42 @@ d3.csv("catsheet.csv", function(error, data) {
 
 
 function buildHierarchy(data) {
+  var articleID = "Article ID";
+  var credCat = "Credibilty Indicator Category";
+  var credName = "Credibility Indicator Name";
+  var pts = "Points";
+
   var jsons = {}; //create object of json files
-  var currArticle = "Article_" + data[0]["Article ID"];
-  var root = {"name": "CATEGORIES", "children": []}
+  var currArticle = "Article_" + data[0][articleID];
+  var root = {"name": "CATEGORIES", "children": []};
   for (var i = 0; i < data.length; i++) { //article ID column
-    if ("Article_" + data[i]["Article ID"] !== currArticle) {
+    if ("Article_" + data[i][articleID] !== currArticle) {
       //adds the current article to jsons, resets root to an empty object
       jsons[currArticle] = root;
-      currArticle = "Article_" + data[i]["Article ID"];
-      var root = {"name": "CATEGORIES", "children": []}
+      currArticle = "Article_" + data[i][articleID];
+      var root = {"name": "CATEGORIES", "children": []};
     }
-    if (!checkIn(root["children"], data[i]["Credibilty Indicator Category"], "name")) { //credibility column
+    if (!checkIn(root["children"], data[i][credCat], "name")) { //credibility column
       //adds a new category to the list of CATEGORIES if it doesn't exist
-      root["children"].push({"name": data[i]["Credibilty Indicator Category"], "children": []});
+      root["children"].push({"name": data[i][credCat], "children": []});
     }
-    var categoryIndex = findIndex(root["children"], data[i], "Credibilty Indicator Category");
+    var categoryIndex = findIndex(root["children"], data[i], credCat);
 
     // .map(function(e) {return e.name}).indexOf(data[i]["Credibilty Indicator Category"]);
-    var cin = root["children"][categoryIndex]["children"]
-    if (!checkIn(cin, data[i]["Credibility Indicator Name"], "name")) { //initializes credibility indicator name and score
+    var cin = root["children"][categoryIndex]["children"];
+    if (!checkIn(cin, data[i][credName], "name")) { //initializes credibility indicator name and score
       //only adds category if it exists
-      cin.push({"name": data[i]["Credibility Indicator Name"], "size": 0});
+      cin.push({"name": data[i][credName], "size": 0, "startIndices": [], "endIndices": []});
     }
-    var cinIndex = findIndex(cin,data[i],  "Credibility Indicator Name");
+    var cinIndex = findIndex(cin,data[i],  credName);
 
     // cin.map(function(e) {return e.name}).indexOf(data[i]["Credibility Indicator Name"]);
-    cin[cinIndex]["size"] += parseInt(data[i]["Points"]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
-
+    cin[cinIndex]["size"] += parseInt(data[i][pts]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
+    cin[cinIndex]["startIndices"].push(parseInt(data[i]["Start"]));
+    cin[cinIndex]["endIndices"].push(parseInt(data[i]["End"]));
 
   }
-  jsons[currArticle] = root;
-  // console.log(jsons["Article_1"]["children"][0]["children"]);
+
   return jsons; //object of json files for each article
 };
 
