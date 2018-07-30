@@ -184,14 +184,10 @@ var dataToPath = new Map();
                 dataToPath.set(d, curPath);
             })
 
-//This adds a floating textbox describing the category.
-var curData = "a tooltip";
-var tooltip = d3.select("body")
-	.append("div")
-	.style("position", "absolute")
-	.style("z-index", "10")
-	.style("visibility", "hidden")
-	.text(curData);
+//Floating Textbox
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
 
 function resetVis() {
@@ -217,6 +213,9 @@ function resetVis() {
         .style("font-size", 18)
         .style("text-anchor", "middle")
         .html("Credibility")
+    div.transition()
+            .duration(200)
+            .style("opacity", 0);
     }
 
 resetVis();
@@ -249,35 +248,33 @@ resetVis();
                     .style("font-size", 40)
                     .style("text-anchor", "middle")
                     .html(sum)
-                g.append("text")
-                    .attr("class", "center-text")
-                    .attr("x", 0)
-                    .attr("y", 20)
-                    .style("text-anchor", "middle")
-                    .style("font-size", function() {
+                div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                 div.html(d.data.name)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px")
+                    .style("width", function() {
                         if (d.data.name.length < 18) {
-                            return 24;
-                        } else if (d.data.name.length < 22) {
-                            return 22;
-                        } else if (d.data.name.length < 27) {
-                            return 20;
-                        } else if (d.data.name.length < 32) {
-                            return 16;
+                            return "80px";
                         } else {
-                            return 12;
+                            return "180px";
                         }
                     })
-                    .html(d.data.name)
-                tooltip.text(d.data.name);
-                tooltip.style("visibility", "visible");
-                tooltip.style("font-size", "20px");
-
             })
-            .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            .on("mousemove", function(){
+                if (visOn == true) {
+                    div
+                        .style("left", (d3.event.pageX)+ "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                } else {
+                    div.transition()
+                        .duration(10)
+                        .style("opacity", 0);
+                }})
             //On mouse exiting, remove all highlights and clear all text and display the total value.
             .on('mouseout',function (d) {
                 resetVis();
-                tooltip.style("visibility", "hidden")
             })
             .style('stroke', 'white')
             .attr('stroke-width', 2)

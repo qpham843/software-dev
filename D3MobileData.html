@@ -24,7 +24,21 @@ Copyright (C) <2018> <Goodly Labs>
     <link rel="stylesheet" type="text/css" href="sequences.css"/>
 </head>
 <body>
-    <div class="example_div"></div>
+    <style>
+        div.tooltip {
+        display: inline-block;
+        position: absolute;
+        text-align: center;
+        width: 80px;
+        height: 35px;
+        padding: 10px;
+        font: 18px sans-serif;
+        background: lightgrey;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+}
+    </style>
 <svg>
 </svg>
 
@@ -106,7 +120,7 @@ function userFindIndex(data, val) {
   return data.map(function(e) {return e.name}).indexOf(val);
 }
 
-
+var coordinates = [0, 0];
 //drawing Visualization
 function createVisualization(article) {
   // Variables
@@ -137,9 +151,6 @@ function createVisualization(article) {
         .endAngle(function (d) { return d.x1 })
         .innerRadius(function (d) { return d.y0 })
         .outerRadius(function (d) { return d.y1 });
-
-    // Put it all together
-
 
 //These variables set the starting color for the categories "Reasoning", "Evidence", "Language".
   var red = 239;
@@ -205,14 +216,12 @@ var dataToPath = new Map();
                 dataToPath.set(d, curPath);
             })
 
-//This adds a floating textbox describing the category.
-var curData = "a tooltip";
-var tooltip = d3.select("body")
-	.append("div")
-	.style("position", "absolute")
-	.style("z-index", "10")
-	.style("visibility", "hidden")
-	.text(curData);
+
+//Floating Textbox
+
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
 //This is the visualization toggle.
 var visOn = false;
@@ -240,6 +249,9 @@ function resetVis() {
         .style("font-size", 18)
         .style("text-anchor", "middle")
         .html("Credibility")
+    div.transition()
+        .duration(200)
+        .style("opacity", 0);
     }
 
 resetVis();
@@ -273,20 +285,38 @@ resetVis();
                     .style("font-size", 40)
                     .style("text-anchor", "middle")
                     .html(sum)
-                tooltip.text(d.data.name);
-                tooltip.style("visibility", "visible");
-                tooltip.style("font-size", "20px");
                 visOn = true;
+                div.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                div	.html(d.data.name)
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                        .style("width", function() {
+                            if (d.data.name.length < 18) {
+                                return "80px";
+                            } else {
+                                return "180px";
+                            }
+                        })
        } else {
                 if (visOn == true) {
                     visOn = false;
                 }
-                    resetVis();
-                    tooltip.style("visibility", "hidden")
-                }
 
+                resetVis();
+                }
             })
-            .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            .on("mousemove", function(){
+                if (visOn == true) {
+                    div
+                        .style("left", (d3.event.pageX)+ "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                } else {
+                    div.transition()
+                        .duration(10)
+                        .style("opacity", 0);
+                }})
             .style('stroke', 'white')
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
@@ -303,32 +333,4 @@ resetVis();
   }
 
 </script>
-    <style type="text/css">
-    #tooltip {
-      position: absolute;
-      width: 200px;
-      height: auto;
-      padding: 10px;
-      background-color: white;
-      -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
-      border-radius: 10px;
-      -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-      -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-      pointer-events: none;
-    }
-
-    #tooltip.hidden {
-      display: none;
-    }
-
-    #tooltip p {
-      margin: 0;
-      font-family: Futura;
-      font-size: 16px;
-      line-height: 20px;
-    }
-
-  </style>
 </body>
