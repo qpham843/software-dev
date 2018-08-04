@@ -7,7 +7,6 @@ d3.csv("catsheet.csv", function(error, data) {
   createVisualization(article1);
 });
 
-
 function buildHierarchy(data) {
   var articleID = "Article ID";
   var credCat = "Credibilty Indicator Category";
@@ -170,6 +169,18 @@ function createVisualization(article) {
 var dataToPath = new Map();
 
 //This is the visualization creation in its entirety.
+var insertCount = 0;
+
+function textHighlight(d) {
+    if (d.parent.data.name === "Reasoning") {
+        return "#FFB635";
+    } else if (d.parent.data.name === "Evidence") {
+        return "#3BFF35";
+    } else {
+        return "#35E7FF";
+    }
+}
+
   g.selectAll('g')
             .data(root.descendants())
             .enter()
@@ -182,6 +193,28 @@ var dataToPath = new Map();
             .each(function(d){
                 var curPath = this;
                 dataToPath.set(d, curPath);
+                if (d.data.children) {
+                    return;
+                } else {
+                    var paragraph = document.getElementById("textArticle").innerHTML;
+                    var start = (d.data.startIndices + 0)*0.1 + insertCount;
+                    while (paragraph[start] != " " && paragraph[start] != ".") {
+                        if (start == 0) {break;}
+                        start -= 1;
+                    }
+                    if (start != 0) {start += 1;}
+                    var end = (d.data.endIndices + 0)*0.1 + insertCount;
+                    while (paragraph[end] != " " && paragraph[end] != ".") {
+                        if (end == paragraph.length) {break;}
+                        end += 1;
+                    }
+
+                    var startEffect = "<span class='highlighter' style='background-color: " + textHighlight(d) + "'>"
+                    var endEffect = "<span class='highlightertext'>" + d.data.name + "</span></span>"
+                    paragraph = paragraph.substring(0, start) + startEffect + paragraph.substring(start, end) + endEffect + paragraph.substring(end);
+                    document.getElementById("textArticle").innerHTML = paragraph;
+                    insertCount += startEffect.length + endEffect.length;
+                }
             })
 
 //Floating Textbox
@@ -189,6 +222,8 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+
+var visOn = false;
 
 function resetVis() {
     d3.selectAll("path")
@@ -216,6 +251,7 @@ function resetVis() {
     div.transition()
             .duration(200)
             .style("opacity", 0);
+    visOn = false;
     }
 
 resetVis();
@@ -251,7 +287,7 @@ resetVis();
                 div.transition()
                     .duration(200)
                     .style("opacity", .9);
-                 div.html(d.data.name)
+                div.html(d.data.name)
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px")
                     .style("width", function() {
@@ -261,6 +297,7 @@ resetVis();
                             return "180px";
                         }
                     })
+                visOn = true;
             })
             .on("mousemove", function(){
                 if (visOn == true) {

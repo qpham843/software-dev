@@ -25,7 +25,7 @@ Copyright (C) <2018> <Goodly Labs>
 </head>
 <body>
     <style>
-        div.tooltip {
+     div.tooltip {
         display: inline-block;
         position: absolute;
         text-align: center;
@@ -37,13 +37,65 @@ Copyright (C) <2018> <Goodly Labs>
         border: 0px;
         border-radius: 8px;
         pointer-events: none;
-}
+     }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
     </style>
+    <div id="inputText">
+        The fox went over the fence
+    </div>
+    <div id="catText">
+        The <span onmouseover="turnYellow(this)">cat</span> is the best animal in the world of animals.
+    </div>
 <svg>
 </svg>
 
 D3 Visualization for Mock Data
 <script>
+
+function turnYellow(object) {
+    object.style='background-color: #FFFF00';
+    }
+
+
+
 d3.csv("catsheet.csv", function(error, data) {
   if (error) throw error;
   // var json = buildHierarchy(csv);
@@ -216,7 +268,6 @@ var dataToPath = new Map();
                 dataToPath.set(d, curPath);
             })
 
-
 //Floating Textbox
 
 var div = d3.select("body").append("div")
@@ -225,6 +276,7 @@ var div = d3.select("body").append("div")
 
 //This is the visualization toggle.
 var visOn = false;
+
 
 function resetVis() {
     d3.selectAll("path")

@@ -1,17 +1,17 @@
 Article ID,Credibility Indicator ID ,Credibilty Indicator Category,Credibility Indicator Name,Points,Indices of Label in Article,Journalist or Quoted Source,Quoted Source ID,Start,End
-1,R2,Reasoning,False Dilemma,-2,,,,1,10
-1,R4,Reasoning,Begging the question,-3,,,,11,20
-1,R1,Reasoning,Straw Man,-1,,,,21,30
-1,R6,Reasoning,Selection Effects,-2,,[ignore this column for now],,31,40
-1,R5,Reasoning,Appeal to fear,-1,,,,41,50
-1,R3,Reasoning,Appeal to popularity,-2,[ignore this column for now],,,51,60
-1,E4,Evidence,Appropriately calibrated confidence,2,,,,61,70
-1,E3,Evidence,Low number statistics,-2,,,[ignore this column for now],71,80
-1,E1,Evidence,Confusing Correlation and Causation,-3,,,,81,90
-1,E2,Evidence,Ignoring selection effects,-1,,,,91,100
-1,L2,Language,Snarky tone,-2,,,,101,110
-1,L3,Language,Outraged tone,-2,,,,111,120
-1,L1,Language,False expertise,-3,,,,121,130
+1,R2,Reasoning,False Dilemma,-2,,,,0,19
+1,R4,Reasoning,Begging the question,-3,,,,34,50
+1,R1,Reasoning,Straw Man,-1,,,,66,80
+1,R6,Reasoning,Selection Effects,-2,,[ignore this column for now],,95,110
+1,R5,Reasoning,Appeal to fear,-1,,,,115,130
+1,R3,Reasoning,Appeal to popularity,-2,[ignore this column for now],,,140,180
+1,E4,Evidence,Appropriately calibrated confidence,2,,,,230,280
+1,E3,Evidence,Low number statistics,-2,,,[ignore this column for now],320,400
+1,E1,Evidence,Confusing Correlation and Causation,-3,,,,450,487
+1,E2,Evidence,Ignoring selection effects,-1,,,,500,560
+1,L2,Language,Snarky tone,-2,,,,600,700
+1,L3,Language,Outraged tone,-2,,,,800,900
+1,L1,Language,False expertise,-3,,,,1000,1200
 2,R3,Reasoning,Appeal to popularity,-2,,,,2,58
 2,L2,Language,Snarky tone,-1,,,,44,201
 2,R1,Reasoning,Straw Man,-3,,,,55,354

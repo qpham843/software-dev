@@ -55,6 +55,28 @@ p {
   z-index: -1;
 }
 
+.highlighter {
+    position: relative;
+    display: inline-block;
+}
+.highlighter .highlightertext {
+    visibility: hidden;
+    width: 110px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 3px;
+    bottom: 100%;
+    opacity: 1;
+    color: black;
+    background-color: #C86EFF;
+    position: absolute;
+    z-index: 1;
+}
+.highlighter:hover .highlightertext {
+    visibility: visible;
+}
+
 #percentage {
   font-size: 2.5em;
   color: #666;
