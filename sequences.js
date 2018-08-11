@@ -181,6 +181,9 @@ function textHighlight(d) {
     }
 }
 
+var arrFront = [];
+var arrBack = [];
+
   g.selectAll('g')
             .data(root.descendants())
             .enter()
@@ -216,6 +219,43 @@ function textHighlight(d) {
                     insertCount += startEffect.length + endEffect.length;
                 }
             })
+
+/*
+                    var paragraph = document.getElementById("textArticle").innerHTML;
+                    var start = (d.data.startIndices + 0)*0.1 + insertCount;
+                    while (paragraph[start] != " " && paragraph[start] != ".") {
+                        if (start == 0) {break;}
+                        start -= 1;
+                    }
+                    if (start != 0) {start += 1;}
+                    var end = (d.data.endIndices + 0)*0.1 + insertCount;
+                    while (paragraph[end] != " " && paragraph[end] != ".") {
+                        if (end == paragraph.length) {break;}
+                        end += 1;
+                    }
+
+                    var startEffect = "<span class='highlighter' style='background-color: " + textHighlight(d) + "'>"
+                    var endEffect = "<span class='highlightertext'>" + d.data.name + "</span></span>"
+                    paragraph = paragraph.substring(0, start) + startEffect + paragraph.substring(start, end) + endEffect + paragraph.substring(end);
+                    document.getElementById("textArticle").innerHTML = paragraph;
+                    insertCount += startEffect.length + endEffect.length;
+*/
+
+
+
+
+var hText = document.querySelectorAll('.highlightertext');
+
+window.onmousemove = function (e) {
+    var x = (e.clientX + 25) + 'px',
+        y = (e.clientY + - 18) + 'px';
+    for (var i = 0; i < hText.length; i++) {
+        hText[i].style.top = y;
+        hText[i].style.left = x;
+    }
+};
+
+
 
 //Floating Textbox
 var div = d3.select("body").append("div")

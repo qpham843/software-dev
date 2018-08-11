@@ -39,51 +39,27 @@ Copyright (C) <2018> <Goodly Labs>
         pointer-events: none;
      }
 
-    .tooltip {
+     .extralight {
         position: relative;
         display: inline-block;
-        border-bottom: 1px dotted black;
+        height: 1.5em;
+        background-color: #FF0000;
+     }
+
+    .highlighter {
+        position: relative;
+        display: inline-block;
+        height: 1.6em;
+        background-color: #FFFF00;
     }
 
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -60px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .tooltip .tooltiptext::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: #555 transparent transparent transparent;
-    }
-
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-        opacity: 1;
-    }
     </style>
     <div id="inputText">
         The fox went over the fence
     </div>
-    <div id="catText">
-        The <span onmouseover="turnYellow(this)">cat</span> is the best animal in the world of animals.
-    </div>
+    <p>
+        The <span class='highlighter'> super fast <span class='extralight'>cat</span> is the best animal </span> in the world of animals.
+    </p>
 <svg>
 </svg>
 
@@ -92,6 +68,10 @@ D3 Visualization for Mock Data
 
 function turnYellow(object) {
     object.style='background-color: #FFFF00';
+    }
+
+function turnRed(object) {
+    object.style='background-color: #FF0000';
     }
 
 

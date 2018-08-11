@@ -55,26 +55,34 @@ p {
   z-index: -1;
 }
 
+.extralight {
+    position: relative;
+    display: inline;
+    background-color: #333;
+}
+
 .highlighter {
     position: relative;
-    display: inline-block;
+    display: inline;
 }
+
 .highlighter .highlightertext {
     visibility: hidden;
-    width: 110px;
+    fit-content = min(max-content, max(min-content, fill-available));
     text-align: center;
     font-weight: bold;
     border-radius: 15px;
     padding: 3px;
-    bottom: 100%;
     opacity: 1;
     color: black;
     background-color: #C86EFF;
     position: absolute;
     z-index: 1;
+    overflow: auto;
 }
 .highlighter:hover .highlightertext {
     visibility: visible;
+    position: fixed;
 }
 
 #percentage {
