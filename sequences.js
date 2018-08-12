@@ -1,3 +1,11 @@
+//This section switches out the existing article for one from a .txt file.
+document.getElementById("articleHead").innerHTML = "Public Editor Lorem Ipsum"
+d3.text("loremipsum.txt", function(text) {
+    document.getElementById("textArticle").innerHTML = text.toString();
+});
+
+
+//This section parses the CSV file into a JSON.
 d3.csv("catsheet.csv", function(error, data) {
   if (error) throw error;
   // var json = buildHierarchy(csv);
@@ -79,7 +87,9 @@ function userFindIndex(data, val) {
 }
 
 
-//drawing Visualization
+
+//BEGIN VISUALIZATION
+//This is the visualization code.
 function createVisualization(article) {
   // Variables
     var chartDiv = document.getElementById("chart"); //resizes with css
@@ -94,7 +104,6 @@ function createVisualization(article) {
     .attr("preserveAspectRatio", "xMinYMin meet")
         // .attr("viewBox", "0 0 250 250")
         // .classed("svg-content", true)
-
         .attr('width', width)
         .attr('height', height)
         .append('g')
@@ -119,7 +128,9 @@ function createVisualization(article) {
     // Put it all together
 
 
-//These variables set the starting color for the categories "Reasoning", "Evidence", "Language".
+
+//COLORING SECTION
+//These variables set the starting color for the categories "Reasoning", "Evidence", "Language" in the visualization.
   var red = 239;
   var green = 165;
   var blue = 230;
@@ -149,6 +160,19 @@ function createVisualization(article) {
         }
   }
 
+//This function determines the color of text highlights.
+  function textHighlight(d) {
+      if (d.parent.data.name === "Reasoning") {
+          return "#FFB635";
+      } else if (d.parent.data.name === "Evidence") {
+          return "#3BFF35";
+      } else {
+          return "#35E7FF";
+      }
+  }
+
+
+//CREDIBILITY VALUES
 //These variables ensure that the total value is accurate.
   var sum = 0;
   var total = checkTotal(article);
@@ -164,26 +188,28 @@ function createVisualization(article) {
     return top;
   };
 
+//This function calculates the sum of the child nodes of a category. Used for "Reasoning", "Evidence", "Language".
+  function checkSum(d) {
+    if (d.data.children) {
+        for (i = 0; i < d.data.children.length; i += 1) {
+            sum += d.data.children[i].size;
+        }
+    } else {
+        sum = d.data.size;
+    }};
 
+
+//DICTIONARIES
 //This dictionary maps data nodes to paths.
 var dataToPath = new Map();
 
+//This dictionary maps indices to strings.
+var indexToString = new Map();
+
+
+
+//CREATE PATHS AND HIGHLIGHTS
 //This is the visualization creation in its entirety.
-var insertCount = 0;
-
-function textHighlight(d) {
-    if (d.parent.data.name === "Reasoning") {
-        return "#FFB635";
-    } else if (d.parent.data.name === "Evidence") {
-        return "#3BFF35";
-    } else {
-        return "#35E7FF";
-    }
-}
-
-var arrFront = [];
-var arrBack = [];
-
   g.selectAll('g')
             .data(root.descendants())
             .enter()
@@ -200,50 +226,46 @@ var arrBack = [];
                     return;
                 } else {
                     var paragraph = document.getElementById("textArticle").innerHTML;
-                    var start = (d.data.startIndices + 0)*0.1 + insertCount;
-                    while (paragraph[start] != " " && paragraph[start] != ".") {
-                        if (start == 0) {break;}
-                        start -= 1;
+                    for (i = 0; i < d.data.startIndices.length; i += 1) {
+                        var ind = d.data.startIndices[i];
+                        var start = (ind + 0);
+                        while (paragraph[start] != " " && paragraph[start] != ".") {
+                            if (start == 0) {break;}
+                                start -= 1;
+                        }
+                        if (start != 0) {start += 1;}
+                        if (start in indexToString.values()) {start += 1};
+                        indexToString.set(start, "<span class='highlighter' style='background-color: " + textHighlight(d) + "'>");
                     }
-                    if (start != 0) {start += 1;}
-                    var end = (d.data.endIndices + 0)*0.1 + insertCount;
-                    while (paragraph[end] != " " && paragraph[end] != ".") {
-                        if (end == paragraph.length) {break;}
-                        end += 1;
+                    for (i = 0; i < d.data.endIndices.length; i += 1) {
+                        var ind = d.data.endIndices[i];
+                        var end = (ind + 0);
+                        while (paragraph[end] != " " && paragraph[end] != ".") {
+                            if (end == paragraph.length) {break;}
+                                end += 1;
+                        }
+                        if (end in indexToString.values()) {end -= 1};
+                        indexToString.set(end, "<span class='highlightertext'>" + d.data.name + "</span></span>");
                     }
-
-                    var startEffect = "<span class='highlighter' style='background-color: " + textHighlight(d) + "'>"
-                    var endEffect = "<span class='highlightertext'>" + d.data.name + "</span></span>"
-                    paragraph = paragraph.substring(0, start) + startEffect + paragraph.substring(start, end) + endEffect + paragraph.substring(end);
-                    document.getElementById("textArticle").innerHTML = paragraph;
-                    insertCount += startEffect.length + endEffect.length;
+                    //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
 
-/*
-                    var paragraph = document.getElementById("textArticle").innerHTML;
-                    var start = (d.data.startIndices + 0)*0.1 + insertCount;
-                    while (paragraph[start] != " " && paragraph[start] != ".") {
-                        if (start == 0) {break;}
-                        start -= 1;
-                    }
-                    if (start != 0) {start += 1;}
-                    var end = (d.data.endIndices + 0)*0.1 + insertCount;
-                    while (paragraph[end] != " " && paragraph[end] != ".") {
-                        if (end == paragraph.length) {break;}
-                        end += 1;
-                    }
-
-                    var startEffect = "<span class='highlighter' style='background-color: " + textHighlight(d) + "'>"
-                    var endEffect = "<span class='highlightertext'>" + d.data.name + "</span></span>"
-                    paragraph = paragraph.substring(0, start) + startEffect + paragraph.substring(start, end) + endEffect + paragraph.substring(end);
-                    document.getElementById("textArticle").innerHTML = paragraph;
-                    insertCount += startEffect.length + endEffect.length;
-*/
+//This code adds in the highlights as needed.
+var unsorted = Array.from(indexToString.keys());
+var sorted = unsorted.sort(function(a, b){return a - b});
+var indexOffset = 0;
+for (i = 0; i < sorted.length; i += 1) {
+    var paragraph = document.getElementById("textArticle").innerHTML;
+    paragraph = paragraph.substring(0, sorted[i] + indexOffset) + indexToString.get(sorted[i]) + paragraph.substring(sorted[i] + indexOffset);
+    document.getElementById("textArticle").innerHTML = paragraph;
+    indexOffset += indexToString.get(sorted[i]).length;
+}
 
 
 
-
+//VISUALIZATION TEXTBOX
+//This section enables the textbox on hover in the article itself.
 var hText = document.querySelectorAll('.highlightertext');
 
 window.onmousemove = function (e) {
@@ -254,17 +276,15 @@ window.onmousemove = function (e) {
         hText[i].style.left = x;
     }
 };
-
-
-
-//Floating Textbox
+//This section enables the Floating Textbox for the visualization.
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
 
+//VISUALIZATION ANIMATIONS
+//This removes the current effects and resets the visualization to default.
 var visOn = false;
-
 function resetVis() {
     d3.selectAll("path")
         .transition()
@@ -296,6 +316,8 @@ function resetVis() {
 
 resetVis();
 
+
+//MOUSE ANIMATION
   //This is all the mouse animation code.
   g.selectAll('path')
             //On mouse entering, highlight path, clear old text, create new text.
@@ -356,14 +378,4 @@ resetVis();
             .style('stroke', 'white')
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
-
-//This function calculates the sum of the child nodes of a category. Used for "Reasoning", "Evidence", "Language".
-  function checkSum(d) {
-    if (d.data.children) {
-        for (i = 0; i < d.data.children.length; i += 1) {
-            sum += d.data.children[i].size;
-        }
-    } else {
-        sum = d.data.size;
-    }};
-  }
+}

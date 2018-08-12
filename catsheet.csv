@@ -10,8 +10,11 @@ Article ID,Credibility Indicator ID ,Credibilty Indicator Category,Credibility I
 1,E1,Evidence,Confusing Correlation and Causation,-3,,,,450,487
 1,E2,Evidence,Ignoring selection effects,-1,,,,500,560
 1,L2,Language,Snarky tone,-2,,,,600,700
-1,L3,Language,Outraged tone,-2,,,,800,900
-1,L1,Language,False expertise,-3,,,,1000,1200
+1,L3,Language,Outraged tone,-2,,,,900,1100
+1,L1,Language,False expertise,-3,,,,1200,1400
+1,R4,Reasoning,Begging the question,-3,,,,2000,2300
+1,E4,Evidence,Appropriately calibrated confidence,2,,,,3000,3300
+1,L2,Language,Snarky tone,-2,,,,4000,4400
 2,R3,Reasoning,Appeal to popularity,-2,,,,2,58
 2,L2,Language,Snarky tone,-1,,,,44,201
 2,R1,Reasoning,Straw Man,-3,,,,55,354

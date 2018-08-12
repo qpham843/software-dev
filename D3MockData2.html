@@ -18,7 +18,7 @@ Copyright (C) <2018> <Goodly Labs>
 <!DOCTYPE html>
 <head>
     <title>D3 Visualization for Mock Data</title>
-   <script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css"
           href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
     <link rel="stylesheet" type="text/css" href="sequences.css"/>
@@ -27,6 +27,7 @@ Copyright (C) <2018> <Goodly Labs>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
@@ -35,22 +36,6 @@ Copyright (C) <2018> <Goodly Labs>
   </div> -->
 <header id = "header">PublicEditor</header>
 
-  <style>
-        div.tooltip {
-        display: inline-block;
-        position: absolute;
-        text-align: center;
-        width: 80px;
-        height: 45px;
-        padding: 10px;
-        font: 14px sans-serif;
-        background: lightgrey;
-        border: 0px;
-        border-radius: 8px;
-        pointer-events: none;
-}
-    </style>
-
 <div class="row" id = "spacer">
   <div class= "col-sm-12"></div>
 </div>
@@ -58,18 +43,20 @@ Copyright (C) <2018> <Goodly Labs>
   <div class= "col-sm-1"></div>
   <div class="col-sm-9">
     <br>
-    <h1>Feds have 12 Michael Cohen audio recordings</h1>
+    <h1 id="articleHead">Feds have 12 Michael Cohen audio recordings</h1>
     <br>
     <p id="textArticle">Federal prosecutors investigating President Donald Trump's former personal attorney Michael Cohen have received 12 audio recordings from the materials seized by the FBI during the searches of Cohen's home, office and hotel room, according to court filings.  The former judge reviewing the material for attorney-client privilege wrote in a court filing Monday that the parties involved in the case had withdrawn their privilege designation on the 12 audio files on Friday. The items had been under consideration by the special master, Barbara Jones, according to the filing.  "Based upon those de-designations, the special master released the 12 items to the government that day," the filing said.  On Friday, Trump attorney Rudy Giuliani said Cohen had secretly recorded a conversation between himself and Trump in which the two discussed a payment to a former Playboy model who has alleged an affair with Trump. That recording, concerning Karen McDougal, is among the 12 files referenced in the court filing, according to a source familiar with the matter, and is the only one of the 12 that is of Cohen and Trump. Trump's attorneys had waived attorney-client privilege on his behalf on that recording, CNN reported on Friday. At least some of the other 11 recordings include conversations Cohen had with members of the media. The filing doesn't specify who is captured on the recordings, the subjects of the conversations or anything else about the files. The special master process reviews the seized material only for questions of attorney-client privilege, not for relevance, meaning it is up to the prosecutors to determine whether the audio recordings are useful to any criminal case. The special master said in the filing that the recordings had been under consideration in the privilege determination process, but didn't indicate that they had been designated as privileged. Asked on Monday how Trump felt upon learning that Cohen had secretly recorded him, White House press secretary Sarah Sanders said that "while the President maintains that he's done nothing wrong, on this specific topic I would refer you to the President's outside counsel.
     </p> <br>
-
   </div>
+
+
   <div class="col-sm-2" class = "svg-container">
     <script type="text/javascript" src="sequences.js"></script>
     <svg id="chart" viewBox="0 0 500 500"  preserveAspectRatio="xMidYMid meet">
     </svg>
   </div>
 </div>
+  <h2 id="bot">Bottom of page!</h2>
 <div id="footer" class="container-fluid">
     <div class="row"></div>
 </div>
