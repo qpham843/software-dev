@@ -163,11 +163,11 @@ function createVisualization(article) {
 //This function determines the color of text highlights.
   function textHighlight(d) {
       if (d.parent.data.name === "Reasoning") {
-          return "#FFB635";
+          return "#EF5C54";
       } else if (d.parent.data.name === "Evidence") {
-          return "#3BFF35";
+          return "#35C988";
       } else {
-          return "#35E7FF";
+          return "#4770B2";
       }
   }
 
@@ -235,7 +235,7 @@ var indexToString = new Map();
                         }
                         if (start != 0) {start += 1;}
                         if (start in indexToString.values()) {start += 1};
-                        indexToString.set(start, "<span class='highlighter' style='background-color: " + textHighlight(d) + "'>");
+                        indexToString.set(start, "<span class='highlighter' style='text-decoration: " + "underline" + textHighlight(d) + "'>");
                     }
                     for (i = 0; i < d.data.endIndices.length; i += 1) {
                         var ind = d.data.endIndices[i];
@@ -297,17 +297,17 @@ function resetVis() {
     g.append("text")
         .attr("class", "center-text")
         .attr("x", 0)
-        .attr("y", 0)
-        .style("font-size", 36)
+        .attr("y", 13)
+        .style("font-size", 50)
         .style("text-anchor", "middle")
-        .html((100 + total) + "%")
-    g.append("text")
-        .attr("class", "center-text")
-        .attr("x", 0)
-        .attr("y", 25)
-        .style("font-size", 18)
-        .style("text-anchor", "middle")
-        .html("Credibility")
+        .html((100 + total))
+    // g.append("text")
+    //     .attr("class", "center-text")
+    //     .attr("x", 0)
+    //     .attr("y", 25)
+    //     .style("font-size", 18)
+    //     .style("text-anchor", "middle")
+    //     .html("Credibility")
     div.transition()
             .duration(200)
             .style("opacity", 0);
