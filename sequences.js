@@ -1,8 +1,10 @@
 //This section switches out the existing article for one from a .txt file.
+/*
 document.getElementById("articleHead").innerHTML = "Public Editor Lorem Ipsum"
 d3.text("loremipsum.txt", function(text) {
     document.getElementById("textArticle").innerHTML = text.toString();
 });
+*/
 
 
 //This section parses the CSV file into a JSON.
@@ -130,20 +132,15 @@ function createVisualization(article) {
 
 
 //COLORING SECTION
-//These variables set the starting color for the categories "Reasoning", "Evidence", "Language" in the visualization.
-  var red = 239;
-  var green = 165;
-  var blue = 230;
-
 //This function determines the color of a category based on its parent, or name.
   function colorFinder(d) {
     if (d.data.children) {
         if (d.data.name === "Reasoning") {
-               return d3.rgb(red, 92, 84);
+               return d3.rgb(239, 92, 84);
             } else if (d.data.name === "Evidence") {
-               return d3.rgb(0, green, 150);
+               return d3.rgb(0, 165, 150);
             } else {
-               return d3.rgb(43, 82, blue);
+               return d3.rgb(43, 82, 230);
             }
         }   else {
         //The children node colors are based on the colors of their parents.
@@ -163,11 +160,11 @@ function createVisualization(article) {
 //This function determines the color of text highlights.
   function textHighlight(d) {
       if (d.parent.data.name === "Reasoning") {
-          return "#EF5C54";
+          return "red";
       } else if (d.parent.data.name === "Evidence") {
-          return "#35C988";
+          return "green";
       } else {
-          return "#4770B2";
+          return "blue";
       }
   }
 
@@ -235,7 +232,7 @@ var indexToString = new Map();
                         }
                         if (start != 0) {start += 1;}
                         if (start in indexToString.values()) {start += 1};
-                        indexToString.set(start, "<span class='highlighter' style='text-decoration: " + "underline" + textHighlight(d) + "'>");
+                        indexToString.set(start, ["o", textHighlight(d), d.data.name]);
                     }
                     for (i = 0; i < d.data.endIndices.length; i += 1) {
                         var ind = d.data.endIndices[i];
@@ -245,7 +242,7 @@ var indexToString = new Map();
                                 end += 1;
                         }
                         if (end in indexToString.values()) {end -= 1};
-                        indexToString.set(end, "<span class='highlightertext'>" + d.data.name + "</span></span>");
+                        indexToString.set(end, ["c", textHighlight(d), d.data.name]);
                     }
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
@@ -255,11 +252,93 @@ var indexToString = new Map();
 var unsorted = Array.from(indexToString.keys());
 var sorted = unsorted.sort(function(a, b){return a - b});
 var indexOffset = 0;
+var numactive = 0;
+var inputString = "";
+var categoryName = "";
+var oldest = "transparent";
+var oldName = "";
+var middle = "transparent";
+var midName = "";
+var newest = "transparent";
+var newName = "";
 for (i = 0; i < sorted.length; i += 1) {
+    categoryName = indexToString.get(sorted[i])[1];
+    if (indexToString.get(sorted[i])[0] == "o") {
+        oldest = middle;
+        oldName = midName;
+        middle = newest;
+        midName = newName;
+        newest = categoryName;
+        newName = indexToString.get(sorted[i])[2];
+        if (numactive == 0) {
+
+            inputString = "<" + categoryName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                        newest + " 0%, transparent 20%)" +
+                        "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            numactive = 1;
+        } else if (numactive == 1) {
+            inputString = "<" + categoryName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                        middle + " 0%, transparent 20%, transparent 35%, " +
+                        newest + " 40%, transparent 55%, transparent 70%)" +
+                        "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            numactive = 2;
+        } else {
+            inputString = "<" + categoryName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                        oldest + " 0%, transparent 20%, transparent 35%, " +
+                        middle + " 40%, transparent 55%, transparent 70%, " +
+                        newest + " 75%, transparent 90%)" +
+                        "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            numactive = 3;
+        }
+    } else {
+        var continueString = "";
+        if (numactive == 1) {
+        } else if (numactive == 2) {
+            if (newest == categoryName) {
+                continueString = "</" + middle + ">" + "<" + middle + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    middle + " 0%, transparent 20%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            } else if (middle == categoryName) {
+                continueString = "</" + newest + ">" + "<" + newest + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    newest + " 0%, transparent 20%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            }
+        } else {
+            if (newest == categoryName) {
+                continueString = "</" + oldest + ">" + "<" + oldest + " name='" + oldName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    oldest + " 0%, transparent 20%, transparent 35%, " +
+                                    middle + " 40%, transparent 55%, transparent 70%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            } else if (middle == categoryName) {
+                continueString = "</" + oldest + ">" + "<" + oldest + " name='" + oldName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    oldest + " 0%, transparent 20%, transparent 35%, " +
+                                    newest + " 40%, transparent 55%, transparent 70%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            } else {
+                continueString = "</" + middle + ">" + "<" + middle + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    middle + " 0%, transparent 20%, transparent 35%, " +
+                                    newest + " 40%, transparent 55%, transparent 70%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            }
+        }
+        inputString = "<hiText class='highlightertext'>" + indexToString.get(sorted[i])[2] + "</hiText></" + categoryName +">" + continueString;
+
+        if (newest == categoryName) {
+            newest = middle;
+            middle = oldest;
+            oldest = "transparent";
+        } else if (middle == categoryName) {
+            middle = oldest;
+            oldest = "transparent";
+        } else {
+            oldest = "transparent";
+        }
+        numactive -= 1;
+    }
     var paragraph = document.getElementById("textArticle").innerHTML;
-    paragraph = paragraph.substring(0, sorted[i] + indexOffset) + indexToString.get(sorted[i]) + paragraph.substring(sorted[i] + indexOffset);
+    paragraph = paragraph.substring(0, sorted[i] + indexOffset) + inputString + paragraph.substring(sorted[i] + indexOffset);
     document.getElementById("textArticle").innerHTML = paragraph;
-    indexOffset += indexToString.get(sorted[i]).length;
+    indexOffset += inputString.length;
 }
 
 
@@ -337,6 +416,12 @@ resetVis();
       	            .duration(300)
       	            .attr('stroke-width',5)
       	            .style("opacity", 1)
+      	        if (d.height == 0) {
+      	            var elems = document.getElementsByName(d.data.name);
+      	            for (var i = 0; i < elems.length; i += 1) {
+      	                elems[i].style.backgroundColor = colorFinder(d);
+      	            }
+      	        }
       	        //This code creates the text in the center of the model.
       	        checkSum(d)
                 g.append("text")
@@ -373,6 +458,10 @@ resetVis();
                 }})
             //On mouse exiting, remove all highlights and clear all text and display the total value.
             .on('mouseout',function (d) {
+                var elems = document.getElementsByName(d.data.name);
+                    for (var i = 0; i < elems.length; i += 1) {
+                  	    elems[i].style.backgroundColor = "white";
+                    }
                 resetVis();
             })
             .style('stroke', 'white')
