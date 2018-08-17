@@ -237,7 +237,7 @@ var indexToString = new Map();
                     for (i = 0; i < d.data.endIndices.length; i += 1) {
                         var ind = d.data.endIndices[i];
                         var end = (ind + 0);
-                        while (paragraph[end] != " " && paragraph[end] != ".") {
+                        while (paragraph[end] != " " && paragraph[end] != "." && paragraph[end] != ",") {
                             if (end == paragraph.length) {break;}
                                 end += 1;
                         }
@@ -257,81 +257,108 @@ var inputString = "";
 var categoryName = "";
 var oldest = "transparent";
 var oldName = "";
+var holdName = "";
 var middle = "transparent";
 var midName = "";
+var hmidName = "";
 var newest = "transparent";
 var newName = "";
+var hnewName = "";
+console.log(sorted)
 for (i = 0; i < sorted.length; i += 1) {
     categoryName = indexToString.get(sorted[i])[1];
     if (indexToString.get(sorted[i])[0] == "o") {
         oldest = middle;
-        oldName = midName;
+        holdName = hmidName;
+        oldName = midName.replace(/ /g,'');
         middle = newest;
-        midName = newName;
+        hmidName = hnewName;
+        midName = newName.replace(/ /g,'');
         newest = categoryName;
-        newName = indexToString.get(sorted[i])[2];
+        hnewName = indexToString.get(sorted[i])[2];
+        newName = indexToString.get(sorted[i])[2].replace(/ /g,'');
+        var endString = "";
         if (numactive == 0) {
-
-            inputString = "<" + categoryName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + newName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         newest + " 0%, transparent 20%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             numactive = 1;
         } else if (numactive == 1) {
-            inputString = "<" + categoryName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + midName + newName + " name='" + midName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         middle + " 0%, transparent 20%, transparent 35%, " +
                         newest + " 40%, transparent 55%, transparent 70%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
         } else {
-            inputString = "<" + categoryName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + oldName + midName + newName + " name='" + oldName + midName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
                         newest + " 75%, transparent 90%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            endString = "<hiText class='highlightertext'>" + hmidName + ", " + hnewName + "</hiText></" + oldName + midName + ">";
             numactive = 3;
         }
+        inputString = endString + inputString;
     } else {
         var continueString = "";
         if (numactive == 1) {
         } else if (numactive == 2) {
             if (newest == categoryName) {
-                continueString = "</" + middle + ">" + "<" + middle + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "</" + newest + ">" + "<" + newest + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + newName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     newest + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
         } else {
             if (newest == categoryName) {
-                continueString = "</" + oldest + ">" + "<" + oldest + " name='" + oldName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + midName + " name='" + oldName + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "</" + oldest + ">" + "<" + oldest + " name='" + oldName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + newName + " name='" + oldName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else {
-                continueString = "</" + middle + ">" + "<" + middle + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + newName + " name='" + midName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
         }
-        inputString = "<hiText class='highlightertext'>" + indexToString.get(sorted[i])[2] + "</hiText></" + categoryName +">" + continueString;
-
+        if (numactive == 1) {
+            inputString = "<hiText class='highlightertext'>" + hnewName + "</hiText></" + newName +">" + continueString;
+        } else if (numactive == 2) {
+            inputString = "<hiText class='highlightertext'>" + hmidName + ", " + hnewName + "</hiText></" + midName + newName +">" + continueString;
+        } else {
+            inputString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + oldName + midName + newName +">" + continueString;
+        }
         if (newest == categoryName) {
             newest = middle;
+            hnewName = hmidName;
+            newName = midName;
             middle = oldest;
+            hmidName = holdName;
+            midName = oldName;
             oldest = "transparent";
+            holdName = "";
+            oldName = "";
         } else if (middle == categoryName) {
             middle = oldest;
+            hmidName = holdName;
+            midName = oldName;
             oldest = "transparent";
+            holdName = "";
+            oldName = "";
         } else {
             oldest = "transparent";
+            holdname = "";
+            oldName = "";
         }
         numactive -= 1;
     }
@@ -339,9 +366,8 @@ for (i = 0; i < sorted.length; i += 1) {
     paragraph = paragraph.substring(0, sorted[i] + indexOffset) + inputString + paragraph.substring(sorted[i] + indexOffset);
     document.getElementById("textArticle").innerHTML = paragraph;
     indexOffset += inputString.length;
+
 }
-
-
 
 //VISUALIZATION TEXTBOX
 //This section enables the textbox on hover in the article itself.
@@ -408,7 +434,6 @@ function resetVis() {
 
 resetVis();
 
-
 //MOUSE ANIMATION
   //This is all the mouse animation code.
   g.selectAll('path')
@@ -430,11 +455,14 @@ resetVis();
       	            .attr('stroke-width',5)
       	            .style("opacity", 1)
       	        if (d.height == 0) {
-      	            var elems = document.getElementsByName(d.data.name);
-      	            for (var i = 0; i < elems.length; i += 1) {
-      	                elems[i].style.backgroundColor = colorFinder(d);
-      	            }
+      	            var allelems = document.querySelectorAll("[name]");
+                    for (var i = 0; i < allelems.length; i += 1) {
+                        if (allelems[i].nodeName.includes(d.data.name.replace(/ /g,'').toUpperCase())) {
+                            allelems[i].style.backgroundColor = colorFinder(d);
+                        }
+                    }
       	        }
+
       	        //This code creates the text in the center of the model.
       	        checkSum(d)
                 g.append("text")
@@ -471,10 +499,12 @@ resetVis();
                 }})
             //On mouse exiting, remove all highlights and clear all text and display the total value.
             .on('mouseout',function (d) {
-                var elems = document.getElementsByName(d.data.name);
-                    for (var i = 0; i < elems.length; i += 1) {
-                  	    elems[i].style.backgroundColor = "white";
+                var allelems = document.querySelectorAll("[name]");
+                for (var i = 0; i < allelems.length; i += 1) {
+                    if (allelems[i].nodeName.includes(d.data.name.replace(/ /g,'').toUpperCase())) {
+                        allelems[i].style.backgroundColor = "white";
                     }
+                }
                 resetVis();
             })
             .style('stroke', 'white')
