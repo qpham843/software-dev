@@ -51,7 +51,7 @@ p {
   left: 200px;
   width: 140px;
   text-align: center;
-  color: #666;
+  color: #666666;
   z-index: -1;
 }
 
@@ -78,6 +78,7 @@ div.tooltip {
 .highlighter {
     position: relative;
     display: inline;
+    background-color: red;
 }
 
 .highlighter .highlightertext {
@@ -97,6 +98,11 @@ div.tooltip {
 .highlighter:hover .highlightertext {
     visibility: visible;
     position: fixed;
+}
+
+.color {
+    background-color: red;
+    color: yellow;
 }
 
 #percentage {

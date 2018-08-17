@@ -347,6 +347,18 @@ for (i = 0; i < sorted.length; i += 1) {
 //This section enables the textbox on hover in the article itself.
 var hText = document.querySelectorAll('.highlightertext');
 
+
+
+var addclass = 'color';
+var $cols = $('.highlighter').click(function(e) {
+    console.log("clicked");
+    g.selectAll("path").style("opacity", 0);
+    console.log(this);
+    $(this).toggleClass('color');
+    // $cols.removeClass('highlighter');
+    // $(this).addClass(addclass);
+});
+
 window.onmousemove = function (e) {
     var x = (e.clientX + 25) + 'px',
         y = (e.clientY + - 18) + 'px';
@@ -372,6 +384,7 @@ function resetVis() {
         .style("opacity", 1)
     g.selectAll(".center-text")
         .style("display", "none")
+        666666
     sum = 0;
     g.append("text")
         .attr("class", "center-text")
