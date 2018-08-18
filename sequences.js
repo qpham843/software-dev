@@ -3,8 +3,8 @@
 document.getElementById("articleHead").innerHTML = "Public Editor Lorem Ipsum"
 d3.text("loremipsum.txt", function(text) {
     document.getElementById("textArticle").innerHTML = text.toString();
-});
-*/
+});*/
+
 
 
 //This section parses the CSV file into a JSON.
@@ -145,14 +145,14 @@ function createVisualization(article) {
         }   else {
         //The children node colors are based on the colors of their parents.
             if (d.data.size > 0) {
-                return d3.rgb(211,211,211);
+                return d3.rgb(192,192,192);
             }
             if (d.parent.data.name === "Reasoning") {
                 return d3.rgb(237, 134, 88);
             } else if (d.parent.data.name === "Evidence") {
                 return d3.rgb(53, 201, 136);
             } else {
-                return d3.rgb(71, 112, 178);
+                return d3.rgb(100,149,237);
             }
         }
   }
@@ -199,10 +199,16 @@ function createVisualization(article) {
 //DICTIONARIES
 //This dictionary maps data nodes to paths.
 var dataToPath = new Map();
+var dataToParentPath = new Map();
+var PathToData = new Map();
 
 //This dictionary maps indices to strings.
 var indexToString = new Map();
 
+//These arrays map categories to the names of their children.
+var reasoning = [];
+var evidence = [];
+var language = [];
 
 
 //CREATE PATHS AND HIGHLIGHTS
@@ -218,8 +224,19 @@ var indexToString = new Map();
             //For each path, map it to the corresponding data.
             .each(function(d){
                 var curPath = this;
-                dataToPath.set(d, curPath);
+                dataToParentPath.set(d, curPath)
+                dataToPath.set(d.data, curPath);
+                PathToData.set(curPath, d);
                 if (d.data.children) {
+                    for (var i = 0; i < d.data.children.length; i += 1) {
+                        if (d.data.name == "Reasoning") {
+                            reasoning[i] = d.data.children[i].name;
+                        } else if (d.data.name == "Evidence") {
+                            evidence[i] = d.data.children[i].name;
+                        } else {
+                            language[i] = d.data.children[i].name;
+                        }
+                    }
                     return;
                 } else {
                     var paragraph = document.getElementById("textArticle").innerHTML;
@@ -393,9 +410,23 @@ var visOn = false;
 function resetVis() {
     d3.selectAll("path")
         .transition()
-        .duration(200)
-        .attr('stroke-width', 2)
-        .style("opacity", 1)
+        .delay(300)
+        .duration(800)
+        .style("opacity", function(d) {
+            if (d.data.children) {
+            } else {
+                return 0;
+            }
+        })
+    d3.selectAll("path")
+        .transition()
+        .delay(1000)
+        .style("display", function(d) {
+            if (d.data.children) {
+            } else {
+                return "none";
+            }
+        })
     g.selectAll(".center-text")
         .style("display", "none")
     sum = 0;
@@ -406,6 +437,7 @@ function resetVis() {
         .style("font-size", 50)
         .style("text-anchor", "middle")
         .html((100 + total))
+
     // g.append("text")
     //     .attr("class", "center-text")
     //     .attr("x", 0)
@@ -421,22 +453,48 @@ function resetVis() {
 
 resetVis();
 
+d3.selectAll("path").transition().each(function(d) {
+    if (!d.data.children) {
+        this.style.display = "none";
+    } else if (d.data.name == "CATEGORIES") {
+        console.log("Something")
+        this.style.display = "none";
+    }
+})
+
 //MOUSE ANIMATION
   //This is all the mouse animation code.
   g.selectAll('path')
             //On mouse entering, highlight path, clear old text, create new text.
             .on('mouseover',function(d) {
+                var curPath = this;
                 g.selectAll(".center-text")
                     .style("display", "none")
-                d3.selectAll("path")
-                    .transition()
-                    .style("opacity", 0.5)
+
+                d3.selectAll("path").transition().style("opacity", 0.5);
+                if (d.data.children) {
+                    for (var i = 0; i < d.data.children.length; i += 1) {
+                        d3.select(dataToPath.get(d.data.children[i]))
+                            .transition()
+                            .style("display", "block")
+                            .style("opacity", 0.5)
+                            .duration(100)
+                    }
+                } else {
+                    var dataArray = Array.from(dataToParentPath.keys());
+                    for (var i = 0; i < Array.from(dataToParentPath.keys()).length; i += 1) {
+                        if (PathToData.get(curPath).parent == dataArray[i].parent) {
+                            dataToPath.get(dataArray[i].data).style.opacity = 0.5;
+                        }
+                    }
+                }
+
                 d3.select(this)
       	            .transition()
       	            .duration(300)
       	            .attr('stroke-width',5)
       	            .style("opacity", 1)
-      	        d3.select(dataToPath.get(d.parent))
+      	        d3.select(dataToParentPath.get(d.parent))
       	            .transition()
       	            .duration(300)
       	            .attr('stroke-width',5)

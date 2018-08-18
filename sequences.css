@@ -11,6 +11,7 @@ p {
   font-family: 'Times New Roman', serif;
   font-size: 18px;
   line-height: 2;
+  white-space: pre-line;
 }
 
 #main {
@@ -63,16 +64,11 @@ div.tooltip {
         height: 45px;
         padding: 10px;
         font: 14px sans-serif;
+        font-weight: bold;
         background: lightgrey;
         border: 0px;
         border-radius: 8px;
         pointer-events: none;
-}
-
-.extralight {
-    position: relative;
-    display: inline;
-    background-color: #333;
 }
 
 .highlighter {
@@ -106,7 +102,7 @@ div.tooltip {
 }
 .svg-container {
     display: inline-block;
-    position: relative;
+    position: absolute;
     width: 100%;
     padding-bottom: 100%;
     vertical-align: top;
@@ -145,4 +141,13 @@ div.tooltip {
     right: 0;
     width: 100%;
 }
+
+.paragraph {
+  position: fixed;
+  bottom: 90;
+  right: 100;
+}
+
+
+
 }
