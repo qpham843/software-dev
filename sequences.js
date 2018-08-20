@@ -377,11 +377,11 @@ var hText = document.querySelectorAll('.highlightertext');
 
 var addclass = 'color';
 var $cols = $('.highlighter').click(function(e) {
-    console.log("clicked");
+    var currCategory = $(this).attr("name");
     g.selectAll("path").style("opacity", 0);
-    console.log(this);
     $(this).toggleClass('color');
-    // $cols.removeClass('highlighter');
+    console.log(this);
+    $cols.removeClass('highlighter');
     // $(this).addClass(addclass);
 });
 
@@ -419,13 +419,6 @@ function resetVis() {
         .style("font-size", 50)
         .style("text-anchor", "middle")
         .html((100 + total))
-    // g.append("text")
-    //     .attr("class", "center-text")
-    //     .attr("x", 0)
-    //     .attr("y", 25)
-    //     .style("font-size", 18)
-    //     .style("text-anchor", "middle")
-    //     .html("Credibility")
     div.transition()
             .duration(200)
             .style("opacity", 0);
