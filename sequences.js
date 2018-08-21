@@ -423,8 +423,6 @@ var $cols = $('.highlighter').hover(function(e) {
     if (visibleArc == false) {
       visibleArc = true;
 
-
-
         //activates half opaque arcs
         d3.selectAll("path")
             .transition()
@@ -639,6 +637,19 @@ d3.selectAll("path").transition().each(function(d) {
                         }
                     })
                 visOn = true;
+
+            //autoscroll to section functionality
+//             jQuery.fn.autoscroll = function(selector) {  
+//   $('html, body').animate(
+//     { scrollTop: $(selector).offset().top },
+//     500
+//   );
+// }
+//
+// //Then to scroll to the class/area you wish to get to like this:
+// $('strawman').autoscroll();
+
+
             })
             .on("mousemove", function(){
                 if (visOn == true) {
