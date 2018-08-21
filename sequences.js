@@ -338,6 +338,7 @@ for (i = 0; i < sorted.length; i += 1) {
         if (numactive == 1) {
         } else if (numactive == 2) {
             if (newest == categoryName) {
+                console.log(categoryName);
                 continueString = "<" + midName + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
@@ -406,6 +407,64 @@ for (i = 0; i < sorted.length; i += 1) {
 //This section enables the textbox on hover in the article itself.
 var hText = document.querySelectorAll('.highlightertext');
 
+
+var visibleArc = false;
+var addclass = 'color';
+var $cols = $('.highlighter').hover(function(e) {
+    var currCategory = $(this).attr("name");
+    var info = textToD3Info(root.data.children, currCategory);
+    var highlightParent = root.data.children[info[1]];
+    var highlightPath = dataToPath.get(root.data.children[info[1]].children[info[2]]);
+
+    //allows for arcs to disappear
+    if (visibleArc == false) {
+      visibleArc = true;
+
+      //activates half opaque arcs
+      for (var i = 0; i < highlightParent.children.length; i += 1) {
+          d3.select(dataToPath.get(highlightParent.children[i]))
+              .transition()
+              .style("display", "block")
+              .style("opacity", 0.5)
+              .duration(100)
+      }
+      //activates the specific arc
+      d3.select(highlightPath)
+          .transition()
+          .style("display", "block")
+          .style("opacity", 1)
+          .duration(100)
+
+
+    } else {
+      //takes out all present visuals
+      visibleArc = false;
+      resetVis();
+    }
+
+    //changes color of text highlight
+    $(this).toggleClass('color');
+
+});
+
+function textToD3Info(d, childName) {
+  var parent;
+  var parentIndex = 0;
+  var childIndex;
+  for (var i = 0; i < d.length; i++) {
+    var curr = d[i];
+    childIndex = 0;
+    for (var j = 0; j < curr.children.length; j++) {
+      var currName = curr.children[j].name.replace(/\s/g, '');
+      if (currName == childName) {
+        parent = curr.name;
+        return [parent, i, j];
+        //returns parent name, parentIndex, childIndex
+      }
+    }
+  }
+}
+
 window.onmousemove = function (e) {
     var x = (e.clientX + 25) + 'px',
         y = (e.clientY + - 18) + 'px';
@@ -445,6 +504,7 @@ function resetVis() {
         })
     g.selectAll(".center-text")
         .style("display", "none")
+        666666
     sum = 0;
     g.append("text")
         .attr("class", "center-text")
@@ -453,14 +513,6 @@ function resetVis() {
         .style("font-size", 50)
         .style("text-anchor", "middle")
         .html((100 + total))
-
-    // g.append("text")
-    //     .attr("class", "center-text")
-    //     .attr("x", 0)
-    //     .attr("y", 25)
-    //     .style("font-size", 18)
-    //     .style("text-anchor", "middle")
-    //     .html("Credibility")
     div.transition()
             .duration(200)
             .style("opacity", 0);
