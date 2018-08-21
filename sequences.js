@@ -5,7 +5,7 @@ d3.text("loremipsum.txt", function(text) {
     document.getElementById("textArticle").innerHTML = text.toString();
 });*/
 
-
+/*
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
@@ -22,7 +22,7 @@ for (i = 0; i < coll.length; i++) {
       content.style.maxHeight = content.scrollHeight + "px";
     }
   });
-}
+}*/
 
 //This section parses the CSV file into a JSON.
 d3.csv("catsheet.csv", function(error, data) {
@@ -218,6 +218,7 @@ function createVisualization(article) {
 var dataToPath = new Map();
 var dataToParentPath = new Map();
 var PathToData = new Map();
+var nameToData = new Map();
 
 //This dictionary maps indices to strings.
 var indexToString = new Map();
@@ -244,6 +245,7 @@ var language = [];
                 dataToParentPath.set(d, curPath)
                 dataToPath.set(d.data, curPath);
                 PathToData.set(curPath, d);
+                nameToData.set(d.data.name.replace(/ /g,''), d)
                 if (d.data.children) {
                     for (var i = 0; i < d.data.children.length; i += 1) {
                         if (d.data.name == "Reasoning") {
@@ -281,6 +283,8 @@ var language = [];
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
+
+
 
 //This code adds in the highlights as needed.
 var unsorted = Array.from(indexToString.keys());
@@ -400,53 +404,62 @@ for (i = 0; i < sorted.length; i += 1) {
     paragraph = paragraph.substring(0, sorted[i] + indexOffset) + inputString + paragraph.substring(sorted[i] + indexOffset);
     document.getElementById("textArticle").innerHTML = paragraph;
     indexOffset += inputString.length;
-
 }
+
 
 //VISUALIZATION TEXTBOX
 //This section enables the textbox on hover in the article itself.
 var hText = document.querySelectorAll('.highlightertext');
 
-
 var visibleArc = false;
 var addclass = 'color';
 var $cols = $('.highlighter').hover(function(e) {
     var currCategory = $(this).attr("name");
-    var info = textToD3Info(root.data.children, currCategory);
-    var highlightParent = root.data.children[info[1]];
-    var highlightPath = dataToPath.get(root.data.children[info[1]].children[info[2]]);
+    var d = nameToData.get(currCategory);
+    var highlightParent = d.parent.data;
+    var highlightPath = dataToPath.get(d);
 
     //allows for arcs to disappear
     if (visibleArc == false) {
       visibleArc = true;
 
-      //activates half opaque arcs
-      for (var i = 0; i < highlightParent.children.length; i += 1) {
-          d3.select(dataToPath.get(highlightParent.children[i]))
-              .transition()
-              .style("display", "block")
-              .style("opacity", 0.5)
-              .duration(100)
-      }
-      //activates the specific arc
-      d3.select(highlightPath)
-          .transition()
-          .style("display", "block")
-          .style("opacity", 1)
-          .duration(100)
+        //activates half opaque arcs
+        d3.selectAll("path")
+            .transition()
+            .style("opacity", 0.5)
+            .duration(100)
 
+        for (var i = 0; i < highlightParent.children.length; i += 1) {
+            d3.select(dataToPath.get(highlightParent.children[i]))
+                .transition()
+                .style("display", "block")
+                .style("opacity", 0.5)
+                .duration(100)
+        }
 
+        d3.select(dataToParentPath.get(d.parent))
+                .transition()
+                .duration(300)
+                .attr('stroke-width',5)
+                .style("opacity", 1)
+
+        d3.select(dataToParentPath.get(d))
+                .transition()
+                .attr('stroke-width',5)
+                .style("opacity", 1)
+
+        this.style.backgroundColor = "yellow";
     } else {
       //takes out all present visuals
       visibleArc = false;
       resetVis();
+      this.style.backgroundColor = "white";
     }
-
     //changes color of text highlight
-    $(this).toggleClass('color');
-
 });
 
+/*
+//                                                                  NOTICE: This code is now unnecessary.
 function textToD3Info(d, childName) {
   var parent;
   var parentIndex = 0;
@@ -464,6 +477,7 @@ function textToD3Info(d, childName) {
     }
   }
 }
+*/
 
 window.onmousemove = function (e) {
     var x = (e.clientX + 25) + 'px',
@@ -487,6 +501,7 @@ function resetVis() {
         .transition()
         .delay(300)
         .duration(800)
+        .attr('stroke-width',2)
         .style("opacity", function(d) {
             if (d.data.children) {
             } else {
@@ -496,6 +511,7 @@ function resetVis() {
     d3.selectAll("path")
         .transition()
         .delay(1000)
+        .attr('stroke-width',2)
         .style("display", function(d) {
             if (d.data.children) {
             } else {
@@ -504,7 +520,6 @@ function resetVis() {
         })
     g.selectAll(".center-text")
         .style("display", "none")
-        666666
     sum = 0;
     g.append("text")
         .attr("class", "center-text")
