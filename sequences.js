@@ -470,21 +470,22 @@ var $cols = $('.highlighter').hover(function(e) {
                     .style("font-size", 40)
                     .style("text-anchor", "middle")
                     .html(sum)
-
-                                                //PROTOTYPE CODE
-                /*div.transition()
+                                                        //PROTOTYPE CODE
+                /*
+                div.transition()
                     .duration(200)
                     .style("opacity", .9);
                 div.html(d.data.name)
-                    .style("left", 1350 + "px")
-                    .style("top", 100 + "px")
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px")
                     .style("width", function() {
                     if (d.data.name.length < 18) {
                         return "80px";
                     } else {
                         return "180px";
                     }
-                    })*/
+                    })
+                */
                 this.style.backgroundColor = colorFinder(d);
             }
         } else {

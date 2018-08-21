@@ -58,7 +58,7 @@ p {
 
 div.tooltip {
         display: inline-block;
-        position: fixed;
+        position: absolute;
         text-align: center;
         width: 80px;
         height: 45px;
