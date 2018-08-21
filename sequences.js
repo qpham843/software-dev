@@ -6,6 +6,23 @@ d3.text("loremipsum.txt", function(text) {
 });*/
 
 
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
 
 //This section parses the CSV file into a JSON.
 d3.csv("catsheet.csv", function(error, data) {
@@ -281,7 +298,6 @@ var hmidName = "";
 var newest = "transparent";
 var newName = "";
 var hnewName = "";
-console.log(sorted)
 for (i = 0; i < sorted.length; i += 1) {
     categoryName = indexToString.get(sorted[i])[1];
     if (indexToString.get(sorted[i])[0] == "o") {
@@ -457,7 +473,6 @@ d3.selectAll("path").transition().each(function(d) {
     if (!d.data.children) {
         this.style.display = "none";
     } else if (d.data.name == "CATEGORIES") {
-        console.log("Something")
         this.style.display = "none";
     }
 })
@@ -556,3 +571,5 @@ d3.selectAll("path").transition().each(function(d) {
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
 }
+
+
