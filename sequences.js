@@ -245,7 +245,7 @@ var language = [];
                 dataToParentPath.set(d, curPath)
                 dataToPath.set(d.data, curPath);
                 PathToData.set(curPath, d);
-                nameToData.set(d.data.name.replace(/ /g,''), d)
+                nameToData.set(d.data.name, d)
                 if (d.data.children) {
                     for (var i = 0; i < d.data.children.length; i += 1) {
                         if (d.data.name == "Reasoning") {
@@ -307,28 +307,28 @@ for (i = 0; i < sorted.length; i += 1) {
     if (indexToString.get(sorted[i])[0] == "o") {
         oldest = middle;
         holdName = hmidName;
-        oldName = midName.replace(/ /g,'');
+        oldName = midName;
         middle = newest;
         hmidName = hnewName;
-        midName = newName.replace(/ /g,'');
+        midName = newName;
         newest = categoryName;
         hnewName = indexToString.get(sorted[i])[2];
         newName = indexToString.get(sorted[i])[2].replace(/ /g,'');
         var endString = "";
         if (numactive == 0) {
-            inputString = "<" + newName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + newName + " name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         newest + " 0%, transparent 20%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             numactive = 1;
         } else if (numactive == 1) {
-            inputString = "<" + midName + newName + " name='" + midName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + midName + newName + " name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         middle + " 0%, transparent 20%, transparent 35%, " +
                         newest + " 40%, transparent 55%, transparent 70%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
         } else {
-            inputString = "<" + oldName + midName + newName + " name='" + oldName + midName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + oldName + midName + newName + " name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
                         newest + " 75%, transparent 90%)" +
@@ -342,28 +342,27 @@ for (i = 0; i < sorted.length; i += 1) {
         if (numactive == 1) {
         } else if (numactive == 2) {
             if (newest == categoryName) {
-                console.log(categoryName);
-                continueString = "<" + midName + " name='" + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + " name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + newName + " name='" + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + newName + " name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     newest + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
         } else {
             if (newest == categoryName) {
-                continueString = "<" + oldName + midName + " name='" + oldName + midName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + midName + " name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + oldName + newName + " name='" + oldName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + newName + " name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else {
-                continueString = "<" + midName + newName + " name='" + midName + newName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + newName + " name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
@@ -412,45 +411,57 @@ for (i = 0; i < sorted.length; i += 1) {
 var hText = document.querySelectorAll('.highlightertext');
 
 var visibleArc = false;
-var addclass = 'color';
 var $cols = $('.highlighter').hover(function(e) {
     var currCategory = $(this).attr("name");
     var d = nameToData.get(currCategory);
-    var highlightParent = d.parent.data;
-    var highlightPath = dataToPath.get(d);
+    var numCategories = 0;
+    var dArray = [];
 
-    //allows for arcs to disappear
-    if (visibleArc == false) {
-      visibleArc = true;
+    //EXPAND FOR DOUBLE CASE HERE
+    d3.selectAll("path")
+        .transition()
+        .style("opacity", 0.5)
+        .duration(100)
 
-        //activates half opaque arcs
-        d3.selectAll("path")
-            .transition()
-            .style("opacity", 0.5)
-            .duration(100)
-
-        for (var i = 0; i < highlightParent.children.length; i += 1) {
-            d3.select(dataToPath.get(highlightParent.children[i]))
-                .transition()
-                .style("display", "block")
-                .style("opacity", 0.5)
-                .duration(100)
+    for (var j = 0; j < Array.from(nameToData.keys()).length; j += 1) {
+        if (currCategory.includes(Array.from(nameToData.keys())[j])) {
+            dArray.push(nameToData.get(Array.from(nameToData.keys())[j]));
+            numCategories += 1;
         }
+    }
+        //allows for arcs to disappear
+    if (visibleArc == false) {
+        visibleArc = true;
+        for (var k = 0; k < numCategories; k += 1) {
+                d = dArray[k];
+                var highlightParent = d.parent.data;
+                var highlightPath = dataToPath.get(d);
 
-        d3.select(dataToParentPath.get(d.parent))
-                .transition()
-                .duration(100)
-                .attr('stroke-width',5)
-                .style("opacity", 1)
+            //activates half opaque arcs
+                for (var i = 0; i < highlightParent.children.length; i += 1) {
+                    d3.select(dataToPath.get(highlightParent.children[i]))
+                        .transition()
+                        .style("display", "block")
+                        .style("opacity", 0.5)
+                        .duration(100)
+                }
+                d3.select(dataToParentPath.get(d.parent))
+                    .transition()
+                    .duration(300)
+                    .attr('stroke-width',5)
+                    .style("opacity", 1)
 
+                d3.select(dataToParentPath.get(d))
+                    .transition()
+                    .attr('stroke-width',5)
+                    .style("opacity", 1)
 
-        //controls center text
-        g.selectAll(".center-text")
-                .style("display", "none")
-        d3.select(dataToParentPath.get(d))
-                .transition()
-                .attr('stroke-width',5)
-                .style("opacity", 1)
+                g.selectAll(".center-text")
+                    .style("display", "none")
+                d3.select(dataToParentPath.get(d))
+                    .transition()
+                    .attr('stroke-width',5)
+                    .style("opacity", 1)
                 checkSum(d)
                 g.append("text")
                     .attr("class", "center-text")
@@ -459,6 +470,8 @@ var $cols = $('.highlighter').hover(function(e) {
                     .style("font-size", 40)
                     .style("text-anchor", "middle")
                     .html(sum)
+                                                        //PROTOTYPE CODE
+                /*
                 div.transition()
                     .duration(200)
                     .style("opacity", .9);
@@ -466,42 +479,22 @@ var $cols = $('.highlighter').hover(function(e) {
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px")
                     .style("width", function() {
-                        if (d.data.name.length < 18) {
-                            return "80px";
-                        } else {
-                            return "180px";
-                        }
+                    if (d.data.name.length < 18) {
+                        return "80px";
+                    } else {
+                        return "180px";
+                    }
                     })
-        this.style.backgroundColor = colorFinder(d);
-    } else {
-      //takes out all present visuals
-      visibleArc = false;
-      resetVis();
-      this.style.backgroundColor = "white";
-    }
-    //changes color of text highlight
+                */
+                this.style.backgroundColor = colorFinder(d);
+            }
+        } else {
+        //takes out all present visuals
+            visibleArc = false;
+            resetVis();
+            this.style.backgroundColor = "white";
+        }
 });
-
-/*
-//                                                                  NOTICE: This code is now unnecessary.
-function textToD3Info(d, childName) {
-  var parent;
-  var parentIndex = 0;
-  var childIndex;
-  for (var i = 0; i < d.length; i++) {
-    var curr = d[i];
-    childIndex = 0;
-    for (var j = 0; j < curr.children.length; j++) {
-      var currName = curr.children[j].name.replace(/\s/g, '');
-      if (currName == childName) {
-        parent = curr.name;
-        return [parent, i, j];
-        //returns parent name, parentIndex, childIndex
-      }
-    }
-  }
-}
-*/
 
 window.onmousemove = function (e) {
     var x = (e.clientX + 25) + 'px',
@@ -608,7 +601,7 @@ d3.selectAll("path").transition().each(function(d) {
       	        if (d.height == 0) {
       	            var allelems = document.querySelectorAll("[name]");
                     for (var i = 0; i < allelems.length; i += 1) {
-                        if (allelems[i].nodeName.includes(d.data.name.replace(/ /g,'').toUpperCase())) {
+                        if (allelems[i].attributes.name.nodeValue.includes(d.data.name)) {
                             allelems[i].style.backgroundColor = colorFinder(d);
                         }
                     }
@@ -639,7 +632,7 @@ d3.selectAll("path").transition().each(function(d) {
                 visOn = true;
 
             //autoscroll to section functionality
-//             jQuery.fn.autoscroll = function(selector) {  
+//             jQuery.fn.autoscroll = function(selector) {
 //   $('html, body').animate(
 //     { scrollTop: $(selector).offset().top },
 //     500
