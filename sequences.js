@@ -423,6 +423,8 @@ var $cols = $('.highlighter').hover(function(e) {
     if (visibleArc == false) {
       visibleArc = true;
 
+
+
         //activates half opaque arcs
         d3.selectAll("path")
             .transition()
@@ -439,16 +441,40 @@ var $cols = $('.highlighter').hover(function(e) {
 
         d3.select(dataToParentPath.get(d.parent))
                 .transition()
-                .duration(300)
+                .duration(100)
                 .attr('stroke-width',5)
                 .style("opacity", 1)
 
+
+        //controls center text
+        g.selectAll(".center-text")
+                .style("display", "none")
         d3.select(dataToParentPath.get(d))
                 .transition()
                 .attr('stroke-width',5)
                 .style("opacity", 1)
-
-        this.style.backgroundColor = "yellow";
+                checkSum(d)
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", -5)
+                    .attr("y", 5)
+                    .style("font-size", 40)
+                    .style("text-anchor", "middle")
+                    .html(sum)
+                div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                div.html(d.data.name)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px")
+                    .style("width", function() {
+                        if (d.data.name.length < 18) {
+                            return "80px";
+                        } else {
+                            return "180px";
+                        }
+                    })
+        this.style.backgroundColor = colorFinder(d);
     } else {
       //takes out all present visuals
       visibleArc = false;
@@ -638,5 +664,3 @@ d3.selectAll("path").transition().each(function(d) {
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
 }
-
-
