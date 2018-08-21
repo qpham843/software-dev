@@ -445,7 +445,6 @@ var $cols = $('.highlighter').hover(function(e) {
                         .style("opacity", 0.5)
                         .duration(100)
                 }
-
                 d3.select(dataToParentPath.get(d.parent))
                     .transition()
                     .duration(300)
@@ -457,7 +456,36 @@ var $cols = $('.highlighter').hover(function(e) {
                     .attr('stroke-width',5)
                     .style("opacity", 1)
 
-                this.style.backgroundColor = "yellow";
+                g.selectAll(".center-text")
+                    .style("display", "none")
+                d3.select(dataToParentPath.get(d))
+                    .transition()
+                    .attr('stroke-width',5)
+                    .style("opacity", 1)
+                checkSum(d)
+                g.append("text")
+                    .attr("class", "center-text")
+                    .attr("x", -5)
+                    .attr("y", 5)
+                    .style("font-size", 40)
+                    .style("text-anchor", "middle")
+                    .html(sum)
+
+                                                //PROTOTYPE CODE
+                /*div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                div.html(d.data.name)
+                    .style("left", 1350 + "px")
+                    .style("top", 100 + "px")
+                    .style("width", function() {
+                    if (d.data.name.length < 18) {
+                        return "80px";
+                    } else {
+                        return "180px";
+                    }
+                    })*/
+                this.style.backgroundColor = colorFinder(d);
             }
         } else {
         //takes out all present visuals
@@ -465,7 +493,6 @@ var $cols = $('.highlighter').hover(function(e) {
             resetVis();
             this.style.backgroundColor = "white";
         }
-    //changes color of text highlight
 });
 
 window.onmousemove = function (e) {
@@ -627,5 +654,3 @@ d3.selectAll("path").transition().each(function(d) {
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
 }
-
-
