@@ -156,7 +156,7 @@ div.tooltip {
     font-size: 24px;
     font-weight: bold;
 }
-.categories {
+#categories {
     margin-top: 100px;
 }
 
@@ -165,23 +165,23 @@ div.tooltip {
     color: white;
     cursor: pointer;
     padding: 18px;
-    width: 90%;
-    border: none;
+    width: 100%;
+    border-style: ridge;
     text-align: left;
     outline: none;
     font-size: 15px;
 }
 
-.collapsible:after {
-    content: '\02795'; /* Unicode character for "plus" sign (+) */
-    font-size: 13px;
+.jumpable {
+    background-color: #777;
     color: white;
-    float: right;
-    margin-left: 5px;
-}
-
-.active:after {
-    content: "\2796"; /* Unicode character for "minus" sign (-) */
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border-style: inset;
+    text-align: left;
+    outline: none;
+    font-size: 12px;
 }
 
 .active, .collapsible:hover {
@@ -190,11 +190,9 @@ div.tooltip {
 
 .content {
     padding: 0 18px;
-    max-height: 0;
-    width: 90%;
+    display: none;
     overflow: hidden;
-    transition: max-height 0.2s;
-    background-color: #C0C0C0;
+    background-color: #f1f1f1;
 }
 
 
