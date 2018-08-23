@@ -1,6 +1,6 @@
 Article ID,Credibility Indicator ID ,Credibilty Indicator Category,Credibility Indicator Name,Points,Indices of Label in Article,Journalist or Quoted Source,Quoted Source ID,Start,End
 1,R2,Reasoning,False Dilemma,-2,,,,0,19
-1,L2,Language,Snarky tone,-2,,,,10,25
+1,L2,Language,Snarky tone,-3,,,,10,25
 1,R4,Reasoning,Begging the question,-3,,,,34,50
 1,R1,Reasoning,Straw Man,-1,,,,66,80
 1,R6,Reasoning,Selection Effects,-2,,[ignore this column for now],,95,110
@@ -10,13 +10,13 @@ Article ID,Credibility Indicator ID ,Credibilty Indicator Category,Credibility I
 1,E3,Evidence,Low number statistics,-2,,,[ignore this column for now],320,400
 1,E1,Evidence,Confusing Correlation and Causation,-3,,,,450,487
 1,E2,Evidence,Ignoring selection effects,-1,,,,500,560
-1,L2,Language,Snarky tone,-2,,,,600,700
-1,L3,Language,Outraged tone,-2,,,,900,1100
+1,L2,Language,Snarky tone,-1,,,,600,700
+1,L3,Language,Outraged tone,-4,,,,900,1100
 1,L1,Language,False expertise,-3,,,,1200,1400
-1,R4,Reasoning,Begging the question,-3,,,,2000,2300
-1,E4,Evidence,Appropriately calibrated confidence,2,,,,3000,4000
-1,L2,Language,Snarky tone,-2,,,,3400,3800
-1,R4,Reasoning,Begging the question,-3,,,,3300,4100
+1,R4,Reasoning,Begging the question,-1,,,,2000,2300
+1,E4,Evidence,Appropriately calibrated confidence,3,,,,3000,4000
+1,L2,Language,Snarky tone,-5,,,,3400,3800
+1,R4,Reasoning,Begging the question,-4,,,,3300,4100
 2,R3,Reasoning,Appeal to popularity,-2,,,,2,58
 2,L2,Language,Snarky tone,-1,,,,44,201
 2,R1,Reasoning,Straw Man,-3,,,,55,354

@@ -173,7 +173,7 @@ function createCategories(d) {
                 if (end > start + 50) {end = start + 50}
                 var errorString = "'" + paragraph.substring(start, end) + "'";
                 //Need to add in an href for the sake of jumping.
-                subcatHTML = subcatHTML + "<button id='" + subcatId + start + "' class='jumpable'>" + "[" + subcatData.size + "]  " + errorString + "</button>";
+                subcatHTML = subcatHTML + "<button id='" + subcatId + start + "' class='jumpable'>" + "[" + subcatData.points[k] + "]  " + errorString + "</button>";
                 document.getElementById(subcatId).innerHTML = subcatHTML;
             }
         }
