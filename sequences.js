@@ -41,7 +41,7 @@ function buildHierarchy(data) {
     var cin = root["children"][categoryIndex]["children"];
     if (!checkIn(cin, data[i][credName], "name")) { //initializes credibility indicator name and score
       //only adds category if it exists
-      cin.push({"name": data[i][credName], "size": 0, "startIndices": [], "endIndices": []});
+      cin.push({"name": data[i][credName], "size": 0, "startIndices": [], "endIndices": [], "points": []});
     }
     var cinIndex = findIndex(cin,data[i],  credName);
 
@@ -49,9 +49,10 @@ function buildHierarchy(data) {
     cin[cinIndex]["size"] += parseInt(data[i][pts]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
     cin[cinIndex]["startIndices"].push(parseInt(data[i]["Start"]));
     cin[cinIndex]["endIndices"].push(parseInt(data[i]["End"]));
+    cin[cinIndex]["points"].push(parseInt(data[i][pts]));
 
   }
-
+  console.log(jsons);
   return jsons; //object of json files for each article
 };
 
@@ -676,6 +677,19 @@ d3.selectAll("path").transition().each(function(d) {
                         }
                     })
                 visOn = true;
+
+            //autoscroll to section functionality
+//             jQuery.fn.autoscroll = function(selector) {
+//   $('html, body').animate(
+//     { scrollTop: $(selector).offset().top },
+//     500
+//   );
+// }
+
+//Then to scroll to the class/area you wish to get to like this:
+$('beggingthequestion').autoscroll();
+
+
             })
             .on("mousemove", function(){
                 if (visOn == true) {
