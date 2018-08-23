@@ -5,25 +5,6 @@ d3.text("loremipsum.txt", function(text) {
     document.getElementById("textArticle").innerHTML = text.toString();
 });*/
 
-/*
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    }
-  });
-}*/
-
 //This section parses the CSV file into a JSON.
 d3.csv("catsheet.csv", function(error, data) {
   if (error) throw error;
@@ -146,6 +127,53 @@ function createVisualization(article) {
 
     // Put it all together
 
+
+//CATEGORIES SECTION
+//This function creates the entirety of the collapsible list.
+function createCategories(d) {
+    for (var i = 0; i < d.data.children.length; i += 1) {
+        var curHTML = document.getElementById("categories").innerHTML;
+        var catData = d.data.children[i];
+        var catId = catData.name.replace(/ /g,'');
+        curHTML = curHTML + "<button class='collapsible'>" + catData.name + "</button>" + "<div id='" + catId + "' class='content'></div>";
+        document.getElementById("categories").innerHTML = curHTML;
+        document.getElementById(catId).style.backgroundColor = colorFinder(nameToData.get(catData.name));
+        for (var j = 0; j < catData.children.length; j += 1) {
+            var catHTML = document.getElementById(catId).innerHTML;
+            var subcatData = catData.children[j];
+            var subcatId = catData.children[j].name.replace(/ /g, '');
+            catHTML = catHTML + "<button class='collapsible'>" + subcatData.name + "</button>" + "<div id='" + subcatId + "' class='content'></div>";
+            document.getElementById(catId).innerHTML = catHTML;
+            document.getElementById(subcatId).style.backgroundColor = colorFinder(nameToData.get(subcatData.name));
+            for (var k = 0; k < subcatData.startIndices.length; k += 1) {
+                var subcatHTML = document.getElementById(subcatId).innerHTML;
+                var paragraph = document.getElementById("textArticle").innerHTML;
+
+                //Determine the 'clean' start and end of the text.
+                var sind = subcatData.startIndices[k];
+                var start = (sind + 0);
+                while (paragraph[start] != " " && paragraph[start] != ".") {
+                    if (start == 0) {break;}
+                        start -= 1;
+                    }
+                if (start != 0) {start += 1;}
+
+                var eind = subcatData.endIndices[k];
+                var end = (eind + 0);
+                while (paragraph[end] != " " && paragraph[end] != "." && paragraph[end] != ",") {
+                    if (end == paragraph.length) {break;}
+                    end += 1;
+                }
+
+                if (end > start + 50) {end = start + 50}
+                var errorString = "'" + paragraph.substring(start, end) + "'";
+                //Need to add in an href for the sake of jumping.
+                subcatHTML = subcatHTML + "<button id='" + subcatId + sind + eind + "' class='jumpable'>" + "[" + subcatData.size + "]  " + errorString + "</button>";
+                document.getElementById(subcatId).innerHTML = subcatHTML;
+            }
+        }
+    }
+}
 
 
 //COLORING SECTION
@@ -283,7 +311,7 @@ var language = [];
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
-
+createCategories(nameToData.get("CATEGORIES"))
 
 
 //This code adds in the highlights as needed.
@@ -315,6 +343,8 @@ for (i = 0; i < sorted.length; i += 1) {
         hnewName = indexToString.get(sorted[i])[2];
         newName = indexToString.get(sorted[i])[2].replace(/ /g,'');
         var endString = "";
+
+        //Need to add in an id for the sake of jumping.
         if (numactive == 0) {
             inputString = "<" + newName + " name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         newest + " 0%, transparent 20%)" +
@@ -668,3 +698,20 @@ $('beggingthequestion').autoscroll();
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
 }
+
+$('document').ready(function(){
+    var coll = document.getElementsByClassName('collapsible');
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+   }
+});
