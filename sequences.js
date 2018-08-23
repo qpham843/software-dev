@@ -157,6 +157,8 @@ function createCategories(d) {
                         start -= 1;
                     }
                 if (start != 0) {start += 1;}
+                if (start in dindexToString.values()) {start += 1};
+                dindexToString.set(start, ["o", d.data.name]);
 
                 var eind = subcatData.endIndices[k];
                 var end = (eind + 0);
@@ -164,11 +166,13 @@ function createCategories(d) {
                     if (end == paragraph.length) {break;}
                     end += 1;
                 }
+                if (end in dindexToString.values()) {end -= 1};
+                dindexToString.set(end, ["c", d.data.name]);
 
                 if (end > start + 50) {end = start + 50}
                 var errorString = "'" + paragraph.substring(start, end) + "'";
                 //Need to add in an href for the sake of jumping.
-                subcatHTML = subcatHTML + "<button id='" + subcatId + sind + eind + "' class='jumpable'>" + "[" + subcatData.size + "]  " + errorString + "</button>";
+                subcatHTML = subcatHTML + "<button id='" + subcatId + start + "' class='jumpable'>" + "[" + subcatData.size + "]  " + errorString + "</button>";
                 document.getElementById(subcatId).innerHTML = subcatHTML;
             }
         }
@@ -250,6 +254,7 @@ var nameToData = new Map();
 
 //This dictionary maps indices to strings.
 var indexToString = new Map();
+var dindexToString = new Map();
 
 //These arrays map categories to the names of their children.
 var reasoning = [];
@@ -346,19 +351,19 @@ for (i = 0; i < sorted.length; i += 1) {
 
         //Need to add in an id for the sake of jumping.
         if (numactive == 0) {
-            inputString = "<" + newName + " name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + newName + " id='cat' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         newest + " 0%, transparent 20%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             numactive = 1;
         } else if (numactive == 1) {
-            inputString = "<" + midName + newName + " name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + midName + newName + " id='cat' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         middle + " 0%, transparent 20%, transparent 35%, " +
                         newest + " 40%, transparent 55%, transparent 70%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
         } else {
-            inputString = "<" + oldName + midName + newName + " name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + oldName + midName + newName + " id='cat' name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
                         newest + " 75%, transparent 90%)" +
@@ -372,27 +377,27 @@ for (i = 0; i < sorted.length; i += 1) {
         if (numactive == 1) {
         } else if (numactive == 2) {
             if (newest == categoryName) {
-                continueString = "<" + midName + " name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + " id='cat' name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + newName + " name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + newName + " id='cat' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     newest + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
         } else {
             if (newest == categoryName) {
-                continueString = "<" + oldName + midName + " name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + midName + " id='cat' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + oldName + newName + " name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + newName + " id='cat' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else {
-                continueString = "<" + midName + newName + " name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + newName + " id='cat' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
