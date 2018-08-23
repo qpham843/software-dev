@@ -638,9 +638,9 @@ d3.selectAll("path").transition().each(function(d) {
 //     500
 //   );
 // }
-//
-// //Then to scroll to the class/area you wish to get to like this:
-// $('strawman').autoscroll();
+
+//Then to scroll to the class/area you wish to get to like this:
+$('beggingthequestion').autoscroll();
 
 
             })
