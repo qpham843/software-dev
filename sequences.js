@@ -452,7 +452,6 @@ var $cols = $('.highlighter').hover(function(e) {
     var numCategories = 0;
     var dArray = [];
 
-    //EXPAND FOR DOUBLE CASE HERE
     d3.selectAll("path")
         .transition()
         .style("opacity", 0.5)
@@ -506,29 +505,37 @@ var $cols = $('.highlighter').hover(function(e) {
                     .style("text-anchor", "middle")
                     .html(sum)
                                                         //PROTOTYPE CODE
-                /*
-                div.transition()
+                psuedobox.transition()
                     .duration(200)
                     .style("opacity", .9);
-                div.html(d.data.name)
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px")
+                psuedobox.html(currCategory)
+                    .style("left", 1310 + "px")
+                    .style("top", 100 + "px")
                     .style("width", function() {
-                    if (d.data.name.length < 18) {
-                        return "80px";
-                    } else {
-                        return "180px";
-                    }
+                        if (currCategory.length < 18) {
+                            return "80px";
+                        } else if (currCategory.length < 35) {
+                            return "180px";
+                        } else {
+                            return "250px";
+                        }
                     })
-                */
-                this.style.backgroundColor = colorFinder(d);
-            }
-        } else {
-        //takes out all present visuals
-            visibleArc = false;
-            resetVis();
-            this.style.backgroundColor = "white";
+                    .style("height", function() {
+                        if (currCategory.length > 50) {
+                            return "60px";
+                        }
+                    })
+            this.style.backgroundColor = colorFinder(d);
         }
+    } else {
+    //takes out all present visuals
+        visibleArc = false;
+        resetVis();
+        psuedobox.transition()
+           .duration(200)
+           .style("opacity", 0);
+        this.style.backgroundColor = "white";
+    }
 });
 
 window.onmousemove = function (e) {
@@ -542,6 +549,10 @@ window.onmousemove = function (e) {
 //This section enables the Floating Textbox for the visualization.
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
+    .style("opacity", 0);
+
+var psuedobox = d3.select("body").append("div")
+    .attr("class", "psuedobox")
     .style("opacity", 0);
 
 

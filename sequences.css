@@ -71,6 +71,23 @@ div.tooltip {
         pointer-events: none;
 }
 
+div.psuedobox {
+        display: inline-block;
+        position: fixed;
+        left: 1350px;
+        top: 100px;
+        text-align: center;
+        width: 80px;
+        height: 45px;
+        padding: 10px;
+        font: 14px sans-serif;
+        font-weight: bold;
+        background: lightgrey;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+}
+
 .highlighter {
     position: relative;
     display: inline;
