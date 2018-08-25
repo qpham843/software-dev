@@ -136,14 +136,15 @@ function createCategories(d) {
         var curHTML = document.getElementById("categories").innerHTML;
         var catData = d.data.children[i];
         var catId = catData.name.replace(/ /g,'');
-        curHTML = curHTML + "<button class='collapsible'>" + catData.name + "</button>" + "<div id='" + catId + "' class='content'></div>";
+        curHTML = curHTML + "<div class='collapsible'>" + catData.name + "</div>" + "<div id='" + catId + "' class='content'></div>";
         document.getElementById("categories").innerHTML = curHTML;
         document.getElementById(catId).style.backgroundColor = colorFinder(nameToData.get(catData.name));
         for (var j = 0; j < catData.children.length; j += 1) {
             var catHTML = document.getElementById(catId).innerHTML;
             var subcatData = catData.children[j];
             var subcatId = catData.children[j].name.replace(/ /g, '');
-            catHTML = catHTML + "<button class='collapsible'>" + subcatData.name + "</button>" + "<div id='" + subcatId + "' class='content'></div>";
+            //<input type='checkbox' id='c" + j + "' class='check'/>
+            catHTML = catHTML + "<div id='" + subcatData.name + "' class='collapsible'>" + subcatData.name + " </div>" + "<div id='" + subcatId + "' class='content'></div>";
             document.getElementById(catId).innerHTML = catHTML;
             document.getElementById(subcatId).style.backgroundColor = colorFinder(nameToData.get(subcatData.name));
             for (var k = 0; k < subcatData.startIndices.length; k += 1) {
@@ -173,7 +174,7 @@ function createCategories(d) {
                 if (end > start + 50) {end = start + 50}
                 var errorString = "'" + paragraph.substring(start, end) + "'";
                 //Need to add in an href for the sake of jumping.
-                subcatHTML = subcatHTML + "<button id='" + subcatId + start + "' class='jumpable'>" + "[" + subcatData.points[k] + "]  " + errorString + "</button>";
+                subcatHTML = subcatHTML + "<div><a href='#" + subcatId.replace(/ /g,'') + start + "' class='jumpable'>" + "[" + subcatData.points[k] + "]  " + errorString + "</a></div>";
                 document.getElementById(subcatId).innerHTML = subcatHTML;
             }
         }
@@ -352,19 +353,19 @@ for (i = 0; i < sorted.length; i += 1) {
 
         //Need to add in an id for the sake of jumping.
         if (numactive == 0) {
-            inputString = "<" + newName + " id='cat' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + newName + " id='" + newName + sorted[i] + "' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         newest + " 0%, transparent 20%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             numactive = 1;
         } else if (numactive == 1) {
-            inputString = "<" + midName + newName + " id='cat' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + midName + newName + " id='" + newName + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         middle + " 0%, transparent 20%, transparent 35%, " +
                         newest + " 40%, transparent 55%, transparent 70%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
         } else {
-            inputString = "<" + oldName + midName + newName + " id='cat' name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
                         newest + " 75%, transparent 90%)" +
@@ -378,27 +379,27 @@ for (i = 0; i < sorted.length; i += 1) {
         if (numactive == 1) {
         } else if (numactive == 2) {
             if (newest == categoryName) {
-                continueString = "<" + midName + " id='cat' name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + " id='" + newName + sorted[i] + "' name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + newName + " id='cat' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + newName + " id='" + newName + sorted[i] + "' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     newest + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
         } else {
             if (newest == categoryName) {
-                continueString = "<" + oldName + midName + " id='cat' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + midName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + oldName + newName + " id='cat' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else {
-                continueString = "<" + midName + newName + " id='cat' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + midName + newName + " id='" + newName + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
@@ -687,9 +688,7 @@ d3.selectAll("path").transition().each(function(d) {
 // }
 
 //Then to scroll to the class/area you wish to get to like this:
-$('beggingthequestion').autoscroll();
-
-
+//$('beggingthequestion').autoscroll();
             })
             .on("mousemove", function(){
                 if (visOn == true) {
@@ -714,21 +713,36 @@ $('beggingthequestion').autoscroll();
             .style('stroke', 'white')
             .attr('stroke-width', 2)
             .style("fill", colorFinder);
-}
 
-$('document').ready(function(){
-    var coll = document.getElementsByClassName('collapsible');
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
+var coll = document.getElementsByClassName('collapsible');
+var i;
+for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        /*var checkElem = document.getElementById(this.innerHTML.substring(27, 29));
+        if (checkElem) {
+            if (checkElem.checked) {
+                var allelems = document.querySelectorAll("[name]");
+                for (var i = 0; i < allelems.length; i += 1) {
+                    if (allelems[i].attributes.name.nodeValue.includes(this.id)) {
+                        allelems[i].style.backgroundColor = d3.rgb(237, 134, 88);
+                    }
+                }
             } else {
-                content.style.display = "block";
+                var allelems = document.querySelectorAll("[name]");
+                for (var i = 0; i < allelems.length; i += 1) {
+                    if (allelems[i].attributes.name.nodeValue.includes(this.id)) {
+                        allelems[i].style.backgroundColor = d3.rgb(255,255,255);
+                    }
+                }
             }
-        });
+        }*/
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    });
    }
-});
+}

@@ -165,9 +165,6 @@ div.psuedobox {
   right: 80;
 }
 
-
-
-
 .dropTitle {
     margin-left: 10px;
     font-size: 24px;
@@ -175,6 +172,7 @@ div.psuedobox {
 }
 #categories {
     margin-top: 100px;
+    width: 100%;
 }
 
 .collapsible {
@@ -189,16 +187,23 @@ div.psuedobox {
     font-size: 15px;
 }
 
+.check {
+    vertical-align: -20%;
+    zoom: 1.5;
+}
+
 .jumpable {
-    background-color: #777;
-    color: white;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border-style: inset;
-    text-align: left;
-    outline: none;
-    font-size: 12px;
+    background-color: #696969;
+        color: white;
+        padding: 18px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+}
+
+a:hover {
+    background-color: #4d4d4d;
+    color: white !important;
 }
 
 .active, .collapsible:hover {
