@@ -52,7 +52,6 @@ function buildHierarchy(data) {
     cin[cinIndex]["points"].push(parseInt(data[i][pts]));
 
   }
-  console.log(jsons);
   return jsons; //object of json files for each article
 };
 
@@ -180,7 +179,6 @@ function createCategories(d) {
         }
     }
 }
-
 
 //COLORING SECTION
 //This function determines the color of a category based on its parent, or name.
@@ -324,8 +322,8 @@ var language = [];
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
-createCategories(nameToData.get("CATEGORIES"))
 
+createCategories(nameToData.get("CATEGORIES"))
 
 //This code adds in the highlights as needed.
 var unsorted = Array.from(indexToString.keys());
@@ -438,7 +436,6 @@ for (i = 0; i < sorted.length; i += 1) {
                                     oldest + " 40%, transparent 55%, transparent 70%, " +
                                     newest + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                console.log(continueString)
             } else if (oldest == categoryName) {
                 continueString = "<" + ancName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     ancient + " 0%, transparent 20%, transparent 35%, " +
@@ -504,7 +501,6 @@ for (i = 0; i < sorted.length; i += 1) {
     document.getElementById("textArticle").innerHTML = paragraph;
     indexOffset += inputString.length;
 }
-
 
 //VISUALIZATION TEXTBOX
 //This section enables the textbox on hover in the article itself.
@@ -574,8 +570,8 @@ var $cols = $('.highlighter').hover(function(e) {
                     .duration(200)
                     .style("opacity", .9);
                 psuedobox.html(currCategory)
-                    .style("left", 1310 + "px")
-                    .style("top", 100 + "px")
+                    .style("left", 80 + "%")
+                    .style("top", 30 + "%")
                     .style("width", function() {
                         if (currCategory.length < 18) {
                             return "90px";
