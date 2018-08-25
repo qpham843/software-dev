@@ -173,7 +173,7 @@ function createCategories(d) {
                 if (end > start + 50) {end = start + 50}
                 var errorString = "'" + paragraph.substring(start, end) + "'";
                 //Need to add in an href for the sake of jumping.
-                subcatHTML = subcatHTML + "<div><a href='#" + subcatId.replace(/ /g,'') + start + "' class='jumpable'>" + "[" + subcatData.points[k] + "]  " + errorString + "</a></div>";
+                subcatHTML = subcatHTML + "<a class='jumpable' href='#" + subcatId.replace(/ /g,'')+ start + "'>" + "[" + subcatData.points[k] + "]  " + errorString + "</a>";
                 document.getElementById(subcatId).innerHTML = subcatHTML;
             }
         }
@@ -322,8 +322,7 @@ var language = [];
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
-
-createCategories(nameToData.get("CATEGORIES"))
+createCategories(nameToData.get("CATEGORIES"));
 
 //This code adds in the highlights as needed.
 var unsorted = Array.from(indexToString.keys());
@@ -737,22 +736,11 @@ d3.selectAll("path").transition().each(function(d) {
                         }
                     })
                 visOn = true;
-            //autoscroll to section functionality
-            if (d.height == 0) {
-              $('html,body').animate({
-                  scrollTop: $(d.data.name.replace(/ /g,'')).offset().top - 300},
-                    'slow');
-            }
-
-//             jQuery.fn.autoscroll = function(selector) {
-//   $('html, body').animate(
-//     { scrollTop: $(selector).offset().top },
-//     500
-//   );
-// }
-
-//Then to scroll to the class/area you wish to get to like this:
-//$('beggingthequestion').autoscroll();
+                //autoscroll to section functionality
+                if (d.height == 0) {
+                    $('html,body').animate({
+                    scrollTop: $(d.data.name.replace(/ /g,'')).offset().top - 300},'slow');
+                }
             })
             .on("mousemove", function(){
                 if (visOn == true) {
@@ -809,4 +797,21 @@ for (i = 0; i < coll.length; i++) {
         }
     });
    }
+
+$(document).ready(function(){
+    $("a").on('click', function(event) {
+        if (this.hash !== "") {
+            event.preventDefault();
+            var hash = this.hash;
+
+            $(hash).animate({backgroundColor: "yellow"}, 500).animate({backgroundColor: "white"}, 500).animate({backgroundColor: "yellow"}, 500).animate({backgroundColor: "white"}, 500);
+
+            $('html, body').animate({
+                scrollTop: $(hash).offset().top
+            }, 800, function(){
+                window.location.hash = hash;
+            });
+        }
+    });
+});
 }
