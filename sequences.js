@@ -190,20 +190,24 @@ function createCategories(d) {
                return d3.rgb(239, 92, 84);
             } else if (d.data.name === "Evidence") {
                return d3.rgb(0, 165, 150);
+            } else if (d.data.name === "Confidence") {
+                return d3.rgb(172, 207, 236);
             } else {
                return d3.rgb(43, 82, 230);
             }
         }   else {
         //The children node colors are based on the colors of their parents.
             if (d.data.size > 0) {
-                return d3.rgb(192,192,192);
+                return d3.rgb(172,172,172);
             }
             if (d.parent.data.name === "Reasoning") {
                 return d3.rgb(237, 134, 88);
             } else if (d.parent.data.name === "Evidence") {
                 return d3.rgb(53, 201, 136);
+            } else if (d.parent.data.name === "Confidence") {
+                return d3.rgb(135,230,235);
             } else {
-                return d3.rgb(100,149,237);
+                return d3.rgb(100,144,255);
             }
         }
   }
@@ -214,8 +218,10 @@ function createCategories(d) {
           return "red";
       } else if (d.parent.data.name === "Evidence") {
           return "green";
+      } else if (d.parent.data.name === "Confidence") {
+          return "aqua";
       } else {
-          return "blue";
+        return "blue";
       }
   }
 
@@ -328,6 +334,9 @@ var indexOffset = 0;
 var numactive = 0;
 var inputString = "";
 var categoryName = "";
+var ancient = "transparent";
+var ancName = "";
+var hancName = "";
 var oldest = "transparent";
 var oldName = "";
 var holdName = "";
@@ -340,6 +349,9 @@ var hnewName = "";
 for (i = 0; i < sorted.length; i += 1) {
     categoryName = indexToString.get(sorted[i])[1];
     if (indexToString.get(sorted[i])[0] == "o") {
+        ancient = oldest;
+        hancName = holdName;
+        ancName = oldName;
         oldest = middle;
         holdName = hmidName;
         oldName = midName;
@@ -364,7 +376,7 @@ for (i = 0; i < sorted.length; i += 1) {
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
-        } else {
+        } else if (numactive == 2) {
             inputString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
@@ -372,6 +384,15 @@ for (i = 0; i < sorted.length; i += 1) {
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + hmidName + ", " + hnewName + "</hiText></" + oldName + midName + ">";
             numactive = 3;
+        } else {
+            inputString = "<" + ancName + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                        ancient + " 0%, transparent 15%, transparent 25%, " +
+                        oldest + " 30%, transparent 45%, transparent 55%, " +
+                        middle + " 60%, transparent 75%, transparent 85%, " +
+                        newest + " 90%, transparent 99%)" +
+                        "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            endString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + ancName + oldName + midName + ">";
+            numactive = 4;
         }
         inputString = endString + inputString;
     } else {
@@ -387,7 +408,7 @@ for (i = 0; i < sorted.length; i += 1) {
                                     newest + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
-        } else {
+        } else if (numactive == 3) {
             if (newest == categoryName) {
                 continueString = "<" + oldName + midName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
@@ -404,13 +425,42 @@ for (i = 0; i < sorted.length; i += 1) {
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             }
+        } else {
+            if (newest == categoryName) {
+                continueString = "<" + ancName + oldName + midName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    ancient + " 0%, transparent 20%, transparent 35%, " +
+                                    oldest + " 40%, transparent 55%, transparent 70%, " +
+                                    middle + " 75%, transparent 90%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            } else if (middle == categoryName) {
+                continueString = "<" + ancName + oldName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    ancient + " 0%, transparent 20%, transparent 35%, " +
+                                    oldest + " 40%, transparent 55%, transparent 70%, " +
+                                    newest + " 75%, transparent 90%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+                console.log(continueString)
+            } else if (oldest == categoryName) {
+                continueString = "<" + ancName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    ancient + " 0%, transparent 20%, transparent 35%, " +
+                                    middle + " 40%, transparent 55%, transparent 70%, " +
+                                    newest + " 75%, transparent 90%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            } else {
+                continueString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                                    oldest + " 0%, transparent 20%, transparent 35%, " +
+                                    middle + " 40%, transparent 55%, transparent 70%, " +
+                                    newest + " 75%, transparent 90%)" +
+                                    "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
+            }
         }
         if (numactive == 1) {
             inputString = "<hiText class='highlightertext'>" + hnewName + "</hiText></" + newName +">" + continueString;
         } else if (numactive == 2) {
             inputString = "<hiText class='highlightertext'>" + hmidName + ", " + hnewName + "</hiText></" + midName + newName +">" + continueString;
-        } else {
+        } else if (numactive == 3) {
             inputString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + oldName + midName + newName +">" + continueString;
+        } else {
+            inputString = "<hiText class='highlightertext'>" + hancName + ", " + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + ancName + oldName + midName + newName +">" + continueString;
         }
         if (newest == categoryName) {
             newest = middle;
@@ -419,20 +469,33 @@ for (i = 0; i < sorted.length; i += 1) {
             middle = oldest;
             hmidName = holdName;
             midName = oldName;
-            oldest = "transparent";
-            holdName = "";
-            oldName = "";
+            oldest = ancient;
+            holdName = hancName;
+            oldName = ancName;
+            ancient = "transparent";
+            hancName = "";
+            ancName = "";
         } else if (middle == categoryName) {
             middle = oldest;
             hmidName = holdName;
             midName = oldName;
-            oldest = "transparent";
-            holdName = "";
-            oldName = "";
+            oldest = ancient;
+            holdName = hancName;
+            oldName = ancName;
+            ancient = "transparent";
+            hancName = "";
+            ancName = "";
+        } else if (oldest == categoryName) {
+            oldest = ancient;
+            holdName = hancName;
+            oldName = ancName;
+            ancient = "transparent";
+            hancName = "";
+            ancName = "";
         } else {
-            oldest = "transparent";
-            holdname = "";
-            oldName = "";
+            ancient = "transparent";
+            hancName = "";
+            ancName = "";
         }
         numactive -= 1;
     }
@@ -515,7 +578,7 @@ var $cols = $('.highlighter').hover(function(e) {
                     .style("top", 100 + "px")
                     .style("width", function() {
                         if (currCategory.length < 18) {
-                            return "80px";
+                            return "90px";
                         } else if (currCategory.length < 35) {
                             return "180px";
                         } else {
@@ -672,7 +735,7 @@ d3.selectAll("path").transition().each(function(d) {
                     .style("top", (d3.event.pageY - 28) + "px")
                     .style("width", function() {
                         if (d.data.name.length < 18) {
-                            return "80px";
+                            return "90px";
                         } else {
                             return "180px";
                         }
