@@ -737,8 +737,13 @@ d3.selectAll("path").transition().each(function(d) {
                         }
                     })
                 visOn = true;
-
             //autoscroll to section functionality
+            if (d.height == 0) {
+              $('html,body').animate({
+                  scrollTop: $(d.data.name.replace(/ /g,'')).offset().top - 300},
+                    'slow');
+            }
+
 //             jQuery.fn.autoscroll = function(selector) {
 //   $('html, body').animate(
 //     { scrollTop: $(selector).offset().top },
