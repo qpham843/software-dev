@@ -52,7 +52,6 @@ function buildHierarchy(data) {
     cin[cinIndex]["points"].push(parseInt(data[i][pts]));
 
   }
-  console.log(jsons);
   return jsons; //object of json files for each article
 };
 
@@ -438,7 +437,6 @@ for (i = 0; i < sorted.length; i += 1) {
                                     oldest + " 40%, transparent 55%, transparent 70%, " +
                                     newest + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                console.log(continueString)
             } else if (oldest == categoryName) {
                 continueString = "<" + ancName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     ancient + " 0%, transparent 20%, transparent 35%, " +
@@ -741,8 +739,13 @@ d3.selectAll("path").transition().each(function(d) {
                         }
                     })
                 visOn = true;
-
             //autoscroll to section functionality
+            if (d.height == 0) {
+              $('html,body').animate({
+                  scrollTop: $(d.data.name.replace(/ /g,'')).offset().top - 300},
+                    'slow');
+            }
+
 //             jQuery.fn.autoscroll = function(selector) {
 //   $('html, body').animate(
 //     { scrollTop: $(selector).offset().top },
