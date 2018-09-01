@@ -374,15 +374,15 @@ for (i = 0; i < sorted.length; i += 1) {
             endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
         } else if (numactive == 2) {
-            inputString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
                         newest + " 75%, transparent 90%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-            endString = "<hiText class='highlightertext'>" + hmidName + ", " + hnewName + "</hiText></" + oldName + midName + ">";
+            endString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + "</hiText></" + oldName + midName + ">";
             numactive = 3;
         } else {
-            inputString = "<" + ancName + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "," + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + ancName + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         ancient + " 0%, transparent 15%, transparent 25%, " +
                         oldest + " 30%, transparent 45%, transparent 55%, " +
                         middle + " 60%, transparent 75%, transparent 85%, " +
@@ -430,7 +430,7 @@ for (i = 0; i < sorted.length; i += 1) {
                                     middle + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + ancName + oldName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + ancName + oldName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     ancient + " 0%, transparent 20%, transparent 35%, " +
                                     oldest + " 40%, transparent 55%, transparent 70%, " +
                                     newest + " 75%, transparent 90%)" +
