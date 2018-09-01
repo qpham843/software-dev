@@ -16,6 +16,8 @@ Article ID,Credibility Indicator ID ,Credibilty Indicator Category,Credibility I
 1,C1,Confidence,High Confidence,-3,,,,1500,1600
 1,C2,Confidence,Low Confidence,-5,,,,1700,1800
 1,C3,Confidence,Silly Confidence,-2,,,,2000,2300
+1,R1,Reasoning,Straw Man,2,,,,2200,2400
+1,L3,Language,Outraged tone,-1,,,,2100,2500
 1,E2,Evidence,Ignoring selection effects,-3,,,,4000,5000
 1,L2,Language,Snarky tone,-5,,,,4400,4800
 1,C2,Confidence,Low Confidence,-5,,,,4600,5200

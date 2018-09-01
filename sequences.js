@@ -556,7 +556,7 @@ var $cols = $('.highlighter').hover(function(e) {
                     .transition()
                     .attr('stroke-width',5)
                     .style("opacity", 1)
-                checkSum(d)
+                checkSum(d);
                 g.append("text")
                     .attr("class", "center-text")
                     .attr("x", -5)
