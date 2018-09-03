@@ -101,7 +101,7 @@ function createVisualization(article) {
 
     // Create the "graph" element.
     var g = d3.select('svg')
-    .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("preserveAspectRatio", "xMinYMin meet")
         // .attr("viewBox", "0 0 250 250")
         // .classed("svg-content", true)
         .attr('width', width)
@@ -158,16 +158,16 @@ function createCategories(d) {
                         start -= 1;
                     }
                 if (start != 0) {start += 1;}
-                if (start in dindexToString.values()) {start += 1};
+                while (start in dindexToString.values()) {start += 1};
                 dindexToString.set(start, ["o", d.data.name]);
 
                 var eind = subcatData.endIndices[k];
                 var end = (eind + 0);
                 while (paragraph[end] != " " && paragraph[end] != "." && paragraph[end] != ",") {
-                    if (end == paragraph.length) {break;}
-                    end += 1;
-                }
-                if (end in dindexToString.values()) {end -= 1};
+                                    if (end == paragraph.length) {break;}
+                                    end += 1;
+                                }
+                while (end in dindexToString.values()) {end -= 1};
                 dindexToString.set(end, ["c", d.data.name]);
 
                 if (end > start + 50) {end = start + 50}
@@ -269,7 +269,8 @@ var language = [];
 
 
 //CREATE PATHS AND HIGHLIGHTS
-//This is the visualization creation in its entirety.
+//This is the visualization creation in its entirety.\
+var counter = 0;
   g.selectAll('g')
             .data(root.descendants())
             .enter()
@@ -280,6 +281,7 @@ var language = [];
             .attr("d", arc)
             //For each path, map it to the corresponding data.
             .each(function(d){
+                counter += 1;
                 var curPath = this;
                 dataToParentPath.set(d, curPath)
                 dataToPath.set(d.data, curPath);
@@ -306,22 +308,26 @@ var language = [];
                                 start -= 1;
                         }
                         if (start != 0) {start += 1;}
-                        if (start in indexToString.values()) {start += 1};
+                        while (start in indexToString.values()) {start += 1};
                         indexToString.set(start, ["o", textHighlight(d), d.data.name]);
                     }
+                    var count = 0;
                     for (i = 0; i < d.data.endIndices.length; i += 1) {
+                        count += 1;
                         var ind = d.data.endIndices[i];
                         var end = (ind + 0);
                         while (paragraph[end] != " " && paragraph[end] != "." && paragraph[end] != ",") {
-                            if (end == paragraph.length) {break;}
-                                end += 1;
-                        }
-                        if (end in indexToString.values()) {end -= 1};
+                                            if (end == paragraph.length) {break;}
+                                            end += 1;
+                                        }
+                        while (end in indexToString.values()) {end -= 1};
                         indexToString.set(end, ["c", textHighlight(d), d.data.name]);
                     }
+
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
+
 createCategories(nameToData.get("CATEGORIES"));
 
 //This code adds in the highlights as needed.
@@ -388,7 +394,7 @@ for (i = 0; i < sorted.length; i += 1) {
                         middle + " 60%, transparent 75%, transparent 85%, " +
                         newest + " 90%, transparent 99%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-            endString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + ancName + oldName + midName + ">";
+            endString = "<hiText class='highlightertext'>" + hancName + ", " + holdName + ", " + hmidName + "</hiText></" + ancName + oldName + midName + ">";
             numactive = 4;
         }
         inputString = endString + inputString;
@@ -412,7 +418,7 @@ for (i = 0; i < sorted.length; i += 1) {
                                     middle + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             } else if (middle == categoryName) {
-                continueString = "<" + oldName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+                continueString = "<" + oldName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
@@ -739,7 +745,7 @@ d3.selectAll("path").transition().each(function(d) {
                 //autoscroll to section functionality
                 if (d.height == 0) {
                     $('html,body').animate({
-                    scrollTop: $(d.data.name.replace(/ /g,'')).offset().top - 300},'slow');
+                    scrollTop: $(d.data.name.replace(/ /g,'')).offset().top -500},'slow');
                 }
             })
             .on("mousemove", function(){
@@ -807,10 +813,8 @@ $(document).ready(function(){
             $(hash).animate({backgroundColor: "yellow"}, 500).animate({backgroundColor: "white"}, 500).animate({backgroundColor: "yellow"}, 500).animate({backgroundColor: "white"}, 500);
 
             $('html, body').animate({
-                scrollTop: $(hash).offset().top
-            }, 800, function(){
-                window.location.hash = hash;
-            });
+                //scrollTop: $(hash).offset().top - 500}, 800, function(){window.location.hash = hash;}
+                scrollTop: $(hash).offset().top -500},'slow');
         }
     });
 });
