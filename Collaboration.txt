@@ -6,3 +6,4 @@ your name, submit a pull request on Github to update the master .txt
 file.
 
 Quang-Minh Pham
+Eashaan Katiyar
