@@ -1,3 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
+
+
+<!-- Google Web Fonts -->
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,100' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700,800" rel="stylesheet" type='text/css'>
+
+<!-- Relative Stylesheets -->
+<!-- <link href="css/homepage.css" rel="stylesheet">*/ -->
+<link rel="stylesheet" href="./css/stylesfinal.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="file:///Users/Artemis1/node_modules/aos/dist/aos.css">
+
+<!-- JS -->
+<script src="./js/scripts.js" charset="utf-8"></script>
+
+
+</head>
+
+<body>
+
+
+<!-- Navigation -->
+
+<div class="nav-wrap">
+  <div class="nav-light">
+    <ul class="nav-bar" role="navigation" id="topNav">
+      <li class="nav-brand"><a href="http://publiceditor.io/index.html" class="navlink">Public Editor</a></li>
+      <li class="not-mobile">
+        <div class="dropdown">
+          <button class="dropbtn" onmouseover="myFunction()">How it Works
+            <i class="fa fa-angle-down mobile-hide"></i>
+          </button>
+          <div class="dropdown-content" id="myDropdown">
+            <a href="http://publiceditor.io/annotate.html">How we generate scores</a>
+            <a href="http://publiceditor.io/trust.html">How we secure the system</a>
+            <a href="http://publiceditor.io/read.html"class="navlink">Reading with Public Editor</a>
+          </div>
+        </div>
+      </li>
+      <li><a href="javascript:void(0);" class="icon" onclick="createMobilenav()">
+          <i class="fa fa-bars" id="navControl"></i>
+          </a>
+      </li>
+      <li class="mobile-only"><a href="http://publiceditor.io/annotate.html" class="navlink">How we generate scores</a></li>
+      <li class="mobile-only"><a href="http://publiceditor.io/trust.html" class="navlink">How we secure the system</a></li>
+      <li class="mobile-only"><a href="http://publiceditor.io/read.html"class="navlink">Reading with Public Editor</a></li>
+      <li><a href="http://publiceditor.io/about.html" class="navlink">About</a></li>
+      <li class="nav-menu-last"><a href="http://publiceditor.io/contact.html" class="navlink">Contact</a></li>
+  </ul>
+ </div>
+</div>
+
+
+<!-- Start gradient -->
+  <div class="teal-gradient">
+    <div class="nav-pad"></div>
+
+<!-- Line Segment -->
+<div class="mobile-hide">
+    <div class="small-space"></div>
+      <div class="homepage-section">
+        <div class="homepage-image segment-right">
+              <img src="./images/SVG/segment-right-down-short.svg" alt="people highlighting articles in browser windows">
+        </div>
+      </div>
+</div>
+
+
+<!-- About - Product -->
+<div class="extra-small-space mobile-hide"></div>
+<div class="small-space web-hide"></div>
+  <div class="content-container">
+      <div class="feature-center">
+        <h1>Read the news with Public Editor</h1>
+        <p class="p-explain">Public Editor displays credibility scores on your daily news in the form of a small icon. With a single click, see how trained citizens rated your article on different criteria of quality, including argument, evidence, and sources.</p>
+        <div class="feature-link-container">
+          <a href="http://publiceditor.io/annotate.html" class="feature-link">Learn how we compute our scores <i class="fa fa-angle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<!-- End gradient -->
+</div>
+
+
+<!-- Image -->
+<div class="extra-small-space"></div>
+<div class="image-container">
+        <div class="extra-small-space web-hide"></div>
+        <img src="./images/SVG/read-tap.svg" alt="man clicking credibility score on an article" id="read-tap">
+        <div class="extra-small-space web-hide"></div>
+</div>
+
+
+<!-- Mobile Spacing -->
+<div class="web-hide">
+  <div class="extra-small-space"></div>
+</div>
+
+
+<!-- Line Segment -->
+<div class="mobile-hide">
+    <div class="small-space"></div>
+      <div class="homepage-section">
+        <div class="homepage-image segment-left">
+              <img src="./images/SVG/segment-left-down.svg" alt="people highlighting articles in browser windows">
+        </div>
+      </div>
+    <div class="extra-small-space"></div>
+</div>
+
+
+<!-- Articles -->
+<div>
 <!--
 Copyright (C) <2018> <Goodly Labs>
     This program is free software: you can redistribute it and/or modify
@@ -43,21 +163,6 @@ Copyright (C) <2018> <Goodly Labs>
 <body>
 
 <div class="base-grid">
-
-    <!-- Navigation -->
-
-    <div class="nav-wrap">
-        <div class="nav-light">
-            <ul class="nav-bar" role="navigation">
-                <li class="nav-brand"><a href="http://publiceditor.io/index.html" class="navlink">Public Editor</a></li>
-                <li><a href="http://publiceditor.io/about.html" class="navlink">About</a></li>
-                <li><a href="http://publiceditor.io/contact.html" class="navlink">Contact</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="nav-pad">
-
         <!-- Gradient start -->
         <div class="teal-gradient">
             <div class="small-space"></div>
@@ -75,7 +180,6 @@ Copyright (C) <2018> <Goodly Labs>
 
             <!-- Content: Features 1, 2, 3-->
             <div class="text article">
-                <h2>Example Article with Public Editor labels</h2>
                 <p class="p-article" id="textArticle">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pretium elementum odio id egestas. Curabitur at dapibus sapien, nec consequat metus. Vivamus eget imperdiet elit, non aliquam purus. Nam ipsum eros, sagittis in cursus commodo, pretium vel magna. Cras dapibus blandit mi vitae condimentum. Fusce porttitor orci et ipsum dignissim euismod. Morbi sodales velit a tincidunt consectetur.
 
@@ -105,7 +209,7 @@ Copyright (C) <2018> <Goodly Labs>
 
 
             <div class="cred-score-container">
-                <script type="text/javascript" src="sequences.js"></script>
+                <script type="text/javascript" src="sequencesRead.js"></script>
                 <div class="sunburst">
                     <svg id="chart" viewBox="0 0 500 500"  preserveAspectRatio="xMidYMid meet">
                     </svg>
@@ -117,30 +221,107 @@ Copyright (C) <2018> <Goodly Labs>
         <!-- Grid end -->
 
         <div class="small-space"></div>
-
-        <!-- Footer -->
-
-        <div class="footer-span">
-            <div class="footer-flex-wrap">
-                <div class="footer-block">
-                    <ul>
-                        <li><b>System</b></li>
-                        <li><a href="./annotate.html" class="footer-link">How we generate scores</a></li>
-                        <li><a href="./d3.html" class="footer-link">Explore scored articles</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-block">
-                    <ul>
-                        <li><b>About</b></li>
-                        <li><a href="./about.html" class="footer-link">About</a></li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-        <!-- End footer -->
-
     </div>
 </div>
 </body>
+</div>
+
+<div class="span-container bg-blue" id="coming-soon" >
+  <div class="gutter">
+  <div class="small-space"></div>
+    <h2 class="white">More scored articles coming soon</h2>
+  <div class="small-space"></div>
+
+  <!-- <div class="span-content-wrapper">
+    <div class="content-block content-block-link"><a href="http://www.breitbart.com/big-government/2018/05/10/treasury-inspector-general-investigating-leak-of-trump-lawyers-bank-records/">
+      <h2>Article 1</h2>
+      <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis atque corrupti quos.</p>
+    </a></div>
+    <div class="content-block content-block-link"><a href="https://www.denverpost.com/2018/05/10/former-sedgwick-county-sheriff-inmate-misconduct/">
+      <h2>Article 2</h2>
+      <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.</p>
+    </a></div>
+    <div class="content-block content-block-link"><a href="Cohen’s $600,000 deal with AT&T specified he would advise on Time Warner merger, internal company records show">
+      <h2>Article 3</h2>
+      <p>Praesentium voluptatum deleniti atque excepturi sint occaecati provident, similique sunt in culpa.</p>
+    </a></div>
+  </div> -->
+  </div>
+</div>
+
+<!-- Line Segment -->
+<div class="mobile-hide">
+    <div class="extra-small-space"></div>
+      <div class="homepage-section">
+        <div class="homepage-image segment-right">
+              <img src="./images/SVG/segment-right-up.svg" alt="people highlighting articles in browser windows">
+        </div>
+      </div>
+    <div class="extra-small-space"></div>
+</div>
+
+<!-- CTA -->
+
+<div class="small-space"></div>
+
+
+<div class="content-container">
+        <div class="call-to-action" data-aos="fade">
+          <h1>Contact Public Editor</h1>
+          <div class="button">
+          <a href="./contact.html">Get in touch</a>
+        </div>
+      </div>
+    </div>
+
+<div class="small-space"></div>
+<div class="extra-small-space"></div>
+
+
+<!-- End CTA -->
+
+  </div>
+</div>
+
+
+<!-- Footer -->
+
+<div class="footer-span">
+  <div class="footer-flex-wrap">
+      <div class="footer-block">
+          <ul>
+             <li><b>System</b></li>
+             <li><a href="./annotate.html" class="footer-link">How we generate scores</a></li>
+             <li><a href="./read.html" class="footer-link">Explore scored articles</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-block">
+          <ul>
+             <li><b>About</b></li>
+             <li><a href="./about.html" class="footer-link">What is Public Editor?</a></li>
+          </ul>
+          </div>
+
+  </div>
+</div>
+
+<!-- End footer -->
+
+</div>
+</div>
+
+<!-- AOS Script -->
+<script src="file:///Users/Artemis1/node_modules/aos/dist/aos.js"></script>
+
+<!-- Initialize Animate on Scroll -->
+<script>
+   AOS.init({
+     duration: 2500,
+     easing: 'ease-in-sine',
+     disable: window.innerWidth < 890,
+   });
+</script>
+
+  </body>
+</html>
