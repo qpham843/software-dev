@@ -1,0 +1,9 @@
+Hello World! This .txt file is useless, except for testing commits.
+
+Feel free to update this .txt file with your name once you've 
+successfully added this repository to your computer. After writing in 
+your name, submit a pull request on Github to update the master .txt 
+file.
+
+Quang-Minh Pham
+Eashaan Katiyar
