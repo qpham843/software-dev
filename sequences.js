@@ -1,21 +1,18 @@
 //This section switches out the existing article for one from a .txt file.
-
-//Use this to control which csv and txt are being used.
-var articleNumber = 1737;
-
-d3.text(articleNumber + "SSSArticle.txt", function(text) {
+/*
+document.getElementById("articleHead").innerHTML = "Public Editor Lorem Ipsum"
+d3.text("loremipsum.txt", function(text) {
     document.getElementById("textArticle").innerHTML = text.toString();
-});
+});*/
 
 //This section parses the CSV file into a JSON.
-d3.csv("VisualizationData_" + articleNumber + ".csv", function(error, data) {
+d3.csv("catsheet.csv", function(error, data) {
   if (error) throw error;
   // var json = buildHierarchy(csv);
   // var csv = d3.csv.parseRows(data);
   var articles = buildHierarchy(data);
-  var article1 = articles["Article_" + articleNumber];
-  setTimeout(function() { createVisualization(article1); }, 100);
-  // createVisualization(article1);;
+  var article1 = articles["Article_1"];
+  createVisualization(article1);
 });
 
 function buildHierarchy(data) {
@@ -49,7 +46,7 @@ function buildHierarchy(data) {
     var cinIndex = findIndex(cin,data[i],  credName);
 
     // cin.map(function(e) {return e.name}).indexOf(data[i]["Credibility Indicator Name"]);
-    cin[cinIndex]["size"] += parseFloat(data[i][pts]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
+    cin[cinIndex]["size"] += parseInt(data[i][pts]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
     cin[cinIndex]["startIndices"].push(parseInt(data[i]["Start"]));
     cin[cinIndex]["endIndices"].push(parseInt(data[i]["End"]));
     cin[cinIndex]["points"].push(parseInt(data[i][pts]));
@@ -138,19 +135,17 @@ function createCategories(d) {
         var curHTML = document.getElementById("categories").innerHTML;
         var catData = d.data.children[i];
         var catId = catData.name.replace(/ /g,'');
-        curHTML = curHTML + "<div id='category" + i + "' class='collapsible'>" + catData.name + "</div>" + "<div id='" + catId + "' class='content'></div>";
+        curHTML = curHTML + "<div class='collapsible'>" + catData.name + "</div>" + "<div id='" + catId + "' class='content'></div>";
         document.getElementById("categories").innerHTML = curHTML;
-        document.getElementById("category" + i).style.borderLeft = "4px solid " + colorFinder(nameToData.get(catId));
+        document.getElementById(catId).style.backgroundColor = colorFinder(nameToData.get(catData.name));
         for (var j = 0; j < catData.children.length; j += 1) {
             var catHTML = document.getElementById(catId).innerHTML;
             var subcatData = catData.children[j];
             var subcatId = catData.children[j].name.replace(/ /g, '');
             //<input type='checkbox' id='c" + j + "' class='check'/>
-            if (subcatData.startIndices[j] != -1 && subcatData.endIndices[j] != -1) {
-            catHTML = catHTML + "<div class='collapsible'>" + subcatData.name + " </div>" + "<div id='" + subcatId + "' class='content'></div>";
+            catHTML = catHTML + "<div id='" + subcatData.name + "' class='collapsible'>" + subcatData.name + " </div>" + "<div id='" + subcatId + "' class='content'></div>";
             document.getElementById(catId).innerHTML = catHTML;
             document.getElementById(subcatId).style.backgroundColor = colorFinder(nameToData.get(subcatData.name));
-            document.getElementById(subcatId).style.borderLeft = "2px double " + colorFinder(nameToData.get(subcatData.name));
             for (var k = 0; k < subcatData.startIndices.length; k += 1) {
                 var subcatHTML = document.getElementById(subcatId).innerHTML;
                 var paragraph = document.getElementById("textArticle").innerHTML;
@@ -158,48 +153,32 @@ function createCategories(d) {
                 //Determine the 'clean' start and end of the text.
                 var sind = subcatData.startIndices[k];
                 var start = (sind + 0);
+                while (paragraph[start] != " " && paragraph[start] != ".") {
+                    if (start == 0) {break;}
+                        start -= 1;
+                    }
+                if (start != 0) {start += 1;}
+                while (start in dindexToString.values()) {start += 1};
+                dindexToString.set(start, ["o", d.data.name]);
+
                 var eind = subcatData.endIndices[k];
                 var end = (eind + 0);
-                end += 1;
-                if (dindexToString.get(start) != null) {
-                    var existing = dindexToString.get(start)
-                    if (existing[0] == 'm') {
-                        existing.push(['o', d.data.name]);}
-                    else {
-                        existing = ['m', existing];
-                        existing.push(['o', d.data.name]);
-                    }
-                    dindexToString.set(start, existing);
-                } else {
-                    dindexToString.set(start, ["o", d.data.name]);
-                }
-                if (dindexToString.get(end) != null) {
-                    existing = dindexToString.get(end)
-                    if (existing[0] == 'm') {
-                        existing.push(['c', d.data.name]);
-                    } else {
-                        existing = ['m', existing];
-                        existing.push(['c', d.data.name]);
-                    }
-                    dindexToString.set(end, existing);
-                } else {
-                    dindexToString.set(end, ["c", d.data.name]);
-                }
-                var elipsesstring = "";
-                if (end > start + 50) {
-                    end = start + 50;
-                    elipsesstring = "...";
-                }
-                var errorString = "'" + paragraph.substring(start, end) + elipsesstring + "'";
+                while (paragraph[end] != " " && paragraph[end] != "." && paragraph[end] != ",") {
+                                    if (end == paragraph.length) {break;}
+                                    end += 1;
+                                }
+                while (end in dindexToString.values()) {end -= 1};
+                dindexToString.set(end, ["c", d.data.name]);
+
+                if (end > start + 50) {end = start + 50}
+                var errorString = "'" + paragraph.substring(start, end) + "'";
                 //Need to add in an href for the sake of jumping.
-                subcatHTML = subcatHTML + "<a class='jumpable' href='#" + start + "'>" + "[" + subcatData.points[k] + "]  " + errorString + "</a>";
+                subcatHTML = subcatHTML + "<a class='jumpable' href='#" + subcatId.replace(/ /g,'')+ start + "'>" + "[" + subcatData.points[k] + "]  " + errorString + "</a>";
                 document.getElementById(subcatId).innerHTML = subcatHTML;
-                }
             }
         }
     }
 }
-
 
 //COLORING SECTION
 //This function determines the color of a category based on its parent, or name.
@@ -209,8 +188,8 @@ function createCategories(d) {
                return d3.rgb(239, 92, 84);
             } else if (d.data.name === "Evidence") {
                return d3.rgb(0, 165, 150);
-            } else if (d.data.name === "Probability") {
-                return d3.rgb(0, 191, 255);
+            } else if (d.data.name === "Confidence") {
+                return d3.rgb(172, 207, 236);
             } else {
                return d3.rgb(43, 82, 230);
             }
@@ -223,10 +202,10 @@ function createCategories(d) {
                 return d3.rgb(237, 134, 88);
             } else if (d.parent.data.name === "Evidence") {
                 return d3.rgb(53, 201, 136);
-            } else if (d.parent.data.name === "Probability") {
-                return d3.rgb(153,204,255);
+            } else if (d.parent.data.name === "Confidence") {
+                return d3.rgb(135,230,235);
             } else {
-                return d3.rgb(65, 105, 225);
+                return d3.rgb(100,144,255);
             }
         }
   }
@@ -237,7 +216,7 @@ function createCategories(d) {
           return "red";
       } else if (d.parent.data.name === "Evidence") {
           return "green";
-      } else if (d.parent.data.name === "Probability") {
+      } else if (d.parent.data.name === "Confidence") {
           return "aqua";
       } else {
         return "blue";
@@ -255,7 +234,7 @@ function createCategories(d) {
     var top = 0;
     for (i = 0; i < d.children.length; i += 1) {
         for (j = 0; j < d.children[i].children.length; j += 1) {
-            top += parseInt(d.children[i].children[j].size);
+            top += d.children[i].children[j].size;
         }
     }
     return top;
@@ -265,10 +244,10 @@ function createCategories(d) {
   function checkSum(d) {
     if (d.data.children) {
         for (i = 0; i < d.data.children.length; i += 1) {
-            sum += parseInt(d.data.children[i].size);
+            sum += d.data.children[i].size;
         }
     } else {
-        sum = parseInt(d.data.size);
+        sum = d.data.size;
     }};
 
 
@@ -282,8 +261,6 @@ var nameToData = new Map();
 //This dictionary maps indices to strings.
 var indexToString = new Map();
 var dindexToString = new Map();
-var startToPair = new Map();
-
 
 //These arrays map categories to the names of their children.
 var reasoning = [];
@@ -324,40 +301,29 @@ var counter = 0;
                 } else {
                     var paragraph = document.getElementById("textArticle").innerHTML;
                     for (i = 0; i < d.data.startIndices.length; i += 1) {
-                        if (d.data.startIndices[i] != -1 && d.data.endIndices[i] != -1) {
-                            var ind = d.data.startIndices[i];
-                            var start = (ind + 0);
-                            var ind = d.data.endIndices[i];
-                            var end = (ind + 0);
-                            end += 1;
-
-                            if (indexToString.get(start) != null) {
-                                var existing = indexToString.get(start)
-                                if (existing[0] == 'm') {
-                                    existing.push(['o', textHighlight(d), d.data.name]);
-                                } else {
-                                    existing = ['m', existing];
-                                    existing.push(['o', textHighlight(d), d.data.name]);
-                                }
-                                indexToString.set(start, existing);
-                            } else {
-                                indexToString.set(start, ["o", textHighlight(d), d.data.name]);
-                            }
-                            if (indexToString.get(end) != null) {
-                                existing = indexToString.get(end)
-                                if (existing[0] == 'm') {
-                                    existing.push(['c', textHighlight(d), d.data.name]);
-                                } else {
-                                    existing = ['m', existing];
-                                    existing.push(['c', textHighlight(d), d.data.name]);
-                                }
-                                indexToString.set(end, existing);
-                            } else {
-                                indexToString.set(end, ["c", textHighlight(d), d.data.name]);
-                            }
-                            startToPair.set(start, end);
+                        var ind = d.data.startIndices[i];
+                        var start = (ind + 0);
+                        while (paragraph[start] != " " && paragraph[start] != ".") {
+                            if (start == 0) {break;}
+                                start -= 1;
                         }
+                        if (start != 0) {start += 1;}
+                        while (start in indexToString.values()) {start += 1};
+                        indexToString.set(start, ["o", textHighlight(d), d.data.name]);
                     }
+                    var count = 0;
+                    for (i = 0; i < d.data.endIndices.length; i += 1) {
+                        count += 1;
+                        var ind = d.data.endIndices[i];
+                        var end = (ind + 0);
+                        while (paragraph[end] != " " && paragraph[end] != "." && paragraph[end] != ",") {
+                                            if (end == paragraph.length) {break;}
+                                            end += 1;
+                                        }
+                        while (end in indexToString.values()) {end -= 1};
+                        indexToString.set(end, ["c", textHighlight(d), d.data.name]);
+                    }
+
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
             })
@@ -369,9 +335,8 @@ var unsorted = Array.from(indexToString.keys());
 var sorted = unsorted.sort(function(a, b){return a - b});
 var indexOffset = 0;
 var numactive = 0;
-var currentHighlight = "";
 var inputString = "";
-var categoryColor = "";
+var categoryName = "";
 var ancient = "transparent";
 var ancName = "";
 var hancName = "";
@@ -384,89 +349,9 @@ var hmidName = "";
 var newest = "transparent";
 var newName = "";
 var hnewName = "";
-console.log(sorted)
 for (i = 0; i < sorted.length; i += 1) {
-    currentHighlight = indexToString.get(sorted[i]);
-    //console.log("Index: " + sorted[i] + " and array: " + currentHighlight)
-    if (currentHighlight[0] == "m") {
-        var opens = [];
-        var closes = [];
-        for (j = 1; j < currentHighlight.length; j+= 1) {
-            if (currentHighlight[j][0] == "c") {
-                closes.push(j);
-            } else if (currentHighlight[j][0] == "o") {
-                opens.push(j);
-            }
-        }
-        console.log(currentHighlight)
-        if (opens.length == 2 && numactive == 0) {
-            var nextHighlight = currentHighlight[2];
-            currentHighlight = currentHighlight[1];
-
-            newest = currentHighlight[1];
-            hnewName = currentHighlight[2];
-            newName = currentHighlight[2].replace(/ /g,'');
-
-            currentHighlight = nextHighlight;
-            middle = newest;
-            hmidName = hnewName;
-            midName = newName;
-            newest = currentHighlight[1];
-            hnewName = currentHighlight[2];
-            newName = currentHighlight[2].replace(/ /g,'');
-            inputString = "<" + midName + newName + " id='" + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
-                middle + " 0%, transparent 20%, transparent 35%, " +
-                newest + " 40%, transparent 55%, transparent 70%)" +
-                "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-            numactive = 2;
-        } else if (opens.length == 3 && numactive == 0) {
-            var cur1 = currentHighlight[1];
-            var cur2 = currentHighlight[2];
-            var cur3 = currentHighlight[3];
-            newest = cur1[1];
-            hnewName = cur1[2];
-            newName = cur1[2].replace(/ /g,'');
-            middle = cur2[1];
-            hmidName = cur2[2];
-            midName = cur2[2].replace(/ /g,'');
-            oldest = cur3[1];
-            holdName = cur3[2];
-            oldName = cur3[2].replace(/ /g,'');
-            inputString = "<" + oldName + midName + newName + " id='" + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
-                oldest + " 0%, transparent 20%, transparent 35%, " +
-                middle + " 40%, transparent 55%, transparent 70%, " +
-                newest + " 75%, transparent 90%)" +
-                "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-            numactive = 3;
-        } else if (opens.length == 2 && numactive == 1 && closes.length == 0) {
-
-        } else if (closes.length == 2 && numactive == 2) {
-            inputString = "<hiText class='highlightertext'>" + hmidName + ", " + hnewName + "</hiText></" + midName + newName +">";
-            numactive = 0;
-            middle = oldest;
-            hmidName = holdName;
-            midName = oldName;
-            newest = middle;
-            hnewName = hmidName;
-            newName = midName;
-        } else if (closes.length == 3 && numactive == 3) {
-            inputString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + oldName + midName + newName +">";
-            numactive = 0;
-            oldest = ancient;
-            holdName = hancName;
-            oldName = ancName;
-            middle = oldest;
-            hmidName = holdName;
-            midName = oldName;
-            newest = middle;
-            hnewName = hmidName;
-            newName = midName;
-        }
-    } else if (currentHighlight[0] == "o") {
-        if (numactive == 4) {                                                                           //Catcher: This catches the more than four case.
-            indexToString.get(startToPair.get(sorted[i]))[0] = "f";
-            continue;
-        }
+    categoryName = indexToString.get(sorted[i])[1];
+    if (indexToString.get(sorted[i])[0] == "o") {
         ancient = oldest;
         hancName = holdName;
         ancName = oldName;
@@ -476,34 +361,34 @@ for (i = 0; i < sorted.length; i += 1) {
         middle = newest;
         hmidName = hnewName;
         midName = newName;
-        newest = currentHighlight[1];
-        hnewName = currentHighlight[2];
-        newName = currentHighlight[2].replace(/ /g,'');
+        newest = categoryName;
+        hnewName = indexToString.get(sorted[i])[2];
+        newName = indexToString.get(sorted[i])[2].replace(/ /g,'');
         var endString = "";
 
         //Need to add in an id for the sake of jumping.
         if (numactive == 0) {
-            inputString = "<" + newName + " id='" + sorted[i] + "' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + newName + " id='" + newName + sorted[i] + "' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         newest + " 0%, transparent 20%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             numactive = 1;
         } else if (numactive == 1) {
-            inputString = "<" + midName + newName + " id='" + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + midName + newName + " id='" + newName + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         middle + " 0%, transparent 20%, transparent 35%, " +
                         newest + " 40%, transparent 55%, transparent 70%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + hmidName + "</hiText></" + midName +">";
             numactive = 2;
         } else if (numactive == 2) {
-            inputString = "<" + oldName + midName + newName + " id='" + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            inputString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         oldest + " 0%, transparent 20%, transparent 35%, " +
                         middle + " 40%, transparent 55%, transparent 70%, " +
                         newest + " 75%, transparent 90%)" +
                         "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
             endString = "<hiText class='highlightertext'>" + holdName + ", " + hmidName + "</hiText></" + oldName + midName + ">";
             numactive = 3;
-        } else if (numactive == 3) {
-            inputString = "<" + ancName + oldName + midName + newName + " id='" + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+        } else {
+            inputString = "<" + ancName + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                         ancient + " 0%, transparent 15%, transparent 25%, " +
                         oldest + " 30%, transparent 45%, transparent 55%, " +
                         middle + " 60%, transparent 75%, transparent 85%, " +
@@ -513,78 +398,63 @@ for (i = 0; i < sorted.length; i += 1) {
             numactive = 4;
         }
         inputString = endString + inputString;
-    } else if (currentHighlight[0] == "c") {
-        categoryName = currentHighlight[2].replace(/ /g,'');
+    } else {
         var continueString = "";
-        var closedSomething = 0;
         if (numactive == 1) {
-            if (newName == categoryName) {
-                closedSomething = 1;
-            }
         } else if (numactive == 2) {
-            if (newName == categoryName) {
-                continueString = "<" + midName + " id='" + sorted[i] + "' name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            if (newest == categoryName) {
+                continueString = "<" + midName + " id='" + newName + sorted[i] + "' name='" + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
-            } else if (midName == categoryName) {
-                continueString = "<" + newName + " id='" + sorted[i] + "' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            } else if (middle == categoryName) {
+                continueString = "<" + newName + " id='" + newName + sorted[i] + "' name='" + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     newest + " 0%, transparent 20%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
             }
         } else if (numactive == 3) {
-            if (newName == categoryName) {
-                continueString = "<" + oldName + midName + " id='" + sorted[i] + "' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            if (newest == categoryName) {
+                continueString = "<" + oldName + midName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
-            } else if (midName == categoryName) {
-                continueString = "<" + oldName + newName + " id='" + sorted[i] + "' name='" + holdName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            } else if (middle == categoryName) {
+                continueString = "<" + oldName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
-            } else if (oldName == categoryName) {
-                continueString = "<" + midName + newName + " id='" + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            } else {
+                continueString = "<" + midName + newName + " id='" + newName + sorted[i] + "' name='" + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     middle + " 0%, transparent 20%, transparent 35%, " +
                                     newest + " 40%, transparent 55%, transparent 70%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
             }
         } else {
-            if (newName == categoryName) {
-                continueString = "<" + ancName + oldName + midName + " id='" + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            if (newest == categoryName) {
+                continueString = "<" + ancName + oldName + midName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hmidName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     ancient + " 0%, transparent 20%, transparent 35%, " +
                                     oldest + " 40%, transparent 55%, transparent 70%, " +
                                     middle + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
-            } else if (midName == categoryName) {
-                continueString = "<" + ancName + oldName + newName + " id='" + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            } else if (middle == categoryName) {
+                continueString = "<" + ancName + oldName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + holdName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     ancient + " 0%, transparent 20%, transparent 35%, " +
                                     oldest + " 40%, transparent 55%, transparent 70%, " +
                                     newest + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
-            } else if (oldName == categoryName) {
-                continueString = "<" + ancName + midName + newName + " id='" + sorted[i] + "' name='" + hancName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            } else if (oldest == categoryName) {
+                continueString = "<" + ancName + midName + newName + " id='" + newName + sorted[i] + "' name='" + hancName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     ancient + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%, " +
                                     newest + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
-            } else if (ancName == categoryName) {
-                continueString = "<" + oldName + midName + newName + " id='" + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
+            } else {
+                continueString = "<" + oldName + midName + newName + " id='" + newName + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                                     oldest + " 0%, transparent 20%, transparent 35%, " +
                                     middle + " 40%, transparent 55%, transparent 70%, " +
                                     newest + " 75%, transparent 90%)" +
                                     "; background-position: 0 1.1em; background-repeat: repeat-x; background-size: 2px 13px; padding-bottom: 15px'>";
-                closedSomething = 1;
             }
         }
-        //if (closedSomething == 0) {continue;}
         if (numactive == 1) {
             inputString = "<hiText class='highlightertext'>" + hnewName + "</hiText></" + newName +">" + continueString;
         } else if (numactive == 2) {
@@ -594,7 +464,7 @@ for (i = 0; i < sorted.length; i += 1) {
         } else {
             inputString = "<hiText class='highlightertext'>" + hancName + ", " + holdName + ", " + hmidName + ", " + hnewName + "</hiText></" + ancName + oldName + midName + newName +">" + continueString;
         }
-        if (newName == categoryName) {
+        if (newest == categoryName) {
             newest = middle;
             hnewName = hmidName;
             newName = midName;
@@ -607,7 +477,7 @@ for (i = 0; i < sorted.length; i += 1) {
             ancient = "transparent";
             hancName = "";
             ancName = "";
-        } else if (midName == categoryName) {
+        } else if (middle == categoryName) {
             middle = oldest;
             hmidName = holdName;
             midName = oldName;
@@ -617,7 +487,7 @@ for (i = 0; i < sorted.length; i += 1) {
             ancient = "transparent";
             hancName = "";
             ancName = "";
-        } else if (oldName == categoryName) {
+        } else if (oldest == categoryName) {
             oldest = ancient;
             holdName = hancName;
             oldName = ancName;
@@ -706,7 +576,7 @@ var $cols = $('.highlighter').hover(function(e) {
                     .style("opacity", .9);
                 psuedobox.html(currCategory)
                     .style("left", 80 + "%")
-                    .style("top", 40 + "%")
+                    .style("top", 30 + "%")
                     .style("width", function() {
                         if (currCategory.length < 18) {
                             return "90px";
@@ -875,7 +745,7 @@ d3.selectAll("path").transition().each(function(d) {
                 //autoscroll to section functionality
                 if (d.height == 0) {
                     $('html,body').animate({
-                    scrollTop: $("#" + d.data.startIndices[0]).offset().top -500},'slow'); //******
+                    scrollTop: $(d.data.name.replace(/ /g,'')).offset().top -500},'slow');
                 }
             })
             .on("mousemove", function(){
