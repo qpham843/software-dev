@@ -86,8 +86,8 @@ function userFindIndex(data, val) {
 //This is the visualization code.
 function continueVisualization(article, articleNumber) {
   // Variables
-    var width = 600;
-    var height = 600;
+    var width = 200;
+    var height = 200;
     var radius = Math.min(width, height) / 2;
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -212,9 +212,9 @@ function resetVis() {
     sum = 0;
     g.append("text")
         .attr("class", "center-text")
-        .attr("x", -5)
-        .attr("y", 30)
-        .style("font-size", 100)
+        .attr("x", 0)
+        .attr("y", 20)
+        .style("font-size", 54)
         .style("font-family", "'Roboto', sans-serif")
         .style("text-anchor", "middle")
         .html((100 + total))
@@ -271,5 +271,4 @@ d3.selectAll("path").transition().each(function(d) {
             .style('stroke', 'white')
             .attr('stroke-width', 7)
             .style("fill", colorFinder);
-  document.getElementById("hidden" + articleNumber).innerHTML = total+100;
 }

@@ -49,12 +49,6 @@ function matchString() {
         outputArticles.push(articles[i]);
     }
 
-    /*if (quant == "Alphabetical") {
-        outputArticles.sort(alphabetize);
-    } else if (quant == "Date Published") {
-        outputArticles.sort(byDate);
-    }*/
-
     if (outputArticles.length == 0) {
         document.getElementById("artlist").innerHTML = "No results found."
     }
@@ -118,25 +112,6 @@ function checkInput1() {
     document.getElementById("artlist").innerHTML = "" +
         "<tr><th onclick='sortTable(5)'> Sunburst</th><th onclick='sortTable(1)'> Title </th><th onclick='sortTable(2)'> Date </th><th onclick='sortTable(3)'> Author</th><th> Article </th><th hidden> Hidden </th></tr>";
     var input = document.getElementById("textField").value;
-    /*var qual = document.getElementById("qualFilter").getElementsByTagName("*");
-    var quant = document.getElementById("quantFilter").getElementsByTagName("*");
-    var qualFilter;
-    var quantFilter;
-
-    for (var i = 0; i < qual.length; i++) {
-        if (qual[i].selected) {
-
-            qual = qual[i].value;
-        }
-    }
-    for (var j = 0; j < quant.length; j++) {
-        if (quant[j].selected) {
-
-            quant = quant[j].value;
-        }
-    }
-    matchString(quant, qual);
-    */
     matchString();
 }
 
