@@ -1,0 +1,49 @@
+December 4, 2015 6 min read
+
+Opinions expressed by Entrepreneur contributors are their own.
+
+If you do great work with your search engine optimization (SEO), it could mean a significant amount of revenue for your business. At the same time, however, it is also an ongoing initiative. Once you generate a steady stream of traffic from SEO, you need to constantly be maintaining and improving your SEO in order to keep those rankings you worked so hard for.
+
+Generally, the two most important items needed to rank well in search engines are links to your website and content -- the hard part is creating great content and generating those links. It is also important to note that Google, the largest search engine, has hundreds of ranking factors with some factors having more weight than others.
+
+Related: 17 Ways To Immediately Improve Your Website Traffic
+
+Here are six important SEO strategies outside of the basics, that are critical to getting to -- or staying at -- the top of the search engines in 2016.
+
+1. Create an influencer who is a subject-matter expert.
+
+An influencer is someone who people listen to online. When it comes to search engine optimization, having an influencer in your corner will mean more people link to your website, share your blog posts and trust your content. If possible, have an influencer who is a subject-matter expert head up the content creation on your website. This person can be you, someone from your company or someone you align with.
+
+2. Develop a content-marketing strategy.
+
+Every website should have a content strategy focused around your top keywords. When you create content such as blog posts, videos, whitepapers, research reports and webinars, it gives people something to link to. In addition, the content you create can rank by itself in the search engines. For example, if you write a blog post on “How to Pick an SEO Company,” there is a possibility it will rank for some of the keywords you use in the title and in the body post, especially if the post gets linked to from other websites or shared a lot on social media. It also helps if your website as a whole already has significant high-quality links.
+
+This results in high domain authority, which translates into better rankings for all of your content. In addition, regular content creation shows Google that your website is alive and active. By sending this fresh content signal to Google on a continual basis, it will result in better rankings for your website as a whole.
+
+3. Generate powerful backlinks to your site and pages.
+
+Having an influencer and content marketing strategy will help you develop backlinks to your website, but it is also important to actively be seeking ways to get people to link to you. Some of the best ways to do this are to write for a large publication, do industry interviews and recommend your powerful content to people who matter. You can also hire a public relations (PR) company or an SEO company that has a strong digital PR division to help you with this initiative.
+
+In addition, you can also use tools like Majestic SEO to see who is linking to your competitors. Once you identify the links to your competitor’s sites, you can analyze these links, learn how they got them and implement a similar strategy for your website. For example, did they donate to a charity causing the charity to link to their site? You can do the same thing.
+
+Related: How to Identify the Best SEO Strategy for Your Company
+
+4. Get your website mobile-ready.
+
+In 2015, there was a major Google update known as Mobilegeddon. This meant that if you did not have a mobile version of your website by April 21, 2015, you lost a significant amount of your rankings in the mobile version of the Google search listings.
+
+Moving into 2016, your website needs to be mobile-ready. There are three types of accepted options for a mobile site in Google’s eyes: responsive design, being set up on a mobile subdomain or use dynamic serving. Google also now ranks websites higher that apply SEO for their apps. So if you have an app, make sure you are taking the time to implement application SEO.
+
+5. Move your website to HTTPS, a secure site.
+
+Google’s Gary IIIyes sent this tweet on August 18, 2015, saying that, “If you're an SEO and you're recommending against going HTTPS, you're wrong, and you should feel bad.” The “S” in HTTPS stands for security, and if your URL leads with HTTPS (https://example.com) instead of HTTP (http://example.com), then your website is secure. Google wants you to move your site to HTTPS so badly that they are now giving a ranking boost to websites that are secure. As we move into 2016, we will be seeing many new websites transferring to HTTPS.
+
+6. Add schema.org markup to your website.
+
+Schema.org is a type of markup that you can put in the code of your website. Using schema.org, you can tell Google which picture on your site is your logo, where your reviews are, where your videos are, what type of company you are, where you are located and much more. Google has hinted over the last year that schema.org will help your website rank better in Google search. Recently, Google’s John Mueller, said in a Google Hangout on Sept. 11 (at the 21:40 minute mark) that “over time, I think it [structured markup] is something that might go into the rankings as well.”
+
+When it comes to SEO in 2016, these are some of the most important items you can focus on. Make sure you are adding fresh, high-quality content and generating backlinks. Also, make sure you website is mobile ready and fully secure. Outside of this, it is also important to follow normal SEO best practices.
+
+Good luck to you in your SEO in 2016.
+
+Related: 10 Tips for Combining SEO and Content Marketing
