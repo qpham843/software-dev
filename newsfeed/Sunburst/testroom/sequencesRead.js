@@ -2,7 +2,7 @@
 function scoreArticle(articleNumber) {
     //Use this to control which csv and txt are being used.
     d3.text(articleNumber + "SSSArticle.txt", function(text) {
-        document.getElementById("textArticle" + articleNumber).innerHTML = text.toString();
+        document.getElementById("textArticle").innerHTML = text.toString();
     });
 
     //This section parses the CSV file into a JSON.
@@ -129,11 +129,11 @@ function createVisualization(article, articleNumber) {
 //This function creates the entirety of the collapsible list.
 function createCategories(d, articleNumber) {
     for (var i = 0; i < d.data.children.length; i += 1) {
-        var curHTML = document.getElementById("categories" + articleNumber).innerHTML;
+        var curHTML = document.getElementById("categories").innerHTML;
         var catData = d.data.children[i];
         var catId = catData.name.replace(/ /g,'');
         curHTML = curHTML + "<div id='" + articleNumber + "category" + i + "' class='collapsible'>" + catData.name + "</div>" + "<div id='"  + articleNumber + catId + "' class='content'></div>";
-        document.getElementById("categories" + articleNumber).innerHTML = curHTML;
+        document.getElementById("categories").innerHTML = curHTML;
         document.getElementById(articleNumber + "category" + i).style.borderLeft = "4px solid " + colorFinder(nameToData.get(catId));
         for (var j = 0; j < catData.children.length; j += 1) {
             var catHTML = document.getElementById(articleNumber + catId).innerHTML;
@@ -147,7 +147,7 @@ function createCategories(d, articleNumber) {
             document.getElementById(articleNumber + subcatId).style.borderLeft = "2px double " + colorFinder(nameToData.get(subcatData.name));
             for (var k = 0; k < subcatData.startIndices.length; k += 1) {
                 var subcatHTML = document.getElementById(articleNumber + subcatId).innerHTML;
-                var paragraph = document.getElementById("textArticle" + articleNumber).innerHTML;
+                var paragraph = document.getElementById("textArticle").innerHTML;
 
                 //Determine the 'clean' start and end of the text.
                 var sind = subcatData.startIndices[k];
@@ -205,7 +205,7 @@ function createCategories(d, articleNumber) {
                return d3.rgb(0, 165, 150);
             } else if (d.data.name === "Probability") {
                 return d3.rgb(0, 191, 255);
-            } else {
+            } else if (d.data.name == "Language") {
                return d3.rgb(43, 82, 230);
             }
         }   else {
@@ -219,7 +219,7 @@ function createCategories(d, articleNumber) {
                 return d3.rgb(53, 201, 136);
             } else if (d.parent.data.name === "Probability") {
                 return d3.rgb(153,204,255);
-            } else {
+            } else if (d.parent.data.name == "Language") {
                 return d3.rgb(65, 105, 225);
             }
         }
@@ -316,7 +316,7 @@ var counter = 0;
                     }
                     return;
                 } else {
-                    var paragraph = document.getElementById("textArticle" + articleNumber).innerHTML;
+                    var paragraph = document.getElementById("textArticle").innerHTML;
                     for (i = 0; i < d.data.startIndices.length; i += 1) {
                         if (d.data.startIndices[i] != -1 && d.data.endIndices[i] != -1) {
                             var ind = d.data.startIndices[i];
@@ -625,9 +625,9 @@ for (i = 0; i < sorted.length; i += 1) {
         }
         numactive -= 1;
     }
-    var paragraph = document.getElementById("textArticle" + articleNumber).innerHTML;
+    var paragraph = document.getElementById("textArticle").innerHTML;
     paragraph = paragraph.substring(0, sorted[i] + indexOffset) + inputString + paragraph.substring(sorted[i] + indexOffset);
-    document.getElementById("textArticle" + articleNumber).innerHTML = paragraph;
+    document.getElementById("textArticle").innerHTML = paragraph;
     indexOffset += inputString.length;
 }
 
@@ -866,11 +866,6 @@ d3.selectAll("path").transition().each(function(d) {
                         }
                     })
                 visOn = true;
-                //autoscroll to section functionality
-                if (d.height == 0) {
-                    $('html,body').animate({
-                    scrollTop: $("#" + d.data.startIndices[0]).offset().top -500},'slow'); //******
-                }
             })
             .on("mousemove", function(){
                 if (visOn == true) {
@@ -891,6 +886,13 @@ d3.selectAll("path").transition().each(function(d) {
                     }
                 }
                 resetVis();
+            })
+            .on('mousedown', function (d) {
+            //autoscroll to section functionality
+                if (d.height == 0) {
+                    $('html,body').animate({
+                        scrollTop: $("#" + d.data.startIndices[0]).offset().top -500},'slow'); //******
+                }
             })
             .style('stroke', 'white')
             .attr('stroke-width', 2)

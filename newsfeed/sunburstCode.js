@@ -213,8 +213,8 @@ function resetVis() {
     g.append("text")
         .attr("class", "center-text")
         .attr("x", 0)
-        .attr("y", 20)
-        .style("font-size", 54)
+        .attr("y", 15)
+        .style("font-size", 40)
         .style("font-family", "'Roboto', sans-serif")
         .style("text-anchor", "middle")
         .html((100 + total))
@@ -242,7 +242,7 @@ d3.selectAll("path").transition().each(function(d) {
                 d3.select(this)
       	            .transition()
       	            .duration(300)
-      	            .attr('stroke-width',7)
+      	            .attr('stroke-width',3)
       	            .style("opacity", 1)
       	        if (d.height == 0) {
       	            var allelems = document.querySelectorAll("[name]");
@@ -256,9 +256,9 @@ d3.selectAll("path").transition().each(function(d) {
       	        checkSum(d)
                 g.append("text")
                     .attr("class", "center-text")
-                    .attr("x", -5)
-                    .attr("y", 30)
-                    .style("font-size", 100)
+                    .attr("x", 0)
+                    .attr("y", 15)
+                    .style("font-size", 40)
                     .style("font-family", "'Roboto', sans-serif")
                     .style("text-anchor", "middle")
                     .html(sum)
@@ -269,6 +269,6 @@ d3.selectAll("path").transition().each(function(d) {
                 resetVis();
             })
             .style('stroke', 'white')
-            .attr('stroke-width', 7)
+            .attr('stroke-width', 5)
             .style("fill", colorFinder);
 }

@@ -52,7 +52,7 @@ function generateList() {
     /*
 
     var sortOptions = document.getElementById("sortByList");
-    var sortBy = sortOptions.options[sortOptions.selectedIndex].name;
+    var sortBy = sortOptions.options[sortOptions.selectedIndex].value;
     var sortedArticles = sortArticles(articles, sortBy);
     //Filter by tags (Needs additional information)
 
@@ -70,7 +70,7 @@ function generateList() {
 }
 
 function generateEntry(entry) {
-    var articleEntry = "<div class='row'>" +
+    var articleEntry = "<a href='" + entry.visLink + "'> <div id='" + entry.id + "' class='row'>" +
                             "<div class='col-2 date'>" + entry.date + "</div>" +
                             "<div class='col-6'>" +
                                 "<h3>" + entry.title + "</h3>" +
@@ -83,7 +83,7 @@ function generateEntry(entry) {
                                     "<svg id='sunburst" + entry.id + "' viewBox='0 0 200 200'  preserveAspectRatio='xMidYMid meet'></svg>" +
                                 "</div>" +
                             "</div>" +
-                       "</div>" +
+                       "</div></a>" +
                        "<hr>";
     runVisualization(entry.id);
     document.getElementById("articleList").innerHTML += articleEntry;
