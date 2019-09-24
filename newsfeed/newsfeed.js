@@ -49,11 +49,13 @@ function generateList() {
     // Collect values from the HTML
 
     //Sort by... Most Recent, Alphabetical, Credibility Score (High to Low & Low to High)
-    /*
+
 
     var sortOptions = document.getElementById("sortByList");
     var sortBy = sortOptions.options[sortOptions.selectedIndex].value;
-    var sortedArticles = sortArticles(articles, sortBy);
+    var orderOptions = document.getElementById("order")
+    var order = orderOptions.options[orderOptions.selectedIndex].value;
+    var sortedArticles = sortArticles(articles, sortBy, order);
     //Filter by tags (Needs additional information)
 
     //Only show the top X results
@@ -61,12 +63,35 @@ function generateList() {
     sortedArticles = sortedArticles.slice(0, showLimit);
     document.getElementById("articleList").innerHTML = "";
 
-    */
     console.log(articles);
     var sortedArticles = articles;
     for (var i = 0; i < sortedArticles.length; i++) {
         generateEntry(sortedArticles[i]);
     }
+}
+
+function sortArticles(articles, sortBy, order) {
+    output = Array.from(articles);
+    if (sortBy == "title") {
+        if (order == "ascending") {
+            articles.sort((a, b) => (a.title < b.title) ? 1 : -1)
+        } else {
+            articles.sort((a, b) => (a.title > b.title) ? 1 : -1)
+        }
+    } else if (sortBy == "date") {
+        if (order == "ascending") {
+            articles.sort((a, b) => (a.date < b.date) ? 1 : -1)
+        } else {
+            articles.sort((a, b) => (a.date > b.date) ? 1 : -1)
+        }
+    } else {
+        if (order == "ascending") {
+            articles.sort((a, b) => (a.credibilityScore < b.credibilityScore) ? 1 : -1)
+        } else {
+            articles.sort((a, b) => (a.credibilityScore > b.credibilityScore) ? 1 : -1)
+        }
+    }
+    return output;
 }
 
 function generateEntry(entry) {
