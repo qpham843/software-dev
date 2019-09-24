@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.ArticleEntity;
@@ -26,24 +28,34 @@ public class ArticleController {
 	
 	@Autowired ArticleService articleService;
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public List<ArticleEntity> getAllArticles() {
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public List<ArticleEntity> getAllArticles(
+		@RequestParam(required = false, name="status") String statusCode,
+		@RequestParam(required = false, name="title") String title,
+		@RequestParam(required = false, name="url") String url
+	) {
+		if (statusCode != null) {
+			return articleService.findArticleByStatus(statusCode); 
+		}
+		if (title != null) {
+			return articleService.findArticleByTitle(title);
+		}
+		if (url != null) {
+			return articleService.findArticleByUrl(url);
+		}
 		return articleService.findAllArticles();
 	}
 
-	@RequestMapping(value = "/{Id}", method = RequestMethod.GET)
-	public ArticleEntity getArticleById(@PathVariable("Id") Integer Id) {
-		return articleService.findArticleById(Id);
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ArticleEntity getArticleById(@PathVariable("id") Integer id) {
+		return articleService.findArticleById(id);
 	}
 	
-	@RequestMapping(value = "url/{url}", method = RequestMethod.GET)
-	public List<ArticleEntity> getArticleByUrl(@PathVariable("url") String url) {
-		return articleService.findArticleByUrl(url);
+	@RequestMapping(value = "/{id}/status/{status}", method = RequestMethod.POST)
+	public ArticleEntity getArticleById(@PathVariable("id") Integer id,
+			@PathVariable("status") String status) {
+		return articleService.updateStatus(id, status, "Comment Placeholder - article controller - POST /status");
 	}
 
-	@RequestMapping(value = "title/{title}", method = RequestMethod.GET)
-	public List<ArticleEntity> getArticleByTitle(@PathVariable("title") String title) {
-		return articleService.findArticleByTitle(title);
-	}
-
+	
 }
