@@ -1,9 +1,10 @@
-//This section switches out the existing article for one from a .txt file.
 function scoreArticle(articleNumber) {
     //Use this to control which csv and txt are being used.
+    
     d3.text(articleNumber + "SSSArticle.txt", function(text) {
         document.getElementById("textArticle").innerHTML = text.toString();
     });
+
 
     //This section parses the CSV file into a JSON.
     d3.csv("VisualizationData_" + articleNumber + ".csv", function(error, data) {

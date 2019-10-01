@@ -2,41 +2,109 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Web Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,600,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700,800" rel="stylesheet" type='text/css'>
+
+    <!-- Relative Stylesheets -->
+    <link rel="stylesheet" href="testroom/scoredArticleCSS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="newsfeed.js" charset="utf-8"></script>
     <script src="sunburstCode.js" charset="utf-8"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="newsfeedstyle.css">
+
 </head>
 
 <body>
-    <button id="cat" onclick="generateList()"> Push Me </button>
-    <select id = "sortByList">
-        <option value="title">title</option>
-        <option value="date">date</option>
-        <option value="credscore">credibility score</option>
-    </select>
-    <select id = "showLimit">
-        <option value=5>5</option>
-        <option value=10>10</option>
-        <option value=15>15</option>
-    </select>
 
-    <select id = "order">
-        <option value="descending">descending</option>
-        <option value="ascending">ascending</option>
-    </select>
-    <div id="articleList" class="container section">
+<div class="base-grid">
+
+    <!-- Navigation -->
+
+    <div class="nav-wrap">
+        <div class="nav-light">
+            <ul class="nav-bar" role="navigation">
+                <li class="nav-brand"><a href="http://publiceditor.io/index.html" class="navlink">Public Editor</a></li>
+                <li><a href="http://publiceditor.io/about.html" class="navlink">About</a></li>
+                <li><a href="http://publiceditor.io/contact.html" class="navlink">Contact</a></li>
+            </ul>
+        </div>
     </div>
+
+    <div class="nav-pad">
+
+        <!-- Gradient start -->
+        <div class="teal-gradient">
+            <div class="small-space"></div>
+        </div>
+
+        <!-- Grid start -->
+        <div class="searchbar">
+            <button id="cat" onclick="generateList()"> Push Me </button>
+            <select id = "sortByList">
+                <option value="title">Title</option>
+                <option value="date">Date</option>
+                <option value="credscore">Credibility Score</option>
+            </select>
+            <select id = "showLimit">
+                <option value=5>5</option>
+                <option value=10>10</option>
+                <option value=15>15</option>
+            </select>
+
+            <select id = "order">
+                <option value="descending">Descending</option>
+                <option value="ascending">Ascending</option>
+            </select>
+        </div>
+
+        <div id="articleList" class="container section"></div>
+
+        <!-- Grid end -->
+
+        <div class="small-space"></div>
+
+        <!-- Footer -->
+
+        <div class="footer-span">
+            <div class="footer-flex-wrap">
+                <div class="footer-block">
+                    <ul>
+                        <li><b>System</b></li>
+                        <li><a href="./annotate.html" class="footer-link">How we generate scores</a></li>
+                        <li><a href="./d3.html" class="footer-link">Explore scored articles</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-block">
+                    <ul>
+                        <li><b>About</b></li>
+                        <li><a href="./about.html" class="footer-link">About</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- End footer -->
+
+    </div>
+</div>
 </body>
 
 <script>
-    readVisData();
-    setTimeout(function() {
+    var promise1 = new Promise(function(resolve, reject) {
+        console.log("Starting!");
+        readVisData();
+    });
+    promise1.then(function(value) {
+        console.log("Here!");
         generateList();
-    }, 500);
+    })
 </script>
+
 
 </html>

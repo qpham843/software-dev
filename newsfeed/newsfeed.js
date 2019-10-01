@@ -1,7 +1,8 @@
 var articles = []
 
 function readVisData() {
-    $.get("visData.json").done(function(data) {
+    $.get("https://cors-anywhere.herokuapp.com/" + "https://s3-us-west-2.amazonaws.com/publiceditor.io/Articles/visData.json").done(function(data) {
+        console.log(data);
         for (var i = 0; i < Object.keys(data).length; i++) {
             var article = data[i];
             var articleEntry = new Article(article["Title"], article["Author"], article["Date"], article["ID"], article["Article Link"], article["Visualization Link"], article["Plain Text"], article["Highlight Data"]);
@@ -49,8 +50,6 @@ function generateList() {
     // Collect values from the HTML
 
     //Sort by... Most Recent, Alphabetical, Credibility Score (High to Low & Low to High)
-
-
     var sortOptions = document.getElementById("sortByList");
     var sortBy = sortOptions.options[sortOptions.selectedIndex].value;
     var orderOptions = document.getElementById("order")
@@ -80,9 +79,9 @@ function sortArticles(articles, sortBy, order) {
         }
     } else if (sortBy == "date") {
         if (order == "ascending") {
-            articles.sort((a, b) => (a.date < b.date) ? 1 : -1)
-        } else {
             articles.sort((a, b) => (a.date > b.date) ? 1 : -1)
+        } else {
+            articles.sort((a, b) => (a.date < b.date) ? 1 : -1)
         }
     } else {
         if (order == "ascending") {
@@ -95,7 +94,7 @@ function sortArticles(articles, sortBy, order) {
 }
 
 function generateEntry(entry) {
-    var articleEntry = "<a href='" + entry.visLink + "'> <div id='" + entry.id + "' class='row'>" +
+    var articleEntry = "<a class='hyperlink' href='" + entry.visLink + "'> <div id='" + entry.id + "' class='row'>" +
                             "<div class='col-2 date'>" + entry.date + "</div>" +
                             "<div class='col-6'>" +
                                 "<h3>" + entry.title + "</h3>" +
@@ -110,7 +109,7 @@ function generateEntry(entry) {
                             "</div>" +
                        "</div></a>" +
                        "<hr>";
-    runVisualization(entry.id);
+    runVisualization(entry.id, entry.highlightData);
     document.getElementById("articleList").innerHTML += articleEntry;
 }
 
