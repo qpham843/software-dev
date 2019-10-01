@@ -1,13 +1,20 @@
 package com.example.demo.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table (name="article")
@@ -21,6 +28,7 @@ public class ArticleEntity implements Serializable {
 	
 	@Id
 	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	protected Integer id;
 	
 	@Column(name="title")
@@ -30,13 +38,17 @@ public class ArticleEntity implements Serializable {
 	protected String author = "";
 	
 	@Column(name="publish_date")
-	protected Date publishDate = Date.from(Instant.now());
+	@Temporal(TemporalType.TIMESTAMP)
+	protected Date publishDate = new Date();
 	
 	@Column(name="article_text")
 	protected String articleText = "";
 	
 	@Column(name="url")
 	protected String url = "";
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "articleId")
+	private List<StatusViewEntity> statuses; 
 
 	public Integer getId() {
 		return id;
@@ -62,14 +74,6 @@ public class ArticleEntity implements Serializable {
 		this.author = author;
 	}
 
-	public Date getPublishDate() {
-		return publishDate;
-	}
-
-	public void setPublishDate(Date publishDate) {
-		this.publishDate = publishDate;
-	}
-
 	public String getArticleText() {
 		return articleText;
 	}
@@ -88,6 +92,22 @@ public class ArticleEntity implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public List<StatusViewEntity> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<StatusViewEntity> statuses) {
+		this.statuses = statuses;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 
 	

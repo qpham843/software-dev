@@ -14,5 +14,8 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer
 	
 	@Query(value="select * from article where title like concat('%',:title,'%') ", nativeQuery=true)
 	public List<ArticleEntity> findByTitle(String title);
+
+	@Query(value="select a.* from article a, article_current_status acs where acs.status_code = :statusCode and acs.id = a.id ", nativeQuery=true)
+	public List<ArticleEntity> findByStatusCode(String statusCode);
 	
 }

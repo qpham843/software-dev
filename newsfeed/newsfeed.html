@@ -12,11 +12,21 @@
 </head>
 
 <body>
-    <button id="cat" onclick="generateLists()"> Push Me </button>
-    <select>
+    <button id="cat" onclick="generateList()"> Push Me </button>
+    <select id = "sortByList">
         <option value="title">title</option>
         <option value="date">date</option>
         <option value="credscore">credibility score</option>
+    </select>
+    <select id = "showLimit">
+        <option value=5>5</option>
+        <option value=10>10</option>
+        <option value=15>15</option>
+    </select>
+
+    <select id = "order">
+        <option value="descending">descending</option>
+        <option value="ascending">ascending</option>
     </select>
     <div id="articleList" class="container section">
     </div>

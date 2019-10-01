@@ -2,13 +2,19 @@ package com.example.demo.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table (name="article_has_status")
@@ -22,6 +28,7 @@ public class ArticleHasStatusEntity implements Serializable {
 	
 	@Id
 	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected Integer id;
 	
 	@Column(name="article_id")
@@ -30,9 +37,10 @@ public class ArticleHasStatusEntity implements Serializable {
 	@Column(name="article_status_id")
 	protected Integer articleStatusId = 0;
 	
-	@Column(name="timestamp")
-	protected java.sql.Timestamp timestamp = new Timestamp(Instant.now().toEpochMilli());
-	
+	@Column(name="dateChanged")
+	@Temporal(TemporalType.TIMESTAMP)
+	protected Date dateChanged = new Date();
+
 	@Column(name="comment")
 	protected String comment = "";
 
@@ -60,12 +68,12 @@ public class ArticleHasStatusEntity implements Serializable {
 		this.articleStatusId = articleStatusId;
 	}
 
-	public java.sql.Timestamp getTimestamp() {
-		return timestamp;
+	public Date getDateChanged() {
+		return dateChanged;
 	}
 
-	public void setTimestamp(java.sql.Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public void setDateChanged(Date dateChanged) {
+		this.dateChanged = dateChanged;
 	}
 
 	public String getComment() {
