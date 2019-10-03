@@ -8,7 +8,6 @@ function runVisualization(articleNumber) {
     console.log(articles)
     createVisualization(article1);
     });
-    console.log("IRAN")
 }
 
 function buildHierarchy(data) {

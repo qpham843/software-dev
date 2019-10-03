@@ -1,7 +1,7 @@
 //Use this to control which csv and txt are being used.
-function runVisualization(articleNumber) {
+function runVisualization(articleNumber, articleData) {
     //This section parses the CSV file into a JSON.
-    d3.csv("VisualizationData_" + articleNumber + ".csv", function(error, data) {
+    d3.csv("https://cors-anywhere.herokuapp.com/" + articleData, function(error, data) {
     if (error) throw error;
     var articles = buildHierarchy(data);
     var article1 = articles["Article_" + articleNumber];

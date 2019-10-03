@@ -1,16 +1,19 @@
-//This section switches out the existing article for one from a .txt file.
 function scoreArticle(articleNumber) {
     //Use this to control which csv and txt are being used.
+    
     d3.text(articleNumber + "SSSArticle.txt", function(text) {
         document.getElementById("textArticle").innerHTML = text.toString();
     });
+
 
     //This section parses the CSV file into a JSON.
     d3.csv("VisualizationData_" + articleNumber + ".csv", function(error, data) {
     if (error) throw error;
     var articles = buildHierarchy(data);
-    var article1 = articles["Article_" + articleNumber];
-    setTimeout(function() { createVisualization(article1, articleNumber); }, 100);
+    console.log(articles)
+    var article = articles["Article_" + articleNumber];
+    console.log(article)
+    setTimeout(function() { createVisualization(article, articleNumber); }, 500);
     });
 }
 
@@ -419,13 +422,13 @@ for (i = 0; i < sorted.length; i += 1) {
             var cur3 = currentHighlight[3];
             newest = cur1[1];
             hnewName = cur1[2];
-            newName = cur1[3].replace(/ /g,'');
+            newName = cur1[2].replace(/ /g,'');
             middle = cur2[1];
             hmidName = cur2[2];
-            midName = cur2[3].replace(/ /g,'');
+            midName = cur2[2].replace(/ /g,'');
             oldest = cur3[1];
             holdName = cur3[2];
-            oldName = cur3[3].replace(/ /g,'');
+            oldName = cur3[2].replace(/ /g,'');
             inputString = "<" + oldName + midName + newName + " id='" + sorted[i] + "' name='" + holdName + ", " + hmidName + ", " + hnewName + "' class='highlighter' style='background: linear-gradient(to bottom, " +
                 oldest + " 0%, transparent 20%, transparent 35%, " +
                 middle + " 40%, transparent 55%, transparent 70%, " +
@@ -737,11 +740,11 @@ window.onmousemove = function (e) {
     }
 };
 //This section enables the Floating Textbox for the visualization.
-var div = d3.select("body").append("div")
+var visBox = d3.select("chart").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-var psuedobox = d3.select("body").append("div")
+var psuedobox = d3.select("chart").append("div")
     .attr("class", "psuedobox")
     .style("opacity", 0);
 
@@ -781,7 +784,7 @@ function resetVis() {
         .style("font-size", 50)
         .style("text-anchor", "middle")
         .html((100 + total))
-    div.transition()
+    visBox.transition()
             .duration(200)
             .style("opacity", 0);
     visOn = false;
@@ -852,10 +855,10 @@ d3.selectAll("path").transition().each(function(d) {
                     .style("font-size", 40)
                     .style("text-anchor", "middle")
                     .html(sum)
-                div.transition()
+                visBox.transition()
                     .duration(200)
                     .style("opacity", .9);
-                div.html(d.data.name)
+                visBox.html(d.data.name)
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px")
                     .style("width", function() {
@@ -869,11 +872,11 @@ d3.selectAll("path").transition().each(function(d) {
             })
             .on("mousemove", function(){
                 if (visOn == true) {
-                    div
+                    visBox
                         .style("left", (d3.event.pageX)+ "px")
                         .style("top", (d3.event.pageY - 28) + "px")
                 } else {
-                    div.transition()
+                    visBox.transition()
                         .duration(10)
                         .style("opacity", 0);
                 }})
