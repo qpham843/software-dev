@@ -43,23 +43,31 @@
         </div>
 
         <!-- Grid start -->
-        <div class="searchbar">
-            <button id="cat" onclick="generateList()"> Push Me </button>
-            <select id = "sortByList">
-                <option value="title">Title</option>
-                <option value="date">Date</option>
-                <option value="credscore">Credibility Score</option>
-            </select>
-            <select id = "showLimit">
-                <option value=5>5</option>
-                <option value=10>10</option>
-                <option value=15>15</option>
-            </select>
+        <div class="row">
+            <div class="col-4">
+            </div>
+            <div class="col-4">
+                <div class="searchbar">
+                    <button id="cat" onclick="generateList()"> Push Me </button>
+                    <select id = "sortByList">
+                        <option value="title">Title</option>
+                        <option value="date">Date</option>
+                        <option value="credscore">Credibility Score</option>
+                    </select>
+                    <select id = "showLimit">
+                        <option value=5>5</option>
+                        <option value=10>10</option>
+                        <option value=15>15</option>
+                    </select>
 
-            <select id = "order">
-                <option value="descending">Descending</option>
-                <option value="ascending">Ascending</option>
-            </select>
+                    <select id = "order">
+                        <option value="descending">Descending</option>
+                        <option value="ascending">Ascending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+            </div>
         </div>
 
         <div id="articleList" class="container section"></div>
@@ -96,14 +104,13 @@
 </body>
 
 <script>
-    var promise1 = new Promise(function(resolve, reject) {
-        console.log("Starting!");
+    function doFunctions() {
         readVisData();
-    });
-    promise1.then(function(value) {
-        console.log("Here!");
-        generateList();
-    })
+        setTimeout(function() {
+            generateList();
+        }, 800);
+    }
+    doFunctions();
 </script>
 
 

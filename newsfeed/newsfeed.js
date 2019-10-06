@@ -101,7 +101,6 @@ function generateEntry(entry) {
                                 "<p class='articleText'>" + entry.previewText + "</p>" +
                                 "<p class='author'>" + entry.author + "</p>" +
                             "</div>" +
-                            //"<img class='col-4 sunburst' src='https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png'></img>" +
                             "<div class='cred-score-container col-4'>" +
                                 "<div class='sunburst'>" +
                                     "<svg id='sunburst" + entry.id + "' viewBox='0 0 200 200'  preserveAspectRatio='xMidYMid meet'></svg>" +
@@ -109,8 +108,8 @@ function generateEntry(entry) {
                             "</div>" +
                        "</div></a>" +
                        "<hr>";
-    runVisualization(entry.id, entry.highlightData);
     document.getElementById("articleList").innerHTML += articleEntry;
+    runVisualization(entry.id, entry.highlightData);
 }
 
 function csvJSON(csv){
