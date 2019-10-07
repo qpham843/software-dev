@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   	this.dashboardService.getArticles()
   	.subscribe((data: Article) => {
-  		this.articles = data;
+		this.articles = data;
   	});
 
   }
