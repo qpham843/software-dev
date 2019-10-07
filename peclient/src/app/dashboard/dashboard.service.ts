@@ -19,7 +19,7 @@ export class DashboardService {
   }
 
   searchByTitle(title: string) {
-  	return this.http.get<Article>('/api/article/title/' + title);
+  	return this.http.get<Article>('/api/article?title=' + title);
   }
 
 }

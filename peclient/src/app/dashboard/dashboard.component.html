@@ -42,7 +42,7 @@
 
 
 	<div class="section">
-	 <table width="100%" border="1px solid black">
+	 <table class="table3">
 		<thead>
 			<tr>
 				<th>Date Added
@@ -60,28 +60,10 @@
 				<th>Action
 					<button aria-label="Sort Object Title column descending" class="sorting"></button>
 				</th>
-				<th>Select</th>
 			</tr>
 		</thead>
 	    <tbody>
-	<!--     	<tr>
-	    		<td> placeholder</td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    	</tr>
-	 -->
-	    	<tr *ngFor="let article of articles">
-	    		<td> placeholder</td>
-	    		<td> {{ article.title }}</td>
-	    		<td> {{ article.url }} </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    	</tr>
-	    	
+	    	<tr *ngFor="let article of articles" app-article-row [article]="article"></tr>
 	    </tbody>
 	    </table>
 	</div>
