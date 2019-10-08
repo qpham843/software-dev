@@ -14,9 +14,10 @@ export class DashboardComponent implements OnInit {
   dashboardForm: FormGroup;
   articles: Article;
   searchString: string = "";
+  statuses: Array<any> = [];
 
   constructor(
-  	private dashboardService: DashboardService,
+  	private ds: DashboardService,
   	private fb: FormBuilder,
   ) { 
   	this.dashboardForm = this.fb.group({
@@ -24,13 +25,15 @@ export class DashboardComponent implements OnInit {
   		searchType: new FormControl(),
   		searchString: new FormControl(),
 
-  	})
+	  });
+	for (let [k, v] of ds.statusMap) {
+		this.statuses.push({"value": v.statusCode, "description": v.description});
+	}
   }
   
   
   ngOnInit() {
-  	this.dashboardService.getArticles()
-  	.subscribe((data: Article) => {
+  	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
   	});
 
@@ -38,12 +41,25 @@ export class DashboardComponent implements OnInit {
 
   search() {
   	console.log("searching");
-  	this.dashboardService.searchByTitle(this.dashboardForm.get('searchString').value).subscribe(
-  		(data: Article) => {
-  		this.articles = data;
-  		}
+	this.ds.searchByTitle(this.dashboardForm.get('searchString').value)
+		.subscribe((data: Article) => {
+			this.articles = data;
+		}
   	);
 
   }
 
+  filterArticles(filterVal: any) {
+	if (filterVal == "All")
+		this.ds.getArticles().subscribe((data: Article) => {
+			this.articles = data;
+  		});
+	else
+		this.ds.searchByStatus(this.dashboardForm.get('statusFilter').value)
+			.subscribe((data: Article) => {
+				this.articles = data;
+			}
+		);
+}
+  
 }
