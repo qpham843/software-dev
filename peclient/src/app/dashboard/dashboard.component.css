@@ -61,8 +61,7 @@
     background: #62abeb;
   }
 
-  .table3 th, 
-  .table3 td {
+  .table3 th {
     min-width: 80px;
     padding: 0.5em;
     border: 1px solid #EEE;
@@ -111,11 +110,11 @@
 }
 
 @media (max-width: 768px) {
+  /* .table3 td  is handled in article-row compnent */
   .table3 table,
   .table3 thead,
   .table3 tbody,
   .table3 th,
-  .table3 td,
   .table3 tr {
     display: block;
   }
@@ -134,45 +133,6 @@
     border-top: 1px solid #EEE;
     border-bottom: 1px solid #EEE;
     background: #6ec1ea;
-  }
-
-  .table3 td {
-    position: relative;
-    margin: 0 0 0 150px;
-    padding: 6px;
-    border-left: 1px solid #EEE;
-  }
-  .table3 td::before {
-    position: absolute;
-    top: 6px;
-    left: -145px;
-    font-weight: bold;
-    white-space: nowrap;
-  }
-
-  /* Clunky that you have to define table headers here so it works for mobile display, sorry! */
-  .table3 .c_title::before {
-    content: "Date Added";
-  }
-
-  .table3 .c_creator::before {
-    content: "Title";
-  }
-
-  .table3 .c_identifier::before {
-    content: "URL";
-  }
-
-  .table3 .c_owner::before {
-    content: "Status";
-  }
-
-  .table3 .c_create_time::before {
-    content: "Action";
-  }
-
-  .table3 .c_select::before {
-    content: "Select";
   }
 
 }

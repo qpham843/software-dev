@@ -1,7 +1,7 @@
 <div data-collapse="medium" data-animation="default" data-duration="400" class="navigation w-nav">
 <div class="navigation-items">
 	<div class="menu-button w-nav-button">
-		<img src="https://uploads-ssl.webflow.com/5d71a7a088e51c43bf96154d/5d71a7a088e51c4aa6961563_menu-icon.png" 
+		<img src="/assets/images/menu-icon.png" 
 			width="22" alt="" class="menu-icon"/>
 	</div>
 	<a href="#" class="logo-link w-nav-brand w--current"><h1 class="heading">Article Dashboard</h1></a>
@@ -15,7 +15,7 @@
 	<div class="w-form">
 		<label for="statusFilter">filter by</label>
 		<select id="statusFilter" name="statusFilter" formControlName="statusFilter"
-			class="select-field w-select">
+			class="select-field w-select" (change)="filterByStatus($event.target.value)">
 			<option value="all">All</option>
 			<option *ngFor="let status of statuses" [value]="status.value">{{status.description}}</option>
 		</select>
@@ -31,16 +31,18 @@
 		</select>
 		<input type="text" class="w-input" maxlength="256" name="searchString" 
 			data-name="Search String" placeholder="Enter search text" id="searchString"
-			formControlName="searchString" required=""/>
+			formControlName="searchString" required="" (keyup.enter)="search()" />
 		<button type="button" (click)="search();">Search</button>
 	</div>
 	</div>
-	<div class="section">
-	<div class="div-block-2">
-	   <div class="text-block-4">Searched on: </div>
-	   <div class="text-block-3"> "{{ searchString }}"</div>
-	</div>
-	</div>
+	<ng-container *ngIf="stringSearched && stringSearched != ''">
+		<div class="section">
+			<div class="div-block-2">
+				<div class="text-block-4">Searched on: </div>
+				<div class="text-block-3"> "{{ stringSearched }}"</div>
+			</div>
+		</div>
+	</ng-container>
 
 	<div class="section">
 	 <table class="table3">
@@ -64,7 +66,12 @@
 			</tr>
 		</thead>
 	    <tbody>
-	    	<tr *ngFor="let article of articles" app-article-row [article]="article"></tr>
+			<ng-container *ngIf="articles && articles.length > 0; else noResults">
+				<tr *ngFor="let article of articles" app-article-row [article]="article"></tr>
+			</ng-container>
+			<ng-template #noResults>
+				<tr><td colspan="5">No results</td></tr>
+			</ng-template>
 	    </tbody>
 	    </table>
 	</div>
