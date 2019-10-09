@@ -12,7 +12,12 @@
 </head>
 
 <body>
-    <button id="cat" onclick="generateList()"> Push Me </button>
+    <form class="example">
+        <input id = "searchtext" type="text" placeholder="Search.." name="search">
+        <button type="button" onclick="generateList()">
+            Search
+        </button>
+    </form>
     <select id = "sortByList">
         <option value="title">title</option>
         <option value="date">date</option>
@@ -23,13 +28,16 @@
         <option value=10>10</option>
         <option value=15>15</option>
     </select>
-
     <select id = "order">
         <option value="descending">descending</option>
         <option value="ascending">ascending</option>
     </select>
     <div id="articleList" class="container section">
     </div>
+
+
+
+
 </body>
 
 <script>
