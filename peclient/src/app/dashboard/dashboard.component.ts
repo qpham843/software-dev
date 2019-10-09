@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
 
   dashboardForm: FormGroup;
   articles: Article;
-  searchString: string = "";
+  stringSearched: string = "";
   statuses: Array<any> = [];
 
   constructor(
@@ -40,8 +40,10 @@ export class DashboardComponent implements OnInit {
   }
 
   search() {
-  	console.log("searching");
-	this.ds.searchByTitle(this.dashboardForm.get('searchString').value)
+	console.log("searching");
+	this.dashboardForm.get('statusFilter').reset();
+	this.stringSearched = this.dashboardForm.get('searchString').value
+	this.ds.searchByTitle(this.stringSearched)
 		.subscribe((data: Article) => {
 			this.articles = data;
 		}
@@ -49,8 +51,9 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  filterArticles(filterVal: any) {
-	if (filterVal == "All")
+  filterByStatus(filterVal: any) {
+	this.stringSearched = '';
+	if (filterVal == "all")
 		this.ds.getArticles().subscribe((data: Article) => {
 			this.articles = data;
   		});
