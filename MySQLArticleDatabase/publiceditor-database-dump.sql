@@ -57,19 +57,29 @@ select article_id, max(date_changed) as MaxDateTime
 	from article_has_status group by article_id
 ;
 
-create view article_current_status as
-select 
-	a.*
-from
-	article a,
-    article_has_status ahs,
-    article_status st,
-    article_sub_status_view assv
-where
-	ahs.article_id = assv.article_id and
-    ahs.date_changed = assv.MaxDateTime and
-	a.id = assv.article_id and
-    st.id = ahs.article_status_id
+CREATE or replace 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `publiceditor`.`article_current_status` AS
+    SELECT 
+        `a`.`id` AS `id`,
+        `a`.`title` AS `title`,
+        `a`.`author` AS `author`,
+        `a`.`url` AS `url`,
+        `a`.`publish_date` AS `publish_date`,
+        `a`.`article_text` AS `article_text`,
+        `st`.`status_code` AS `status_code`
+    FROM
+        (((`publiceditor`.`article` `a`
+        JOIN `publiceditor`.`article_has_status` `ahs`)
+        JOIN `publiceditor`.`article_status` `st`)
+        JOIN `publiceditor`.`article_sub_status_view` `assv`)
+    WHERE
+        ((`ahs`.`article_id` = `assv`.`article_id`)
+            AND (`ahs`.`date_changed` = `assv`.`MaxDateTime`)
+            AND (`a`.`id` = `assv`.`article_id`)
+            AND (`st`.`id` = `ahs`.`article_status_id`))
 ;
 
 CREATE VIEW `publiceditor`.`article_status_view` AS select `ahs`.`id` AS `id`,`ahs`.`article_id` AS `article_id`,`ahs`.`date_changed` AS `date_changed`,`ahs`.`comment` AS `comment`,`ast`.`status_code` AS `status_code`,`ast`.`status_text` AS `status_text` from (`publiceditor`.`article_has_status` `ahs` join `publiceditor`.`article_status` `ast`) where (`ahs`.`article_status_id` = `ast`.`id`);

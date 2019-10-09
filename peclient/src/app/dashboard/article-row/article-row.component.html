@@ -1,0 +1,15 @@
+    <td> {{ articleRow.publishDate }}</td>
+    <td> {{ articleRow.title }}</td>
+    <td> {{ articleRow.url }} </td>
+    <td> {{ articleRow.statusText }} </td>
+    <td>
+        <div *ngIf="displaySubmitButton">
+            <a [routerLink]="" class="button-2 w-button"
+            (click)="setSubmit(articleRow.id)">
+            Submit</a>
+        </div>
+        <div *ngIf="displayRejectButton">
+            <a [routerLink]="" class="button-3 w-button"
+            (click)="setReject(articleRow.id)">
+            Reject</a></div>
+    </td>
