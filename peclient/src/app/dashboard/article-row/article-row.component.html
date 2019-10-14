@@ -1,0 +1,15 @@
+    <td class="c_date_added"> {{ articleRow.publishDate }}</td>
+    <td class="c_title"> {{ articleRow.title }}</td>
+    <td class="c_url"> <a target="_blank" href="{{ articleRow.url }}">{{ articleRow.url }}</a> </td>
+    <td class="c_status"> {{ articleRow.statusText }} </td>
+    <td class="c_action">
+        <div *ngIf="displaySubmitButton">
+            <a [routerLink]="" class="button-2 w-button"
+            (click)="setSubmit(articleRow.id)">
+            Submit</a>
+        </div>
+        <div *ngIf="displayRejectButton">
+            <a [routerLink]="" class="button-3 w-button"
+            (click)="setReject(articleRow.id)">
+            Reject</a></div>
+    </td>

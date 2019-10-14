@@ -183,6 +183,13 @@ var dataToParentPath = new Map();
              })
 
 //VISUALIZATION ANIMATIONS
+
+//This section enables the Floating Textbox for the visualization.
+var visBox = d3.select("#sunburst" + articleNumber).append("div")
+    .attr("id", "visBox" + articleNumber)
+    .attr("class", "tooltip")
+    .style("opacity", 1);
+console.log(visBox);
 //This removes the current effects and resets the visualization to default.
 var visOn = false;
 function resetVis() {
@@ -218,6 +225,9 @@ function resetVis() {
         .style("font-family", "'Roboto', sans-serif")
         .style("text-anchor", "middle")
         .html((100 + total))
+    visBox.transition()
+        .duration(200)
+        .style("opacity", 1);
     visOn = false;
     }
 
@@ -262,8 +272,32 @@ d3.selectAll("path").transition().each(function(d) {
                     .style("font-family", "'Roboto', sans-serif")
                     .style("text-anchor", "middle")
                     .html(sum)
+                visBox.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                visBox.html(d.data.name)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px")
+                    .style("width", function() {
+                        if (d.data.name.length < 18) {
+                            return "90px";
+                        } else {
+                            return "180px";
+                        }
+                    })
                 visOn = true;
             })
+            //On mouse move, update the position of the visBox
+            .on("mousemove", function(){
+                if (visOn == true) {
+                    visBox
+                        .style("left", (d3.event.pageX)+ "px")
+                        .style("top", (d3.event.pageY - 28) + "px")
+                } else {
+                    visBox.transition()
+                        .duration(10)
+                        .style("opacity", 1);
+                }})
             //On mouse exiting, remove all highlights and clear all text and display the total value.
             .on('mouseout',function (d) {
                 resetVis();

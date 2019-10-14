@@ -54,7 +54,14 @@ function generateList() {
     var sortBy = sortOptions.options[sortOptions.selectedIndex].value;
     var orderOptions = document.getElementById("order")
     var order = orderOptions.options[orderOptions.selectedIndex].value;
-    var sortedArticles = sortArticles(articles, sortBy, order);
+    search = document.getElementById("searchtext").value;
+
+    //search
+    var searchedArticles = unlimitedSearchWorks(search, articles);
+
+    //sort
+    var sortedArticles = sortArticles(searchedArticles, sortBy, order);
+    console.log(sortedArticles)
     //Filter by tags (Needs additional information)
 
     //Only show the top X results
@@ -62,15 +69,25 @@ function generateList() {
     sortedArticles = sortedArticles.slice(0, showLimit);
     document.getElementById("articleList").innerHTML = "";
 
-    console.log(articles);
-    var sortedArticles = articles;
+    console.log(sortedArticles)
     for (var i = 0; i < sortedArticles.length; i++) {
         generateEntry(sortedArticles[i]);
     }
+    return false;
+}
+
+function unlimitedSearchWorks(query, articles) {
+    output = []
+    var re = new RegExp(search, 'gi');
+    for (var i = 0; i < articles.length; i++) {
+        if (articles[i].title.match(re) != null) {
+            output.push(articles[i])
+        }
+    }
+    return output
 }
 
 function sortArticles(articles, sortBy, order) {
-    output = Array.from(articles);
     if (sortBy == "title") {
         if (order == "ascending") {
             articles.sort((a, b) => (a.title < b.title) ? 1 : -1)
@@ -90,8 +107,10 @@ function sortArticles(articles, sortBy, order) {
             articles.sort((a, b) => (a.credibilityScore > b.credibilityScore) ? 1 : -1)
         }
     }
-    return output;
+    return articles;
 }
+
+
 
 function generateEntry(entry) {
     var articleEntry = "<a class='hyperlink' href='" + entry.visLink + "'> <div id='" + entry.id + "' class='row'>" +
@@ -101,7 +120,6 @@ function generateEntry(entry) {
                                 "<p class='articleText'>" + entry.previewText + "</p>" +
                                 "<p class='author'>" + entry.author + "</p>" +
                             "</div>" +
-                            //"<img class='col-4 sunburst' src='https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png'></img>" +
                             "<div class='cred-score-container col-4'>" +
                                 "<div class='sunburst'>" +
                                     "<svg id='sunburst" + entry.id + "' viewBox='0 0 200 200'  preserveAspectRatio='xMidYMid meet'></svg>" +
@@ -109,8 +127,8 @@ function generateEntry(entry) {
                             "</div>" +
                        "</div></a>" +
                        "<hr>";
-    runVisualization(entry.id, entry.highlightData);
     document.getElementById("articleList").innerHTML += articleEntry;
+    runVisualization(entry.id, entry.highlightData);
 }
 
 function csvJSON(csv){
