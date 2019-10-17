@@ -13,10 +13,11 @@ export class DashboardComponent implements OnInit {
 
   dashboardForm: FormGroup;
   articles: Article;
-  searchString: string = "";
+  stringSearched: string = "";
+  statuses: Array<any> = [];
 
   constructor(
-  	private dashboardService: DashboardService,
+  	private ds: DashboardService,
   	private fb: FormBuilder,
   ) { 
   	this.dashboardForm = this.fb.group({
@@ -24,26 +25,44 @@ export class DashboardComponent implements OnInit {
   		searchType: new FormControl(),
   		searchString: new FormControl(),
 
-  	})
+	  });
+	for (let [k, v] of ds.statusMap) {
+		this.statuses.push({"value": v.statusCode, "description": v.description});
+	}
   }
   
   
   ngOnInit() {
-  	this.dashboardService.getArticles()
-  	.subscribe((data: Article) => {
-  		this.articles = data;
+  	this.ds.getArticles().subscribe((data: Article) => {
+		this.articles = data;
   	});
 
   }
 
   search() {
-  	console.log("searching");
-  	this.dashboardService.searchByTitle(this.dashboardForm.get('searchString').value).subscribe(
-  		(data: Article) => {
-  		this.articles = data;
-  		}
+	console.log("searching");
+	this.dashboardForm.get('statusFilter').reset();
+	this.stringSearched = this.dashboardForm.get('searchString').value
+	this.ds.searchByTitle(this.stringSearched)
+		.subscribe((data: Article) => {
+			this.articles = data;
+		}
   	);
 
   }
 
+  filterByStatus(filterVal: any) {
+	this.stringSearched = '';
+	if (filterVal == "all")
+		this.ds.getArticles().subscribe((data: Article) => {
+			this.articles = data;
+  		});
+	else
+		this.ds.searchByStatus(this.dashboardForm.get('statusFilter').value)
+			.subscribe((data: Article) => {
+				this.articles = data;
+			}
+		);
+}
+  
 }

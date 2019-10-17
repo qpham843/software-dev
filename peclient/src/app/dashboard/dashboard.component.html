@@ -1,48 +1,51 @@
 <div data-collapse="medium" data-animation="default" data-duration="400" class="navigation w-nav">
 <div class="navigation-items">
-   <div class="menu-button w-nav-button"><img src="https://uploads-ssl.webflow.com/5d71a7a088e51c43bf96154d/5d71a7a088e51c4aa6961563_menu-icon.png" width="22" alt="" class="menu-icon"/></div>
-   <a href="#" class="logo-link w-nav-brand w--current">
-      <h1 class="heading">Article Dashboard</h1>
-   </a>
+	<div class="menu-button w-nav-button">
+		<img src="/assets/images/menu-icon.png" 
+			width="22" alt="" class="menu-icon"/>
+	</div>
+	<a href="#" class="logo-link w-nav-brand w--current"><h1 class="heading">Article Dashboard</h1></a>
 </div>
 </div>
 <div class="section">
-<div class="user-container w-container"><a href="#" class="paragraph-small">Log Out</a></div>
+	<div class="user-container w-container"><a href="#" class="paragraph-small">Log Out</a></div>
 </div>
 <form [formGroup]="dashboardForm">
 	<div class="section">
 	<div class="w-form">
-	      <label for="statusFilter">filter by</label>
-	      <select id="statusFilter" name="statusFilter" formControlName="statusFilter" class="select-field w-select">
-	         <option value="all">All</option>
-	         <option value="pending_feed">Pending (Feed)</option>
-	         <option value="pending_manual">Pending (Manual)</option>
-	         <option value="submitted">Submitted</option>
-	         <option value="error">Error</option>
-	      </select>
+		<label for="statusFilter">filter by</label>
+		<select id="statusFilter" name="statusFilter" formControlName="statusFilter"
+			class="select-field w-select" (change)="filterByStatus($event.target.value)">
+			<option value="all">All</option>
+			<option *ngFor="let status of statuses" [value]="status.value">{{status.description}}</option>
+		</select>
 	</div>
 	</div>
 	<div class="section">
 	<div class="form-block w-form">
-	      <label for="searchType" class="field-label-2">Search</label>
-	      <select id="searchType" name="searchType" formControlName="searchType" class="select-field-2 w-select">
-	         <option value="title">Title</option>
-	         <option value="url">URL</option>
-	      </select>
-	      <input type="text" class="w-input" maxlength="256" name="searchString" data-name="Search String" placeholder="Enter search text" id="searchString" formControlName="searchString" required=""/>
-	      <button type="button" (click)="search();">Search</button>
+		<label for="searchType" class="field-label-2">Search</label>
+		<select id="searchType" name="searchType" formControlName="searchType" 
+			class="select-field-2 w-select">
+			<option value="title">Title</option>
+			<option value="url">URL</option>
+		</select>
+		<input type="text" class="w-input" maxlength="256" name="searchString" 
+			data-name="Search String" placeholder="Enter search text" id="searchString"
+			formControlName="searchString" required="" (keyup.enter)="search()" />
+		<button type="button" (click)="search();">Search</button>
 	</div>
 	</div>
-	<div class="section">
-	<div class="div-block-2">
-	   <div class="text-block-4">Searched on: </div>
-	   <div class="text-block-3"> "{{ searchString }}"</div>
-	</div>
-	</div>
+	<ng-container *ngIf="stringSearched && stringSearched != ''">
+		<div class="section">
+			<div class="div-block-2">
+				<div class="text-block-4">Searched on: </div>
+				<div class="text-block-3"> "{{ stringSearched }}"</div>
+			</div>
+		</div>
+	</ng-container>
 
-
 	<div class="section">
-	 <table width="100%" border="1px solid black">
+	 <table class="table3">
 		<thead>
 			<tr>
 				<th>Date Added
@@ -60,28 +63,15 @@
 				<th>Action
 					<button aria-label="Sort Object Title column descending" class="sorting"></button>
 				</th>
-				<th>Select</th>
 			</tr>
 		</thead>
 	    <tbody>
-	<!--     	<tr>
-	    		<td> placeholder</td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    	</tr>
-	 -->
-	    	<tr *ngFor="let article of articles">
-	    		<td> placeholder</td>
-	    		<td> {{ article.title }}</td>
-	    		<td> {{ article.url }} </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    		<td> placeholder </td>
-	    	</tr>
-	    	
+			<ng-container *ngIf="articles && articles.length > 0; else noResults">
+				<tr *ngFor="let article of articles" app-article-row [article]="article"></tr>
+			</ng-container>
+			<ng-template #noResults>
+				<tr><td colspan="5">No results</td></tr>
+			</ng-template>
 	    </tbody>
 	    </table>
 	</div>
