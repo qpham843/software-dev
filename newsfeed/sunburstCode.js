@@ -189,7 +189,6 @@ var visBox = d3.select("#sunburst" + articleNumber).append("div")
     .attr("id", "visBox" + articleNumber)
     .attr("class", "tooltip")
     .style("opacity", 1);
-console.log(visBox);
 //This removes the current effects and resets the visualization to default.
 var visOn = false;
 function resetVis() {

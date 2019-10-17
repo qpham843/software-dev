@@ -42,6 +42,7 @@ class Article {
         var article = this;
         $.get("https://cors-anywhere.herokuapp.com/" + article.plainText).done(function(data) {
             article.previewText = data.toString().substring(0, 200);
+            console.log("Preview Text is: " + article.previewText);
         });
     }
 }

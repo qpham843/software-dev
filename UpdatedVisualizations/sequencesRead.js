@@ -1,19 +1,23 @@
 function scoreArticle(articleNumber) {
     //Use this to control which csv and txt are being used.
-    
-    d3.text(articleNumber + "SSSArticle.txt", function(text) {
-        document.getElementById("textArticle").innerHTML = text.toString();
-    });
 
+    var prefixstr = "https://cors-anywhere.herokuapp.com/https://s3-us-west-2.amazonaws.com/publiceditor.io/Articles/";
+    
+    d3.text(prefixstr + articleNumber + "SSSArticle.txt", function(text) {
+	console.log(text);
+        document.getElementById("textArticle").innerHTML = text.toString();
+	console.log("Done?");
+    });
+    
 
     //This section parses the CSV file into a JSON.
-    d3.csv("VisualizationData_" + articleNumber + ".csv", function(error, data) {
+    d3.csv(prefixstr + "VisualizationData_" + articleNumber + ".csv", function(error, data) {
     if (error) throw error;
     var articles = buildHierarchy(data);
     console.log(articles)
     var article = articles["Article_" + articleNumber];
     console.log(article)
-    setTimeout(function() { createVisualization(article, articleNumber); }, 500);
+    setTimeout(function() { createVisualization(article, articleNumber); }, 1000);
     });
 }
 
