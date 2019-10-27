@@ -1,23 +1,23 @@
 function scoreArticle(articleNumber) {
     //Use this to control which csv and txt are being used.
+    console.log(articleNumber);
 
-    var prefixstr = "https://cors-anywhere.herokuapp.com/https://s3-us-west-2.amazonaws.com/publiceditor.io/Articles/";
     
-    d3.text(prefixstr + articleNumber + "SSSArticle.txt", function(text) {
-	console.log(text);
+    d3.text(articleNumber + "SSSArticle.txt", function(text) {
+	console.log(text.toString());
         document.getElementById("textArticle").innerHTML = text.toString();
-	console.log("Done?");
     });
     
 
+
     //This section parses the CSV file into a JSON.
-    d3.csv(prefixstr + "VisualizationData_" + articleNumber + ".csv", function(error, data) {
+    d3.csv("VisualizationData_" + articleNumber + ".csv", function(error, data) {
     if (error) throw error;
     var articles = buildHierarchy(data);
     console.log(articles)
     var article = articles["Article_" + articleNumber];
     console.log(article)
-    setTimeout(function() { createVisualization(article, articleNumber); }, 1000);
+    setTimeout(function() { createVisualization(article, articleNumber); }, 500);
     });
 }
 
@@ -744,7 +744,7 @@ window.onmousemove = function (e) {
     }
 };
 //This section enables the Floating Textbox for the visualization.
-var visBox = d3.select("chart").append("div")
+var visBox = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
@@ -779,20 +779,22 @@ function resetVis() {
             }
         })
     g.selectAll(".center-text")
-        .style("display", "none")
-    sum = 0;
-    g.append("text")
-        .attr("class", "center-text")
-        .attr("x", 0)
-        .attr("y", 13)
-        .style("font-size", 50)
-        .style("text-anchor", "middle")
         .html((100 + total))
+    sum = 0;
+
     visBox.transition()
             .duration(200)
             .style("opacity", 0);
     visOn = false;
     }
+
+g.append("text")
+    .attr("class", "center-text")
+    .attr("x", 0)
+    .attr("y", 13)
+    .style("font-size", 50)
+    .style("text-anchor", "middle")
+    .html((100 + total))
 
 resetVis();
 
@@ -810,8 +812,6 @@ d3.selectAll("path").transition().each(function(d) {
             //On mouse entering, highlight path, clear old text, create new text.
             .on('mouseover',function(d) {
                 var curPath = this;
-                g.selectAll(".center-text")
-                    .style("display", "none")
 
                 d3.selectAll("path").transition().style("opacity", 0.5);
                 if (d.data.children) {
@@ -852,12 +852,7 @@ d3.selectAll("path").transition().each(function(d) {
 
       	        //This code creates the text in the center of the model.
       	        checkSum(d)
-                g.append("text")
-                    .attr("class", "center-text")
-                    .attr("x", -5)
-                    .attr("y", 5)
-                    .style("font-size", 40)
-                    .style("text-anchor", "middle")
+                g.selectAll(".center-text")
                     .html(sum)
                 visBox.transition()
                     .duration(200)
@@ -867,7 +862,7 @@ d3.selectAll("path").transition().each(function(d) {
                     .style("top", (d3.event.pageY - 28) + "px")
                     .style("width", function() {
                         if (d.data.name.length < 18) {
-                            return "90px";
+                            return "100px";
                         } else {
                             return "180px";
                         }
@@ -895,8 +890,10 @@ d3.selectAll("path").transition().each(function(d) {
                 resetVis();
             })
             .on('mousedown', function (d) {
+
             //autoscroll to section functionality
                 if (d.height == 0) {
+                    console.log(d);
                     $('html,body').animate({
                         scrollTop: $("#" + d.data.startIndices[0]).offset().top -500},'slow'); //******
                 }

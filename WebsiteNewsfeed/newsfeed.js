@@ -1,7 +1,7 @@
 var listofarticles = [];
 
 function readVisData() {
-    $.get("https://cors-anywhere.herokuapp.com/" + "https://s3-us-west-2.amazonaws.com/publiceditor.io/Articles/visData.json").done(function(data) {
+    $.get("visData.json").done(function(data) {
         console.log(data);
         for (var i = 0; i < Object.keys(data).length; i++) {
             var article = data[i];

@@ -1,7 +1,23 @@
+<!--
+Copyright (C) <2018> <Goodly Labs>
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+
 <!DOCTYPE html>
-<html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>D3 Visualization for Mock Data</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
+
     <!-- Google Web Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,600,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700,800" rel="stylesheet" type='text/css'>
@@ -9,19 +25,22 @@
     <!-- Relative Stylesheets -->
     <link rel="stylesheet" href="scoredArticleCSS.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="file:///Users/Artemis1/node_modules/aos/dist/aos.css"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 
+    <!-- JS -->
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="newsfeed.js" charset="utf-8"></script>
-    <script src="ArticleData.js" charset="utf-8"></script>
-    <script src="sunburstCode.js" charset="utf-8"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <script type="text/javascript" src="sequencesRead.js"></script>
 </head>
 
-<body>
+<!-- Begin body -->
 
+<body>
 
 <div class="base-grid">
 
@@ -45,59 +64,35 @@
         </div>
 
         <!-- Grid start -->
-        <div class="row">
-            <div class="col-2">
+        <div class="homepage-section">
+
+            <div class="categories" id="categories">
+                <h2 class="dropTitle">Categories</h2>
+                <div class="extra-small-space"></div>
             </div>
-            <div class="col-8">
-                <div class="searchbar">
-                    <form class="example">
-                        <input id = "searchtext" type="text" placeholder="Search.." name="search">
-                        <button type="button" onclick="generateList()">
-                            Search
-                        </button>
-                    </form>
-                    <br>
 
-                    Filter By:
-                    <select id = "sortByList">
-                        <option value="title">Title</option>
-                        <option value="date">Date</option>
-                        <option value="credscore">Credibility Score</option>
-                    </select>
 
-                    Show:
-                    <select id = "showLimit">
-                        <option value=5>5</option>
-                        <option value=10>10</option>
-                        <option value=15>15</option>
-                    </select>
+            <!-- Content: Features 1, 2, 3-->
+            <div class="text article">
+                <h2>Example Article with Public Editor labels</h2>
+                <p class="p-article" id="textArticle">
+			ARTICLETEXTHERE
+		</p>
+            </div>
 
-                    Order by:
-                    <select id = "order">
-                        <option value="descending">Descending</option>
-                        <option value="ascending">Ascending</option>
-                    </select>
+            <!-- Article end -->
+
+            <!-- Cred score begin -->
+            <div class="cred-score-container">
+                <script type="text/javascript">scoreArticle("1737");</script>
+                <div class="sunburst">
+                    <svg id="chart" viewBox="0 0 500 500"  preserveAspectRatio="xMidYMid meet">
+                    </svg>
                 </div>
             </div>
-            <div class="col-2">
-            </div>
+            <!-- Cred score end -->
+
         </div>
-
-        <br>
-
-        <div id="articleList" class="container section"></div>
-
-        <script>
-            console.log("YO");
-            function doFunctions() {
-                readVisData();
-                setTimeout(function () {
-                    generateList();
-                }, 1000);
-            }
-            doFunctions();
-        </script>
-
         <!-- Grid end -->
 
         <div class="small-space"></div>
@@ -127,15 +122,4 @@
 
     </div>
 </div>
-
 </body>
-
-<style>
-
-    input#searchtext {
-        width: 500px;
-    }
-</style>
-
-
-</html>

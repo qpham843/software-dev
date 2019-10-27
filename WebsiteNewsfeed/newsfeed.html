@@ -13,9 +13,9 @@
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="newsfeed.js" charset="utf-8"></script>
-    <script src="ArticleData.js" charset="utf-8"></script>
-    <script src="sunburstCode.js" charset="utf-8"></script>
+    <script src="sunburstCode.js" charset="utf-8" type="text/javascript"></script>
+    <script src="ArticleData.js" charset="utf-8" type="text/javascript"></script>
+    <script src="newsfeed.js" charset="utf-8" type="text/javascript"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
@@ -50,34 +50,34 @@
             </div>
             <div class="col-8">
                 <div class="searchbar">
-                    <form class="example">
-                        <input id = "searchtext" type="text" placeholder="Search.." name="search">
-                        <button type="button" onclick="generateList()">
-                            Search
-                        </button>
-                    </form>
+                    <div class="input-group">
+                        <input id = "searchtext" class="form-control" type="text" placeholder="Search.." name="search">
+			<div class="input-group-append">
+                        	<button class="btn btn-primary" type="button" onclick="generateList()"> Search </button>
+			</div>
+                    </div>
+		
                     <br>
 
-                    Filter By:
-                    <select id = "sortByList">
+		<div class="input-group">
+                    <select id = "sortByList" class="selectpicker show-tick" data-style="btn-info" title="Filter By...">
                         <option value="title">Title</option>
                         <option value="date">Date</option>
                         <option value="credscore">Credibility Score</option>
                     </select>
 
-                    Show:
-                    <select id = "showLimit">
+                    <select id = "showLimit" class="selectpicker show-tick" data-style="btn-info" title="Number of results..">
                         <option value=5>5</option>
                         <option value=10>10</option>
                         <option value=15>15</option>
                     </select>
 
-                    Order by:
-                    <select id = "order">
+                    <select id = "order" class="selectpicker show-tick" data-style="btn-info" title="Order by...">
                         <option value="descending">Descending</option>
                         <option value="ascending">Ascending</option>
                     </select>
                 </div>
+		</div>
             </div>
             <div class="col-2">
             </div>
