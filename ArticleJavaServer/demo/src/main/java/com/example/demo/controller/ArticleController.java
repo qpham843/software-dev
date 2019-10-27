@@ -41,11 +41,27 @@ public class ArticleController {
 			return articleService.findArticleByTitle(title);
 		}
 		if (url != null) {
-			return articleService.findArticleByUrl(url);
+			ArticleEntity a = articleService.findArticleByUrl(url);
+			List<ArticleEntity> al = new ArrayList<ArticleEntity>();
+			al.add(a);
+			return al;
 		}
 		return articleService.findAllArticles();
 	}
 
+	@RequestMapping(value = "/submit/{url}", method = RequestMethod.POST)
+	public ArticleEntity newArticle(
+		@RequestParam(required = true, name="url") String url
+	) {
+		ArticleEntity article = articleService.findArticleByUrl(url);
+		if (article != null) {
+			return article;
+		} else {
+			return articleService.createNewArticle(url, "A");
+		}
+		
+	}
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ArticleEntity getArticleById(@PathVariable("id") Integer id) {
 		return articleService.findArticleById(id);

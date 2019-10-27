@@ -37,8 +37,34 @@ public class ArticleService {
 		return articleRepository.findByStatusCode(statusCode);
 	}
 
-	public List<ArticleEntity> findArticleByUrl(String url) {
-		return articleRepository.findByUrl(url);
+	public ArticleEntity findArticleByUrl(String url) {
+		Optional<ArticleEntity> a = articleRepository.findByUrl(url);
+		if (a.isPresent()) {
+			return a.get();
+		} else {
+			return null;
+		}
+	}
+	
+	public ArticleEntity createNewArticle(String url, String status) {
+		ArticleEntity a = new ArticleEntity();
+		a.setUrl(url);
+		ArticleEntity b = articleRepository.save(a);
+		ArticleHasStatusEntity ahs = new ArticleHasStatusEntity();
+		ahs.setArticleId(b.getId());
+		Optional<StatusEntity> s = statusRepository.findByStatusCode(status);
+		if (s.isPresent()) {
+			ahs.setArticleStatusId(s.get().getId());
+		} else {
+			ahs.setArticleStatusId(1);
+		}
+		ArticleHasStatusEntity newAhs = articleHasStatusRepository.save(ahs);
+		Optional<ArticleEntity> c = articleRepository.findById(b.getId());
+		if (c.isPresent()) {
+			return c.get();
+		} else {
+			return null;
+		}
 	}
 
 	public List<ArticleEntity> findArticleByTitle(String title) {

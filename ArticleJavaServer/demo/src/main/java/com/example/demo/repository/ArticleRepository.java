@@ -10,7 +10,7 @@ import com.example.demo.entities.ArticleEntity;
 
 public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer>{
 	public Optional<ArticleEntity> findById(Integer id);
-	public List<ArticleEntity> findByUrl(String url);
+	public Optional<ArticleEntity> findByUrl(String url);
 	
 	@Query(value="select * from article where title like concat('%',:title,'%') ", nativeQuery=true)
 	public List<ArticleEntity> findByTitle(String title);

@@ -35,6 +35,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
+      console.log(this.articles);
+      alert("herrrre");
   	});
 
   }
