@@ -49,7 +49,7 @@ public class ArticleController {
 		return articleService.findAllArticles();
 	}
 
-	@RequestMapping(value = "/submit/{url}", method = RequestMethod.POST)
+	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public ArticleEntity newArticle(
 		@RequestParam(required = true, name="url") String url
 	) {
