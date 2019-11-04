@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.batch.BuzzBatch;
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.service.ArticleService;
 
@@ -29,24 +30,30 @@ public class BuzzController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzController.class);
 	
 	@Autowired ArticleService articleService;
+	@Autowired BuzzBatch buzzBatch;
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String getBuzz() {
 
-        RestTemplate restTemplate = new RestTemplate();
-        String foo = "";
+//        RestTemplate restTemplate = new RestTemplate();
+//        String foo = "";
 //        String url="https://gturnquist-quoters.cfapps.io/api/random";
 //        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?");
 //        url.append("q=www.washingtonpost.com%2Fnational-security%2Ftrump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say%2F2019%2F09%2F23%2Fdf93a6ca-de38-11e9-8dc8-498eabc129a0_story.html%0A");
 //        url.append("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
 //        https://www.washingtonpost.com/national-security/trump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say/2019/09/23/df93a6ca-de38-11e9-8dc8-498eabc129a0_story.html
-        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=https://www.washingtonpost.com/national-security/trump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say/2019/09/23/df93a6ca-de38-11e9-8dc8-498eabc129a0_story.html&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
-//        StringBuilder url = new StringBuilder("http://dummy.restapiexample.com/api/v1/employees");
+//        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=https://www.washingtonpost.com/national-security/trump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say/2019/09/23/df93a6ca-de38-11e9-8dc8-498eabc129a0_story.html&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
+//        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=https://www.washingtonpost.com/politics/as-warren-and-buttigieg-rise-the-democratic-presidential-race-is-competitive-and-fluid-a-washington-post-abc-news-poll-finds/2019/11/02/4b7aca3c-fccd-11e9-8906-ab6b60de9124_story.html&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
+//https://api.buzzsumo.com/search/articles.json?q=https://www.washingtonpost.com/politics/as-warren-and-buttigieg-rise-the-democratic-presidential-race-is-competitive-and-fluid-a-washington-post-abc-news-poll-finds/2019/11/02/4b7aca3c-fccd-11e9-8906-ab6b60de9124_story.html&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf
+        //        StringBuilder url = new StringBuilder("http://dummy.restapiexample.com/api/v1/employees");
         
-        ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
-        logger.info(url.toString());
-        logger.info(response.getBody());
-        return response.getBody();
+//        ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
+//        logger.info(url.toString());
+//        logger.info(response.getBody());
+//        return response.getBody();
+		
+		logger.info("from buxxBatch: " + buzzBatch.getBuzz() );
+		return "aaaa";
 	}
 	
 }
