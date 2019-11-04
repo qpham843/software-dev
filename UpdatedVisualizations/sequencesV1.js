@@ -53,7 +53,9 @@ function buildHierarchy(data) {
     cin[cinIndex]["size"] += parseFloat(data[i][pts]); //adds together the net impact of points, has not handled cancellation case, should be calculated based upon absolute value?
     cin[cinIndex]["startIndices"].push(parseInt(data[i]["Start"]));
     cin[cinIndex]["endIndices"].push(parseInt(data[i]["End"]));
-    cin[cinIndex]["points"].push(parseInt(data[i][pts]));
+    var points = (parseFloat((data[i][pts])*100)/100).toFixed(2);
+    cin[cinIndex]["points"].push(parseFloat(points));
+
 
   }
   return jsons; //object of json files for each article
@@ -117,7 +119,7 @@ function createVisualization(article, articleNumber) {
 
     // Find data root
     var root = d3.hierarchy(article)
-        .sum(function (d) { return Math.abs(d.size)});
+        .sum(function (d) { return Math.abs(d.size)+1});
 
     // Size arcs
     partition(root);
@@ -191,7 +193,8 @@ function createCategories(d, articleNumber) {
                 }
                 var errorString = "'" + paragraph.substring(start, end) + elipsesstring + "'";
                 //Need to add in an href for the sake of jumping.
-                subcatHTML = subcatHTML + "<a class='jumpable' href='#" + start + "'>" + "[" + subcatData.points[k] + "]  " + errorString + "</a>";
+                let points = (parseFloat((subcatData.points[k])*100)/100).toFixed(2);
+                subcatHTML = subcatHTML + "<a class='jumpable' href='#" + start + "'>" + "[" + points + "]  " + errorString + "</a>";
                 document.getElementById(articleNumber + subcatId).innerHTML = subcatHTML;
                 }
             }
@@ -212,7 +215,9 @@ function createCategories(d, articleNumber) {
                 return d3.rgb(0, 191, 255);
             } else if (d.data.name == "Language") {
                return d3.rgb(43, 82, 230);
-            }
+            } else {
+                return d3.rgb(255, 223, 0);
+        }
         }   else {
         //The children node colors are based on the colors of their parents.
             if (d.data.size > 0) {
@@ -226,6 +231,8 @@ function createCategories(d, articleNumber) {
                 return d3.rgb(153,204,255);
             } else if (d.parent.data.name == "Language") {
                 return d3.rgb(65, 105, 225);
+            } else {
+                return d3.rgb(255, 180, 0);
             }
         }
   }
@@ -238,8 +245,10 @@ function createCategories(d, articleNumber) {
           return "green";
       } else if (d.parent.data.name === "Probability") {
           return "aqua";
-      } else {
+      } else if (d.parent.data.name == "Language") {
         return "blue";
+      } else {
+          return "yellow"
       }
   }
 
@@ -251,24 +260,33 @@ function createCategories(d, articleNumber) {
 
 //This function returns the total number of points in the Credibility Report.
   function checkTotal(d) {
-    var top = 0;
+    let totalPointsLost = 0;
     for (i = 0; i < d.children.length; i += 1) {
         for (j = 0; j < d.children[i].children.length; j += 1) {
-            top += parseInt(d.children[i].children[j].size);
+            let points = parseFloat((parseFloat((d.children[i].children[j].size)*100)/100).toFixed(2));
+            totalPointsLost += points;
         }
     }
-    return top;
+    var totalPoints = 100 + totalPointsLost;
+    if (totalPoints > 100) {
+        totalPoints = 99;
+    }
+    return Math.round(totalPoints);
   };
 
 //This function calculates the sum of the child nodes of a category. Used for "Reasoning", "Evidence", "Language".
   function checkSum(d) {
     if (d.data.children) {
         for (i = 0; i < d.data.children.length; i += 1) {
-            sum += parseInt(d.data.children[i].size);
+            let points = parseFloat((parseFloat((d.data.children[i].size)*100)/100).toFixed(2));
+            sum += points;
         }
     } else {
-        sum = parseInt(d.data.size);
-    }};
+        let points = parseFloat((parseFloat((d.data.size)*100)/100).toFixed(2));
+        sum = points;
+    }
+    sum = Math.round(sum);
+  };
 
 
 //DICTIONARIES
@@ -289,6 +307,7 @@ var reasoning = [];
 var evidence = [];
 var language = [];
 
+let endOfArticleString = "";
 
 //CREATE PATHS AND HIGHLIGHTS
 //This is the visualization creation in its entirety.\
@@ -355,11 +374,24 @@ var counter = 0;
                                 indexToString.set(end, ["c", textHighlight(d), d.data.name]);
                             }
                             startToPair.set(start, end);
+                        } else {
+                            let dataString = d.data.name.toString();
+                            if (endOfArticleString.indexOf(dataString) == -1) {
+                                let arraySum = Array.from(d.data.points).reduce((a,b) => a + b, 0);
+                                let points = (parseFloat((arraySum)*100)/100).toFixed(2);
+                                let desiredString = dataString + " : " + points;
+                                let parentColor = textHighlight(d);
+                                let highlightedString = "<" + d.data.name.replace(/ /g,'') + " name='"+ dataString +"' class='highlighter metaTag' style='background-color: #C8C8C8; border-radius: 10px; padding: 6px; color: " + parentColor + "'>" +
+                                                            desiredString + "<hiText class='highlightertext' style='display: none'>" + dataString + "</hiText>" +
+                                                        "</" + d.data.name.replace(/ /g,'') + "><br>";
+                                endOfArticleString += highlightedString;
+                            }
                         }
                     }
+
                     //This completes the creation of the dictionary, with each entry having a unique key.
                 }
-            })
+            });
 
 createCategories(nameToData.get("CATEGORIES"), articleNumber);
 
@@ -397,6 +429,7 @@ for (i = 0; i < sorted.length; i += 1) {
                 opens.push(j);
             }
         }
+        //console.log(currentHighlight)
         if (opens.length == 2 && numactive == 0) {
             var nextHighlight = currentHighlight[2];
             currentHighlight = currentHighlight[1];
@@ -635,6 +668,19 @@ for (i = 0; i < sorted.length; i += 1) {
     indexOffset += inputString.length;
 }
 
+    var currentArticleString = document.getElementById("textArticle").innerHTML;
+    var endTitleIndex = currentArticleString.indexOf("Subtitle:");
+    let remainingArticleText = currentArticleString.substring(endTitleIndex);
+    endOfArticleString = "<div style='line-height: 35px'>" + endOfArticleString + "</div>";
+    if (endTitleIndex != -1) {
+        let articleTitle = currentArticleString.substring(6, endTitleIndex);
+        document.getElementById("headerArticle").innerHTML = "<title>PE - Labeled Article: " + articleTitle + "</title>";
+        document.getElementById("textArticle").innerHTML = "<h2 style='line-height: 40px'>" + articleTitle + "</h2><br>" + endOfArticleString + remainingArticleText;
+    } else {
+        document.getElementById("headerArticle").innerHTML = "<title>PE - Labeled Article</title>";
+        document.getElementById("textArticle").innerHTML = "<h2> Public Editor Article </h2><br>" + endOfArticleString + remainingArticleText;
+    }
+
 //VISUALIZATION TEXTBOX
 //This section enables the textbox on hover in the article itself.
 var hText = document.querySelectorAll('.highlightertext');
@@ -642,14 +688,14 @@ var hText = document.querySelectorAll('.highlightertext');
 var visibleArc = false;
 var $cols = $('.highlighter').hover(function(e) {
     var currCategory = $(this).attr("name");
-    var d = nameToData.get(currCategory);
+    var d = null;
     var numCategories = 0;
     var dArray = [];
 
     d3.selectAll("path")
         .transition()
         .style("opacity", 0.5)
-        .duration(100);
+        .duration(100)
 
     for (var j = 0; j < Array.from(nameToData.keys()).length; j += 1) {
         if (currCategory.includes(Array.from(nameToData.keys())[j])) {
@@ -677,27 +723,27 @@ var $cols = $('.highlighter').hover(function(e) {
                     .transition()
                     .duration(300)
                     .attr('stroke-width',5)
-                    .style("opacity", 1);
+                    .style("opacity", 1)
 
                 d3.select(dataToParentPath.get(d))
                     .transition()
                     .attr('stroke-width',5)
-                    .style("opacity", 1);
+                    .style("opacity", 1)
 
                 g.selectAll(".center-text")
-                    .style("display", "none");
+                    .style("display", "none")
                 d3.select(dataToParentPath.get(d))
                     .transition()
                     .attr('stroke-width',5)
-                    .style("opacity", 1);
+                    .style("opacity", 1)
                 checkSum(d);
                 g.append("text")
                     .attr("class", "center-text")
-                    .attr("x", -5)
-                    .attr("y", 5)
-                    .style("font-size", 40)
+                    .attr("x", 0)
+                    .attr("y", 13)
+                    .style("font-size", 50)
                     .style("text-anchor", "middle")
-                    .html(sum);
+                    .html(sum)
                                                         //PROTOTYPE CODE
                 psuedobox.transition()
                     .duration(200)
@@ -729,6 +775,9 @@ var $cols = $('.highlighter').hover(function(e) {
            .duration(200)
            .style("opacity", 0);
         this.style.backgroundColor = "white";
+        if (this.className.toString().indexOf("metaTag") != -1) {
+            this.style.backgroundColor = "#C8C8C8";
+        }
     }
 });
 
@@ -776,7 +825,7 @@ function resetVis() {
             }
         })
     g.selectAll(".center-text")
-        .html((100 + total))
+        .html((total))
     sum = 0;
 
     visBox.transition()
@@ -785,13 +834,14 @@ function resetVis() {
     visOn = false;
     }
 
+
 g.append("text")
     .attr("class", "center-text")
     .attr("x", 0)
     .attr("y", 13)
     .style("font-size", 50)
     .style("text-anchor", "middle")
-    .html((100 + total))
+    .html((total))
 
 resetVis();
 
@@ -881,7 +931,11 @@ d3.selectAll("path").transition().each(function(d) {
                 var allelems = document.querySelectorAll("[name]");
                 for (var i = 0; i < allelems.length; i += 1) {
                     if (allelems[i].nodeName.includes(d.data.name.replace(/ /g,'').toUpperCase())) {
-                        allelems[i].style.backgroundColor = "white";
+                        if (allelems[i].className.toString().indexOf("metaTag") != -1) {
+                            allelems[i].style.backgroundColor = "#C8C8C8";
+                        } else {
+                            allelems[i].style.backgroundColor = "white";
+                        }
                     }
                 }
                 resetVis();
@@ -890,9 +944,11 @@ d3.selectAll("path").transition().each(function(d) {
 
             //autoscroll to section functionality
                 if (d.height == 0) {
-                    console.log(d);
-                    $('html,body').animate({
-                        scrollTop: $("#" + d.data.startIndices[0]).offset().top -500},'slow'); //******
+                    if (d.data.startIndices[0] == -1) {
+                        $('html,body').animate({scrollTop: 0}, duration = 700);
+                    } else {
+                        $('html,body').animate({scrollTop: $("#" + d.data.startIndices[0]).offset().top -500},duration = 700);
+                    }
                 }
             })
             .style('stroke', 'white')
@@ -931,14 +987,13 @@ for (i = 0; i < coll.length; i++) {
     });
    }
 
+
 $(document).ready(function(){
     $("a").on('click', function(event) {
         if (this.hash !== "") {
             event.preventDefault();
             var hash = this.hash;
-
             $(hash).animate({backgroundColor: "yellow"}, 500).animate({backgroundColor: "white"}, 500).animate({backgroundColor: "yellow"}, 500).animate({backgroundColor: "white"}, 500);
-
             $('html, body').animate({
                 //scrollTop: $(hash).offset().top - 500}, 800, function(){window.location.hash = hash;}
                 scrollTop: $(hash).offset().top -500},'slow');

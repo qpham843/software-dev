@@ -14,6 +14,8 @@ Copyright (C) <2018> <Goodly Labs>
 
 <!DOCTYPE html>
 <head>
+    <title>D3 Visualization for Mock Data</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
 
     <!-- Google Web Fonts -->
@@ -33,7 +35,7 @@ Copyright (C) <2018> <Goodly Labs>
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="sequencesV1.js"></script>
+    <script type="text/javascript" src="sequencesRead.js"></script>
 </head>
 
 <!-- Begin body -->
@@ -72,17 +74,17 @@ Copyright (C) <2018> <Goodly Labs>
 
             <!-- Content: Features 1, 2, 3-->
             <div class="text article">
-                <p id="headerArticle"></p>
+                <h2>Example Article with Public Editor labels</h2>
                 <p class="p-article" id="textArticle">
-                    ARTICLETEXTHERE
-                </p>
+			ARTICLETEXTHERE
+		</p>
             </div>
 
             <!-- Article end -->
 
             <!-- Cred score begin -->
             <div class="cred-score-container">
-                <script type="text/javascript">scoreArticle("ARTICLEIDHERE");</script>
+                <script type="text/javascript">scoreArticle("1712");</script>
                 <div class="sunburst">
                     <svg id="chart" viewBox="0 0 500 500"  preserveAspectRatio="xMidYMid meet">
                     </svg>

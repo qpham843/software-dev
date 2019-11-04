@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ArticleJavaServer/demo/.mvn/.mvn.iml" filepath="$PROJECT_DIR$/ArticleJavaServer/demo/.mvn/.mvn.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ArticleJavaServer/demo/src/main/main.iml" filepath="$PROJECT_DIR$/ArticleJavaServer/demo/src/main/main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ArticleJavaServer/demo/src/test/test.iml" filepath="$PROJECT_DIR$/ArticleJavaServer/demo/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/software-dev.iml" filepath="$PROJECT_DIR$/.idea/software-dev.iml" />
     </modules>
   </component>
 </project>
