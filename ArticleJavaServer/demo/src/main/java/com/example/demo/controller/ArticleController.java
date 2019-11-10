@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.BuzzService;
+import com.example.demo.service.FileService;
 
 @RestController
 @CrossOrigin(origins="*")
@@ -27,6 +30,8 @@ public class ArticleController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleController.class);
 	
 	@Autowired ArticleService articleService;
+	@Autowired BuzzService buzzService;
+	@Autowired FileService fileService;
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<ArticleEntity> getAllArticles(
@@ -54,10 +59,15 @@ public class ArticleController {
 		@RequestParam(required = true, name="url") String url
 	) {
 		ArticleEntity article = articleService.findArticleByUrl(url);
+		JSONObject jArticle = null;
 		if (article != null) {
 			return article;
 		} else {
-			return articleService.createNewArticle(url, "A");
+			ArticleEntity newArticle = articleService.createNewArticle(url, "USER");
+			jArticle = buzzService.getBuzz(url);
+			ArticleEntity updatedArticle = articleService.updateArticleWithBuzz(jArticle, newArticle);
+			fileService.makeFile(updatedArticle);
+			return updatedArticle;
 		}
 		
 	}

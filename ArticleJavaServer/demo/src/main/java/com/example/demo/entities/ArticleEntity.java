@@ -78,7 +78,7 @@ public class ArticleEntity implements Serializable {
 	protected Integer loveCount = 0;
 
 	@Column(name="evergreen_score")
-	protected double evergreenScore = 0;
+	protected Double evergreenScore = Double.valueOf(0);
 
 	@Column(name="total_reddit_engagements")
 	protected Integer totalRedditEngagements = 0;

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class ArticleService {
 	@Autowired private ArticleRepository articleRepository;
 	@Autowired private StatusRepository statusRepository;
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
+	@Autowired private BuzzService buzz;
 	
 	public ArticleEntity findArticleById(Integer id) {
 		Optional<ArticleEntity> a = articleRepository.findById(id);
@@ -105,6 +107,34 @@ public class ArticleService {
 			}
 		}
 		return null;			
+	}
+	
+	public ArticleEntity updateArticleWithBuzz(JSONObject jArticle, ArticleEntity article) {
+		article.setAlexaRank(jArticle.optInt("alexa_rank"));
+		article.setAngryCount(jArticle.optInt("angry_count"));
+//		article.setArticleAmplifiers(articleAmplifiers);
+		article.setArticleTitle(jArticle.optString("title"));
+		article.setAuthor(jArticle.optString("author_name"));
+		article.setBuzzsumoArticleId(jArticle.optInt("id"));
+		article.setDomainName(jArticle.optString("domain_name"));
+		article.setEvergreenScore(jArticle.optDouble("evergreen_score"));
+		article.setFacebookComments(jArticle.optInt("facebook_comments"));
+		article.setFacebookLikes(jArticle.optInt("facebook_likes"));
+		article.setFacebookShares(jArticle.optInt("total_facebook_shares"));
+		article.setHahaCount(jArticle.optInt("haha_count"));
+		article.setLoveCount(jArticle.optInt("love_count"));
+		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains"));
+		article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000)));
+		article.setSadCount(jArticle.optInt("sad_count"));
+		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements"));
+		article.setTotalShares(jArticle.optInt("total_shares"));
+		article.setTwitterShares(jArticle.optInt("twitter_shares"));
+//		article.setUpdatedAt(updatedAt);
+		article.setWowCount(jArticle.optInt("wow_count"));
+		
+		articleRepository.save(article);
+		
+		return article;
 	}
 
 }
