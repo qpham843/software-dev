@@ -6,17 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.controller.BuzzController;
 import com.example.demo.service.ArticleService;
 
 @Service
 public class BuzzService {
 
-private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzController.class);
+private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.class);
 	
 	@Autowired ArticleService articleService;
 	
@@ -27,7 +24,7 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzController.
         
         ResponseEntity<String> response = restTemplate.getForEntity(articleUrl,String.class);
         String res = response.getBody();
-        
+        logger.info(res);
         JSONObject j = new JSONObject(res);
         JSONArray a = j.optJSONArray("results");
         JSONObject buzzEntry = null;
