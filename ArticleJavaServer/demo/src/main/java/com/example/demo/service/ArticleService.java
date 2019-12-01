@@ -136,5 +136,10 @@ public class ArticleService {
 		
 		return article;
 	}
+	
+	public void updateArticle(ArticleEntity article) {
+		articleRepository.save(article);
+	}
+		
 
 }

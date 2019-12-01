@@ -20,6 +20,7 @@ import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 import org.rauschig.jarchivelib.CompressionType;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.controller.BuzzController;
@@ -28,10 +29,12 @@ import com.example.demo.entities.ArticleEntity;
 @Service
 public class FileService {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(FileService.class);
+	@Autowired ArticleService articleService;
 	public void makeFile(ArticleEntity article) {
 
 		StringBuilder articleText = new StringBuilder(scrapeArticle(article));
 		article.setArticleText(articleText.toString());
+		articleService.updateArticle(article);
 		
 		//		StringBuilder fn = new StringBuilder("/temp/");
 		//		fn.append(article.getUrl() + ".txt");		
