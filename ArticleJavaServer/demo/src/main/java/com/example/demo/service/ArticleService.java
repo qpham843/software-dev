@@ -18,6 +18,9 @@ import com.example.demo.repository.ArticleHasStatusRepository;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.StatusRepository;
 
+import com.example.demo.service.BuzzService;
+import com.example.demo.service.FileService;
+
 @Service
 public class ArticleService {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleController.class);
@@ -25,7 +28,9 @@ public class ArticleService {
 	@Autowired private ArticleRepository articleRepository;
 	@Autowired private StatusRepository statusRepository;
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
-	@Autowired private BuzzService buzz;
+	@Autowired private BuzzService buzzService;
+	@Autowired private FileService fileService;
+
 	
 	public ArticleEntity findArticleById(Integer id) {
 		Optional<ArticleEntity> a = articleRepository.findById(id);
@@ -48,6 +53,24 @@ public class ArticleService {
 		}
 	}
 	
+	public ArticleEntity processSubmitArticle(String url) {
+		// create new record
+		ArticleEntity newArticle = createNewArticle(url, "USER");
+		
+		//see if it's in buzzsumo
+		JSONObject jArticle = buzzService.getBuzz(url);
+		
+		//update with buzz fields
+		ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, newArticle);
+		
+		//scrape article, sha256, create metadata, tar.gz
+		fileService.makeFile(updatedArticle);
+		
+		
+		
+		return updatedArticle;
+
+	}
 	public ArticleEntity createNewArticle(String url, String status) {
 		ArticleEntity a = new ArticleEntity();
 		a.setUrl(url);
@@ -124,7 +147,7 @@ public class ArticleService {
 		article.setHahaCount(jArticle.optInt("haha_count"));
 		article.setLoveCount(jArticle.optInt("love_count"));
 		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains"));
-		article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000)));
+//		article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000)));
 		article.setSadCount(jArticle.optInt("sad_count"));
 		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements"));
 		article.setTotalShares(jArticle.optInt("total_shares"));

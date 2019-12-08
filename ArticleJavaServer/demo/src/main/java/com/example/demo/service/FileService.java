@@ -38,7 +38,17 @@ public class FileService {
 		
 		//		StringBuilder fn = new StringBuilder("/temp/");
 		//		fn.append(article.getUrl() + ".txt");		
-		File fn = new File("/temp/" + article.getUrl() + ".txt");
+		
+		// strip off https:// or http://
+		String u = article.getUrl();
+		String u2 = u.replace("https://", "");
+		String u3 = u2.replace("http://","");
+
+		StringBuilder f = new StringBuilder();
+		f.append("/temp/");
+		f.append(u3);
+		f.append(".txt");
+		File fn = new File(f.toString());
 		
 		//*******************************************************
 		// CREATE ARTICLE FILE (text.txt)
@@ -114,7 +124,9 @@ public class FileService {
 
 		Runtime r = Runtime.getRuntime();
 		StringBuilder s = new StringBuilder();
-		s.append("cmd /c python c:\\aa\\software-dev\\py\\try4.py");
+		s.append("cmd /c python c:\\aa\\software-dev\\py\\try4.py ");
+		s.append(article.getUrl());
+		//s.append(" c:\\temp\\article.txt");
 		try {
 			Process p = r.exec(s.toString());
 		} catch (IOException e) {
@@ -122,7 +134,7 @@ public class FileService {
 			e.printStackTrace();
 		}
 		
-		File file = new File("C:\\py\\webscraper\\article-texts\\article-text.txt"); 
+		File file = new File("C:\\temp\\article.txt"); 
 		  
 		BufferedReader br = null;
 		try {

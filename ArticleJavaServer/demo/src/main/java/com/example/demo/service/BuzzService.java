@@ -20,9 +20,12 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 	public JSONObject getBuzz(String articleUrl) {
 
         RestTemplate restTemplate = new RestTemplate();
-//        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=https://www.washingtonpost.com/politics/as-warren-and-buttigieg-rise-the-democratic-presidential-race-is-competitive-and-fluid-a-washington-post-abc-news-poll-finds/2019/11/02/4b7aca3c-fccd-11e9-8906-ab6b60de9124_story.html&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
+        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=");
+        //https://www.washingtonpost.com/politics/as-warren-and-buttigieg-rise-the-democratic-presidential-race-is-competitive-and-fluid-a-washington-post-abc-news-poll-finds/2019/11/02/4b7aca3c-fccd-11e9-8906-ab6b60de9124_story.html
+        url.append(articleUrl);
+        url.append("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
         
-        ResponseEntity<String> response = restTemplate.getForEntity(articleUrl,String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
         String res = response.getBody();
         logger.info(res);
         JSONObject j = new JSONObject(res);
