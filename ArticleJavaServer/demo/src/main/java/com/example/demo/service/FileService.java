@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -120,19 +123,45 @@ public class FileService {
 			e.printStackTrace();
 		}
 	}
+	Process mProcess;
+	Process nProcess;
 	public String scrapeArticle(ArticleEntity article) {
 
 		Runtime r = Runtime.getRuntime();
 		StringBuilder s = new StringBuilder();
-		s.append("cmd /c python c:\\aa\\software-dev\\py\\try4.py ");
+		s.append("cmd /c c:\\aa\\software-dev\\py\\try4.py ");
 		s.append(article.getUrl());
-		//s.append(" c:\\temp\\article.txt");
 		try {
 			Process p = r.exec(s.toString());
+			mProcess = p;
+			nProcess = p;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		InputStream stdout = mProcess.getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));
+		String line;
+		try{
+			while((line = reader.readLine()) != null){
+				System.out.println("stdout: "+ line);
+			}
+		}catch(IOException e){
+			System.out.println("Exception in reading output"+ e.toString());
+		}
+		
+		InputStream stderr = nProcess.getInputStream();
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(stderr,StandardCharsets.UTF_8));
+		String line2;
+		try{
+			while((line2 = reader2.readLine()) != null){
+				System.out.println("stderr: "+ line2);
+			}
+		}catch(IOException e){
+			System.out.println("Exception in reading stderr "+ e.toString());
+		}
+		
 		
 		File file = new File("C:\\temp\\article.txt"); 
 		  

@@ -1,6 +1,10 @@
 package com.example.demo.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,24 +35,52 @@ import com.example.demo.service.ArticleService;
 public class BuzzController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzController.class);
 	
-	@Autowired ArticleService articleService;
-	@Autowired BuzzService buzz;
-	@Autowired FileService fileService;
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String getBuzz() {
-		ArticleEntity article = articleService.findArticleById(4);
-		fileService.makeFile(article);
-		return "aaaa";
-	}
+	Process mProcess;
+	Process nProcess;
+
 	@RequestMapping(value = "/py", method = RequestMethod.GET)
 	public String getBuzzPy() {
+		
+		logger.info("entering py");	
 		Runtime r = Runtime.getRuntime();
+		StringBuilder s = new StringBuilder();
+		//			s.append("cmd /c dir ");
+		s.append("cmd /c c:\\aa\\software-dev\\py\\try4.py ");
+		
 		try {
-			Process p = r.exec("cmd /c python c:\\aa\\software-dev\\py\\try4.py");
+			Process p = r.exec(s.toString());
+			mProcess = p;
+			nProcess = p;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "bbbbb";
+		logger.debug("entering py");	
+			
+		InputStream stdout = mProcess.getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));
+		String line;
+		try{
+			while((line = reader.readLine()) != null){
+				System.out.println("stdout: "+ line);
+			}
+		}catch(IOException e){
+			System.out.println("Exception in reading output"+ e.toString());
+		}
+		
+		InputStream stderr = nProcess.getInputStream();
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(stderr,StandardCharsets.UTF_8));
+		String line2;
+		try{
+			while((line2 = reader2.readLine()) != null){
+				System.out.println("stderr: "+ line2);
+			}
+		}catch(IOException e){
+			System.out.println("Exception in reading stderr "+ e.toString());
+		}
+		logger.info("leaving py");	
+		
+		return "aaa";
 	}
+	
 }
