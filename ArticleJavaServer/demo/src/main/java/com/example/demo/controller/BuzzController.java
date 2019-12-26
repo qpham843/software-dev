@@ -1,5 +1,10 @@
 package com.example.demo.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.service.BuzzService;
+import com.example.demo.service.FileService;
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.service.ArticleService;
 
@@ -28,25 +35,52 @@ import com.example.demo.service.ArticleService;
 public class BuzzController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzController.class);
 	
-	@Autowired ArticleService articleService;
-	
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String getBuzz() {
+	Process mProcess;
+	Process nProcess;
 
-        RestTemplate restTemplate = new RestTemplate();
-        String foo = "";
-//        String url="https://gturnquist-quoters.cfapps.io/api/random";
-//        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?");
-//        url.append("q=www.washingtonpost.com%2Fnational-security%2Ftrump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say%2F2019%2F09%2F23%2Fdf93a6ca-de38-11e9-8dc8-498eabc129a0_story.html%0A");
-//        url.append("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
-//        https://www.washingtonpost.com/national-security/trump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say/2019/09/23/df93a6ca-de38-11e9-8dc8-498eabc129a0_story.html
-        StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=https://www.washingtonpost.com/national-security/trump-ordered-hold-on-military-aid-days-before-calling-ukrainian-president-officials-say/2019/09/23/df93a6ca-de38-11e9-8dc8-498eabc129a0_story.html&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
-//        StringBuilder url = new StringBuilder("http://dummy.restapiexample.com/api/v1/employees");
-        
-        ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
-        logger.info(url.toString());
-        logger.info(response.getBody());
-        return response.getBody();
+	@RequestMapping(value = "/py", method = RequestMethod.GET)
+	public String getBuzzPy() {
+		
+		logger.info("entering py");	
+		Runtime r = Runtime.getRuntime();
+		StringBuilder s = new StringBuilder();
+		//			s.append("cmd /c dir ");
+		s.append("cmd /c c:\\aa\\software-dev\\py\\try4.py ");
+		
+		try {
+			Process p = r.exec(s.toString());
+			mProcess = p;
+			nProcess = p;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		logger.debug("entering py");	
+			
+		InputStream stdout = mProcess.getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));
+		String line;
+		try{
+			while((line = reader.readLine()) != null){
+				System.out.println("stdout: "+ line);
+			}
+		}catch(IOException e){
+			System.out.println("Exception in reading output"+ e.toString());
+		}
+		
+		InputStream stderr = nProcess.getInputStream();
+		BufferedReader reader2 = new BufferedReader(new InputStreamReader(stderr,StandardCharsets.UTF_8));
+		String line2;
+		try{
+			while((line2 = reader2.readLine()) != null){
+				System.out.println("stderr: "+ line2);
+			}
+		}catch(IOException e){
+			System.out.println("Exception in reading stderr "+ e.toString());
+		}
+		logger.info("leaving py");	
+		
+		return "aaa";
 	}
 	
 }

@@ -27,6 +27,8 @@ public class ArticleController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleController.class);
 	
 	@Autowired ArticleService articleService;
+	//@Autowired BuzzService buzzService;
+	//@Autowired FileService fileService;
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<ArticleEntity> getAllArticles(
@@ -54,10 +56,11 @@ public class ArticleController {
 		@RequestParam(required = true, name="url") String url
 	) {
 		ArticleEntity article = articleService.findArticleByUrl(url);
+		
 		if (article != null) {
-			return article;
+			return null;
 		} else {
-			return articleService.createNewArticle(url, "A");
+			return articleService.processSubmitArticle(url);
 		}
 		
 	}

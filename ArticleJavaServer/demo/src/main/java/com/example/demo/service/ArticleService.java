@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ import com.example.demo.repository.ArticleHasStatusRepository;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.StatusRepository;
 
+import com.example.demo.service.BuzzService;
+import com.example.demo.service.FileService;
+
 @Service
 public class ArticleService {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleController.class);
@@ -24,6 +28,9 @@ public class ArticleService {
 	@Autowired private ArticleRepository articleRepository;
 	@Autowired private StatusRepository statusRepository;
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
+	@Autowired private BuzzService buzzService;
+	@Autowired private FileService fileService;
+
 	
 	public ArticleEntity findArticleById(Integer id) {
 		Optional<ArticleEntity> a = articleRepository.findById(id);
@@ -46,6 +53,24 @@ public class ArticleService {
 		}
 	}
 	
+	public ArticleEntity processSubmitArticle(String url) {
+		// create new record
+		ArticleEntity newArticle = createNewArticle(url, "USER");
+		
+		//see if it's in buzzsumo
+		JSONObject jArticle = buzzService.getBuzz(url);
+		
+		//update with buzz fields
+		ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, newArticle);
+		
+		//scrape article, sha256, create metadata, tar.gz
+		fileService.makeFile(updatedArticle);
+		
+		
+		
+		return updatedArticle;
+
+	}
 	public ArticleEntity createNewArticle(String url, String status) {
 		ArticleEntity a = new ArticleEntity();
 		a.setUrl(url);
@@ -106,5 +131,38 @@ public class ArticleService {
 		}
 		return null;			
 	}
+	
+	public ArticleEntity updateArticleWithBuzz(JSONObject jArticle, ArticleEntity article) {
+		article.setAlexaRank(jArticle.optInt("alexa_rank"));
+		article.setAngryCount(jArticle.optInt("angry_count"));
+//		article.setArticleAmplifiers(articleAmplifiers);
+		article.setArticleTitle(jArticle.optString("title"));
+		article.setAuthor(jArticle.optString("author_name"));
+		article.setBuzzsumoArticleId(jArticle.optInt("id"));
+		article.setDomainName(jArticle.optString("domain_name"));
+		article.setEvergreenScore(jArticle.optDouble("evergreen_score"));
+		article.setFacebookComments(jArticle.optInt("facebook_comments"));
+		article.setFacebookLikes(jArticle.optInt("facebook_likes"));
+		article.setFacebookShares(jArticle.optInt("total_facebook_shares"));
+		article.setHahaCount(jArticle.optInt("haha_count"));
+		article.setLoveCount(jArticle.optInt("love_count"));
+		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains"));
+//		article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000)));
+		article.setSadCount(jArticle.optInt("sad_count"));
+		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements"));
+		article.setTotalShares(jArticle.optInt("total_shares"));
+		article.setTwitterShares(jArticle.optInt("twitter_shares"));
+//		article.setUpdatedAt(updatedAt);
+		article.setWowCount(jArticle.optInt("wow_count"));
+		
+		articleRepository.save(article);
+		
+		return article;
+	}
+	
+	public void updateArticle(ArticleEntity article) {
+		articleRepository.save(article);
+	}
+		
 
 }
