@@ -26,26 +26,20 @@ function checkURL(targetURL) {
   //Do the following function when ready.
   xhttp.onreadystatechange = function() {
     //Note: this.responseText is generated before this function is called. The responseText is what our server responds to the request with, but converted into a string.
-    //So the CSV we retrieve is given as a string, so we can search through it for the URL like we would a string.
-    //Initialize the assumed response.
-    var link = "No article found.";
-    //If the response to our GET request has the target URL in it, then return true.
-    var pileofJsons = JSON.parse(this.responseText);
-    var jsons = Array.from(pileofJsons);
-    for (var i = 0; i < jsons.length; i++) {
-      if (jsons[i]['Article Link'] == targetURL) {
-        link = jsons[i]['Visualization Link'];
-      }
-    }
-    //When ready, change the HTML element to indicate if the URL is in the database or not.
-    var button = "<a href='" + link + "'> Link </a>"
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("demo").innerHTML = button;
+    
+    if (this.responseText == "") {
+	//This is where we output that the article already exists.
+        document.getElementById("demo").innerHTML = "Response text was empty.";
+    } else {
+	//This is where we output that the article has been added.
+	document.getElementById("demo").innerHTML = this.responseText;
     }
   };
   //Get from the following URL.
-    //https://cors-anywhere.herokuapp.com allows you to make cross origin requests. Place it before the desired URL to make your request there.
-    //https://s3-us-west-2.amazonaws.com/dev.publiceditor.io/test/visData.csv is the CSV containing all the URLs and data for the articles.
-  xhttp.open("GET", "https://cors-anywhere.herokuapp.com/https://s3-us-west-2.amazonaws.com/dev.publiceditor.io/test/visData.json", true);
+  document.getElementById("test").innerHTML = targetURL.toString();
+
+  //The first part of the queried URL allows us to make Cross Origin HTTPS requests,
+  //The second part of the URL submits the URL to the database.
+  xhttp.open("POST", "https://cors-anywhere.herokuapp.com/http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article/submit?url=" + targetURL.toString(), true);
   xhttp.send();
 }

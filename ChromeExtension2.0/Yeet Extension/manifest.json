@@ -1,0 +1,12 @@
+{
+  "name": "Yeet Extension",
+  "version": "1.0",
+  "description": "Replaces all 'yes' with 'yeet'",
+  "manifest_version": 2,
+  "content_scripts":
+    [{
+			"matches": ["*://*/*"],
+			"js": ["content_script.js"],
+			"run_at": "document_end"
+    }]
+}
