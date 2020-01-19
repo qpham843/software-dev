@@ -88,7 +88,9 @@
         <div id="articleList" class="container section"></div>
 
         <script>
-            console.log("YO");
+            $.get("http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article").done(function(data) {
+                console.log(data);
+            });
             function doFunctions() {
                 readVisData();
                 setTimeout(function () {

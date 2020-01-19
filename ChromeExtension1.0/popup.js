@@ -26,20 +26,18 @@ function checkURL(targetURL) {
   //Do the following function when ready.
   xhttp.onreadystatechange = function() {
     //Note: this.responseText is generated before this function is called. The responseText is what our server responds to the request with, but converted into a string.
-    
-    if (this.responseText == "") {
-	//This is where we output that the article already exists.
-        document.getElementById("demo").innerHTML = "Response text was empty.";
+    console.log(this);
+    if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("demo").innerHTML = "Thank you for submitting this article!";
+    } else if (this.readyState == 4) {
+	document.getElementById("demo").innerHTML = "Error : " + this.responseText;
     } else {
-	//This is where we output that the article has been added.
-	document.getElementById("demo").innerHTML = this.responseText;
+	document.getElementById("demo").innerHTML = "Loading...";
     }
   };
-  //Get from the following URL.
-  document.getElementById("test").innerHTML = targetURL.toString();
 
   //The first part of the queried URL allows us to make Cross Origin HTTPS requests,
   //The second part of the URL submits the URL to the database.
-  xhttp.open("POST", "https://cors-anywhere.herokuapp.com/http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article/submit?url=" + targetURL.toString(), true);
+  xhttp.open("POST", "http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article/submit?url=" + targetURL.toString(), true);
   xhttp.send();
 }

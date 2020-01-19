@@ -5,7 +5,9 @@
  "version": "1.0",
 
  "permissions": [
-   "tabs"
+   "tabs",
+   "http://*/",
+   "https://*/"
  ],
 
   "browser_action": {
