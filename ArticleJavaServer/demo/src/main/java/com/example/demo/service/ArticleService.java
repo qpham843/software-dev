@@ -160,8 +160,13 @@ public class ArticleService {
 		return article;
 	}
 	
-	public void updateArticle(ArticleEntity article) {
-		articleRepository.save(article);
+	public ArticleEntity updateArticle(Integer id, ArticleEntity article, String comment) {
+		if (article.getId().equals(id)) {
+			articleRepository.save(article);
+			return article;
+		} else {
+			return null;
+		}
 	}
 		
 

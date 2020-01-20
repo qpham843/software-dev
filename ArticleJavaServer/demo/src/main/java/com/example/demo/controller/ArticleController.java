@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,6 +71,15 @@ public class ArticleController {
 		return articleService.findArticleById(id);
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	public ArticleEntity updateArticleFields(@PathVariable("id") Integer id,
+			@PathVariable("status") Integer status,
+			@RequestBody ArticleEntity article) {
+		logger.info("herrrrrrrrrrrrre>>>>" + id.toString());
+		logger.info("updating article" + ">>>" + article.getTitle() + "<<< >>>" + article.getAuthor() + "<<<<");
+		return articleService.updateArticle(id, article, "article controller - POST update article object");
+	}
+
 	@RequestMapping(value = "/{id}/status/{status}", method = RequestMethod.POST)
 	public ArticleEntity getArticleById(@PathVariable("id") Integer id,
 			@PathVariable("status") String status) {
