@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 
 import { DashboardService } from './dashboard.service';
 import { Article } from './article';
+import { Status } from './article';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,9 +13,9 @@ import { Article } from './article';
 export class DashboardComponent implements OnInit {
 
   dashboardForm: FormGroup;
-  articles: Article;
+  articles: any = [];
   stringSearched: string = "";
-  statuses: Array<Status> = [];
+  statuses: any = [];
 
   constructor(
   	private ds: DashboardService,
@@ -23,9 +24,17 @@ export class DashboardComponent implements OnInit {
   	this.dashboardForm = this.fb.group({
   		statusFilter: new FormControl(),
   		searchType: new FormControl(),
-  		searchString: new FormControl(),
-
+  		searchUrl: new FormControl(),
+		searchTitle: new FormControl(),
 	  });
+
+	  this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
+	  	console.log("vvvvvvvvvvvvvv", val)
+	  	this.ds.searchByStatus(val).subscribe((data: Article) => {
+				this.articles = data;
+			}
+		);
+	  })
   }
   
   
@@ -33,7 +42,7 @@ export class DashboardComponent implements OnInit {
 	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
 		console.log(this.articles);
-		alert("hiiiiii");
+		//alert("hiiiiii");
   	});
 	
 	this.ds.getStatuses().subscribe((data: Status) => {
@@ -42,16 +51,16 @@ export class DashboardComponent implements OnInit {
 	});
   }
 
-  search() {
-	console.log("searching");
-	this.dashboardForm.get('statusFilter').reset();
-	this.stringSearched = this.dashboardForm.get('searchString').value
-	this.ds.searchByTitle(this.stringSearched)
-		.subscribe((data: Article) => {
-			this.articles = data;
-		}
-  	);
+  searchUrl() {
+  	this.ds.searchByUrl(this.dashboardForm.get('searchUrl').value).subscribe((data: Article) => {
+  		this.articles = data;
+  	})
+  }
 
+  searchTitle() {
+  	this.ds.searchByTitle(this.dashboardForm.get('searchTitle').value).subscribe((data: Article) => {
+  		this.articles = data;
+  	})
   }
 
   filterByStatus(filterVal: any) {
@@ -66,6 +75,16 @@ export class DashboardComponent implements OnInit {
 				this.articles = data;
 			}
 		);
-}
+	}
+	
+	//val contains the $event from the html
+	// one of the properties of event is srcElement (an html DOM object)
+	// this object's value is the new value 
+	changeStatus(id: number, val) {
+		console.log("changing status", id, val.srcElement.value);
+		this.ds.setStatus(id, val.srcElement.value).subscribe((data: Article) => {
+			this.articles = data;
+		});
+	}
   
 }

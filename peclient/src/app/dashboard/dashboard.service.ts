@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Article } from './article';
+import { Status } from './article';
 
 @Injectable({
   providedIn: 'root'
@@ -35,14 +36,8 @@ export class DashboardService {
   	return this.http.get<Article>('/api/article?title=' + url);
   }
 
-  setSubmit(articleId: number) {
-    return this.http.post('/api/article/' + articleId + '/status/' + 
-       this.statusMap.get("SENT_TO_TAGWORKS").statusCode, null);
-  }
-
-  setReject(articleId: number) {
-    return this.http.post('/api/article/' + articleId + '/status/' + 
-      this.statusMap.get("TAGWORKS_REJECTED").statusCode, null);
+  setStatus(id: number, status: string) {
+    return this.http.post('/api/article/' + id + '/status/' + status);
   }
 
 }

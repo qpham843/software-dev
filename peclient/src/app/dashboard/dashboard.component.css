@@ -1,3 +1,11 @@
+.ten-percent {width: 10%; }
+.fifteen-percent {width: 15%; }
+.twenty-percent {width: 20%; }
+.thirty-percent {width: 30%;}
+.fifteen-percent {width: 15%;}
+
+
+.field-label-2 {width: 200px; display: inline-block;}
 /* The Section for choosing an action on multiple articles  */
 #act_multiple {
   display: none; /* Hidden by default */
