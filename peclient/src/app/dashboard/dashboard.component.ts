@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
   dashboardForm: FormGroup;
   articles: Article;
   stringSearched: string = "";
-  statuses: Array<any> = [];
+  statuses: Array<Status> = [];
 
   constructor(
   	private ds: DashboardService,
@@ -26,19 +26,20 @@ export class DashboardComponent implements OnInit {
   		searchString: new FormControl(),
 
 	  });
-	for (let [k, v] of ds.statusMap) {
-		this.statuses.push({"value": v.statusCode, "description": v.description});
-	}
   }
   
   
   ngOnInit() {
-  	this.ds.getArticles().subscribe((data: Article) => {
+	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
-      console.log(this.articles);
-      alert("herrrre");
+		console.log(this.articles);
+		alert("hiiiiii");
   	});
-
+	
+	this.ds.getStatuses().subscribe((data: Status) => {
+		this.statuses = data;
+		console.log(this.statuses);
+	});
   }
 
   search() {

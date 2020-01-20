@@ -7,17 +7,6 @@ import { Article } from './article';
 })
 
 export class DashboardService {
-
-  public statusMap: any = new Map([
-    ["URL_FROM_BUZZFEED",   {"statusCode": "A", "description": "Url From BuzzFeed"}],
-    ["SCRAPED",             {"statusCode": "B", "description": "Scraped"}],
-    ["METADATA_EXTRACTED",  {"statusCode": "C", "description": "Metadata Extracted"}],
-    ["FILE_CREATED",        {"statusCode": "D", "description": "FileCreated"}],
-    ["SENT_TO_TAGWORKS",    {"statusCode": "E", "description": "Sent To Tagworks"}],
-    ["TAGWORKS_COMPLETE",   {"statusCode": "F", "description": "Tagworks Complete"}],
-    ["METADATA_ERROR",      {"statusCode": "G", "description": "Metadata Error"}],
-    ["TAGWORKS_REJECTED",   {"statusCode": "H", "description": "Tagworks Rejected"}],
-  ]);
   
   constructor(
   	private http: HttpClient
@@ -28,6 +17,11 @@ export class DashboardService {
   getArticles() {
   	return this.http.get<Article>('/api/article/');
   }
+
+  getStatuses() {
+  	return this.http.get<Status>('/api/status/');
+  }
+
 
   searchByStatus(statusCode: string) {
   	return this.http.get<Article>('/api/article?status=' + statusCode);
