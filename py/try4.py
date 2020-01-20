@@ -8,7 +8,7 @@ import time
 from newspaper import Article
 
 print(os.getcwd())
-path = r"c:\temp"
+path = r"/var/article"
 os.chdir(path)
 url = sys.argv[1]
 

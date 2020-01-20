@@ -28,38 +28,50 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.controller.BuzzController;
 import com.example.demo.entities.ArticleEntity;
+import com.example.demo.repository.ArticleRepository;
 
 @Service
 public class FileService {
+	/*
+	 * scrape article
+	 * - get url from article object
+	 * - call python (returns article text (string))
+	 * - update article object (save to db)
+	 * 
+	 * place article and metadata on file system
+	 * - store article text in /var/article/temp/text.txt
+	 * - store metadata in /var/article/temp/metadata.txt
+	 * 
+	 * zip
+	 * - tar gzip using /var/article folder, giving var/article.tar.gzip
+	 * - rename to var/article/<url>.tgz
+	 * 
+	 */
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(FileService.class);
 	@Autowired ArticleService articleService;
+	@Autowired ArticleRepository articleRepository;
+	
 	public void makeFile(ArticleEntity article) {
 
 		StringBuilder articleText = new StringBuilder(scrapeArticle(article));
 		article.setArticleText(articleText.toString());
-		articleService.updateArticle(article);
-		
-		//		StringBuilder fn = new StringBuilder("/temp/");
-		//		fn.append(article.getUrl() + ".txt");		
-		
+		articleRepository.save(article);
+				
 		// strip off https:// or http://
 		String u = article.getUrl();
 		String u2 = u.replace("https://", "");
 		String u3 = u2.replace("http://","");
 
-		StringBuilder f = new StringBuilder();
-		f.append("/temp/");
-		f.append(u3);
-		f.append(".txt");
-		File fn = new File(f.toString());
-		
+		String articleDir = "/var/article/temp/";
+		String zipDestDir = "/var/article/";
+		String zipDestFilename = "article";
+		String articleFilename = articleDir + "text.txt";
+		String metadataFilename = articleDir + "metadata.json";
 		//*******************************************************
 		// CREATE ARTICLE FILE (text.txt)
-		//articleText.append(article.getArticleText());
-		//articleText.append(System.currentTimeMillis());
-		String sha256hex = DigestUtils.sha256Hex(articleText.toString());
 
-		File articleFile = new File(fn.getAbsoluteFile() + "/text.txt");
+		
+		File articleFile = new File(articleFilename);
 		try {
 			FileUtils.writeStringToFile(articleFile, articleText.toString(), true);
 		} catch (IOException e) {
@@ -69,13 +81,14 @@ public class FileService {
 		
 		//*******************************************************
 		// CREATE METADATA FILE (metadata.json)
+		String sha256hex = DigestUtils.sha256Hex(articleText.toString());
 		JSONObject metadata = new JSONObject();
 		
 		metadata.put("extra", new JSONObject(article));
 		metadata.put("file_sha256", sha256hex);
-		metadata.put("filename", fn.getName());
+		metadata.put("filename", articleFile.getName());
 
-		File metadataFile = new File(fn.getAbsoluteFile() + "/metadata.json");
+		File metadataFile = new File(metadataFilename);
 		try {
 			FileUtils.writeStringToFile(metadataFile, metadata.toString(4), false);
 		} catch (IOException e) {
@@ -86,38 +99,25 @@ public class FileService {
 		//*******************************************************
 		// CREATE tgz 
 		
-//		String archiveName = "archive";
-		String archiveName = fn.getName();
-		File destination = new File(fn.getParent());
-		if (destination.getName().length() < 3) {
-			destination = new File(fn.getParent() + "zzz");
-		}
-		//File destination = new File(fn.getPath() + ".tgz");
-		File source = new File(fn.getPath());
+		String archiveName = "article";
+		File zipSourceDirFile = new File(articleDir);
+		File zipDestDirFile = new File(zipDestDir);
 		
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP);
 		
 		try {
-			logger.info("gzipping archiveName " + archiveName);
-			logger.info("destination " + destination.getAbsolutePath());
-			logger.info("source " + source.getAbsolutePath());
 			
-			File archive = archiver.create(archiveName, destination, source);
-			logger.info("moving");
-			logger.info("archive " + archive.toPath().toString());
-			logger.info("dest " + source.toPath().toString());
-			Path temp2 = Paths.get(source.getParent(), archive.getName());
-			Path temp = Files.move(archive.toPath(), temp2, StandardCopyOption.REPLACE_EXISTING);
-			if (temp != null) {
-				//success
-				logger.info("success: moved file from " + archive.getAbsolutePath() + " to " + source.getAbsolutePath());
-				logger.info("aaaaaa" + temp.toString());
-			} else {
-				logger.info("file move failed");
-				logger.info("source " + archive.toPath().toString());
-				logger.info("dest " + source.toPath().toString());
-				
-			}
+			File archive = archiver.create(zipDestFilename, zipDestDirFile, zipSourceDirFile);
+			File destFile = new File(zipDestDir + u3 + sha256hex + ".tgz");
+			destFile.getParentFile().mkdirs();
+			
+			logger.info(archive.toPath().toString());
+			logger.info(destFile.toString());
+
+			Path temp = Files.move(
+					archive.toPath(), 
+					destFile.toPath(), 
+					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,43 +127,69 @@ public class FileService {
 	Process nProcess;
 	public String scrapeArticle(ArticleEntity article) {
 
+		logger.info("scraping article " + article.getUrl());
+		String os = System.getProperty("os.name");
 		Runtime r = Runtime.getRuntime();
 		StringBuilder s = new StringBuilder();
-		s.append("cmd /c c:\\aa\\software-dev\\py\\try4.py ");
-		s.append(article.getUrl());
+
+		if (os.contains("ows")) {
+			s.append("cmd /c c:\\var\\scrape.py ");
+			s.append(article.getUrl());
+			s.append(" > c:\\var\\article\\temp\\text.txt");
+			
+		} else {
+			s.append("sh -c /var/scrape.py ");
+			s.append(article.getUrl());
+//			s.append(" > /var/article/temp/text.txt");
+		}
+		
+		
+		
+		logger.info("command line " + s.toString());
+
 		try {
 			Process p = r.exec(s.toString());
-			mProcess = p;
-			nProcess = p;
+//			mProcess = p;
+//			nProcess = p;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		InputStream stdout = mProcess.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));
-		String line;
-		try{
-			while((line = reader.readLine()) != null){
-				System.out.println("stdout: "+ line);
-			}
-		}catch(IOException e){
-			System.out.println("Exception in reading output"+ e.toString());
+//		// ***** stdout
+//		InputStream stdout = mProcess.getInputStream();
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));
+//		String line;
+//		StringBuilder articleText = new StringBuilder();
+//		try{
+//			while((line = reader.readLine()) != null){
+//				logger.info("stdout..............: "+ line);
+//				articleText.append(line);
+//			}
+//			logger.info("done reading stdout.................");
+//			logger.info(articleText.toString());
+//		}catch(IOException e){
+//			System.out.println("Exception in reading output"+ e.toString());
+//		}
+//		
+//		InputStream stderr = nProcess.getInputStream();
+//		BufferedReader reader2 = new BufferedReader(new InputStreamReader(stderr,StandardCharsets.UTF_8));
+//		String line2;
+//		try{
+//			while((line2 = reader2.readLine()) != null){
+//				System.out.println("stderr: "+ line2);
+//			}
+//		}catch(IOException e){
+//			System.out.println("Exception in reading stderr "+ e.toString());
+//		}
+//		
+		
+		File file = null; 
+		if (os.contains("ows")) {
+			file = new File("C:\\var\\article\\temp\\text.txt"); 
+		} else {
+			file = new File("/var/article/temp/text.txt"); 
 		}
-		
-		InputStream stderr = nProcess.getInputStream();
-		BufferedReader reader2 = new BufferedReader(new InputStreamReader(stderr,StandardCharsets.UTF_8));
-		String line2;
-		try{
-			while((line2 = reader2.readLine()) != null){
-				System.out.println("stderr: "+ line2);
-			}
-		}catch(IOException e){
-			System.out.println("Exception in reading stderr "+ e.toString());
-		}
-		
-		
-		File file = new File("C:\\temp\\article.txt"); 
 		  
 		BufferedReader br = null;
 		try {
@@ -185,7 +211,9 @@ public class FileService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		logger.info("done scraping ");
 		
+		logger.info(a.toString());
 		return a.toString();
 	}
 	
