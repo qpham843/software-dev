@@ -6,13 +6,11 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ArticleRowComponent } from './dashboard/article-row/article-row.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
-    ArticleRowComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

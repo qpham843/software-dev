@@ -12,40 +12,28 @@
 </div>
 <form [formGroup]="dashboardForm">
 	<div class="section">
-	<div class="w-form">
-		<label for="statusFilter">filter by</label>
-		<select id="statusFilter" name="statusFilter" formControlName="statusFilter"
-			class="select-field w-select" (change)="filterByStatus($event.target.value)">
-			<option value="all">All</option>
-			<option *ngFor="let status of statuses" [value]="status.value">{{status.description}}</option>
+		<label for="statusFilter">Filter</label>
+		<select id="statusFilter" name="statusFilter" formControlName="statusFilter" class="select-field w-select">
+			<option [value]="all">All</option>
+			<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
 		</select>
-	</div>
 	</div>
 	<div class="section">
 	<div class="form-block w-form">
-		<label for="searchType" class="field-label-2">Search</label>
-		<select id="searchType" name="searchType" formControlName="searchType" 
-			class="select-field-2 w-select">
-			<option value="title">Title</option>
-			<option value="url">URL</option>
-		</select>
-		<input type="text" class="w-input" maxlength="256" name="searchString" 
-			data-name="Search String" placeholder="Enter search text" id="searchString"
-			formControlName="searchString" required="" (keyup.enter)="search()" />
-		<button type="button" (click)="search();">Search</button>
+		<label for="searchUrl" class="field-label-2">URL Search</label>
+		<input type="text" class="" formControlName="searchUrl" (keyup.enter)="searchUrl()" /><button type="button" (click)="searchUrl();">Search</button>
+
+		<br>
+
+		<label for="searchTitle" class="field-label-2">TITLE Search</label>
+		
+		<input type="text" class="" formControlName="searchTitle" (keyup.enter)="searchTitle()" />
+		<button type="button" (click)="searchTitle();">Search</button>
 	</div>
 	</div>
-	<ng-container *ngIf="stringSearched && stringSearched != ''">
-		<div class="section">
-			<div class="div-block-2">
-				<div class="text-block-4">Searched on: </div>
-				<div class="text-block-3"> "{{ stringSearched }}"</div>
-			</div>
-		</div>
-	</ng-container>
 
 	<div class="section">
-	 <table class="table3">
+	 <table class="table3" border="1px solid">
 		<thead>
 			<tr>
 				<th>Date Added
@@ -66,12 +54,19 @@
 			</tr>
 		</thead>
 	    <tbody>
-			<ng-container *ngIf="articles && articles.length > 0; else noResults">
-				<tr *ngFor="let article of articles" app-article-row [article]="article"></tr>
-			</ng-container>
-			<ng-template #noResults>
-				<tr><td colspan="5">No results</td></tr>
-			</ng-template>
+	    	<tr *ngFor="let a of articles">
+	    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
+	    		<td class="twenty-percent">{{a.title}}</td>
+	    		<td class="fifteen-percent">{{a.url}}</td>
+	    		<td class="ten-percent">{{a.statuses[0].statusCode}}</td>
+	    		<td class="ten-percent">
+	    			<!-- change per filter dropdown and what we discussed today -->
+	    			<!-- ps - didn't use the onValueChange subscribe 'cause it's a repeated element - simpler to call a function with the id -->
+	    			<select (change)="changeStatus(a.id, $event)">
+	    				<option (value)="a">a</option>
+	    				<option (value)="b">b</option>
+					</select>
+	    		</td>
 	    </tbody>
 	    </table>
 	</div>
