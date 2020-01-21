@@ -37,7 +37,7 @@ export class DashboardService {
   }
 
   setStatus(id: number, status: string) {
-    return this.http.post('/api/article/' + id + '/status/' + status);
+    return this.http.post('/api/article/' + id + '/status/' + status, null);
   }
 
 }

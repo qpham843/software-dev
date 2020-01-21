@@ -63,9 +63,15 @@
 	    			<!-- change per filter dropdown and what we discussed today -->
 	    			<!-- ps - didn't use the onValueChange subscribe 'cause it's a repeated element - simpler to call a function with the id -->
 	    			<select (change)="changeStatus(a.id, $event)">
-	    				<option (value)="a">a</option>
-	    				<option (value)="b">b</option>
-					</select>
+					<option [value]="a.statuses[0].statusCode">
+						{{a.statuses[0].statusCode}} - {{a.statuses[0].statusText}}
+					</option>
+					<ng-container *ngFor="let status of statuses">
+						<option *ngIf="a.statuses[0].statusCode != status.statusCode" [value]="status.statusCode">
+							{{status.statusCode}} - {{status.statusText}}
+						</option>
+					</ng-container>
+				</select>
 	    		</td>
 	    </tbody>
 	    </table>
