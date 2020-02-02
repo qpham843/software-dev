@@ -73,7 +73,6 @@ public class ArticleController {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	public ArticleEntity updateArticleFields(@PathVariable("id") Integer id,
-			@PathVariable("status") Integer status,
 			@RequestBody ArticleEntity article) {
 		logger.info("herrrrrrrrrrrrre>>>>" + id.toString());
 		logger.info("updating article" + ">>>" + article.getTitle() + "<<< >>>" + article.getAuthor() + "<<<<");

@@ -110,17 +110,18 @@ public class ArticleEntity implements Serializable {
 	@Column(name="haha_count")
 	protected Integer hahaCount = 0;
 	
+	@Column(name="vis_data")
+	protected String visData = "";
 	
 /*
-	 *  Table: article
+Table: article
 Columns:
 id int(11) AI PK 
 title char(50) 
 author char(50) 
-url char(150) 
+url mediumtext 
 publish_date timestamp 
 article_text mediumtext 
-
 author_name char(50) 
 article_title char(200) 
 article_amplifiers varchar(500) 
@@ -134,7 +135,7 @@ num_words int(11)
 alexa_rank int(11) 
 twitter_shares int(11) 
 love_count int(11) 
-evergren_score double 
+evergreen_score double 
 total_reddit_engagements int(11) 
 wow_count int(11) 
 facebook_likes int(11) 
@@ -144,7 +145,8 @@ total_facebook_shares int(11)
 angry_count int(11) 
 facebook_shares int(11) 
 num_linking_domains int(11) 
-haha_count int(11)
+haha_count int(11) 
+vis_data mediumtext
  */
 	
 	
@@ -377,6 +379,14 @@ haha_count int(11)
 
 	public void setHahaCount(Integer hahaCount) {
 		this.hahaCount = hahaCount;
+	}
+
+	public String getVisData() {
+		return visData;
+	}
+
+	public void setVisData(String visData) {
+		this.visData = visData;
 	}
 
 	

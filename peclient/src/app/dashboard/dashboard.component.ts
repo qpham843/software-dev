@@ -83,6 +83,7 @@ export class DashboardComponent implements OnInit {
 	changeStatus(id: number, val) {
 		console.log("changing status", id, val.srcElement.value);
 		this.ds.setStatus(id, val.srcElement.value).subscribe((data: Article) => {
+			console.log("back from changing status", data);
 			this.articles = data;
 		});
 	}
