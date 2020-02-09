@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { DashboardService } from './dashboard.service';
 import { Article } from './article';
 import { Status } from './article';
+//import { TSMap } from "typescript-map";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +17,8 @@ export class DashboardComponent implements OnInit {
   articles: any = [];
   stringSearched: string = "";
   statuses: any = [];
+  //articleDetails = new TSMap<number,boolean>();
+  articleDetails: any = [];
 
   constructor(
   	private ds: DashboardService,
@@ -41,6 +44,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
 	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
+		for(let x = 0; x < this.articles.size; x++) {
+			this.articleDetails[data[x].id] = false;
+		}
 		console.log(this.articles);
 		//alert("hiiiiii");
   	});
@@ -87,5 +93,7 @@ export class DashboardComponent implements OnInit {
 			this.articles = data;
 		});
 	}
+
+
   
 }

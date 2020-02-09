@@ -112,7 +112,10 @@ public class ArticleEntity implements Serializable {
 	
 	@Column(name="vis_data")
 	protected String visData = "";
-	
+
+	@Column(name="tagworks_id")
+	protected Integer tagworksId = 0;
+
 /*
 Table: article
 Columns:
@@ -387,6 +390,14 @@ vis_data mediumtext
 
 	public void setVisData(String visData) {
 		this.visData = visData;
+	}
+
+	public Integer getTagworksId() {
+		return tagworksId;
+	}
+
+	public void setTagworksId(Integer tagworksId) {
+		this.tagworksId = tagworksId;
 	}
 
 	

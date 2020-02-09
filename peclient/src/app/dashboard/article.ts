@@ -5,7 +5,7 @@ export interface Status {
 
 export interface Article {
   id: number;
-  title: string;
+  articleTitle: string;
   author: string;
   publishDate: string;
   articleText: string;

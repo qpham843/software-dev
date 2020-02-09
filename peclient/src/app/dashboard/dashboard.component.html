@@ -54,25 +54,37 @@
 			</tr>
 		</thead>
 	    <tbody>
-	    	<tr *ngFor="let a of articles">
-	    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
-	    		<td class="twenty-percent">{{a.title}}</td>
-	    		<td class="fifteen-percent">{{a.url}}</td>
-	    		<td class="ten-percent">{{a.statuses[0].statusCode}}</td>
-	    		<td class="ten-percent">
-	    			<!-- change per filter dropdown and what we discussed today -->
-	    			<!-- ps - didn't use the onValueChange subscribe 'cause it's a repeated element - simpler to call a function with the id -->
-	    			<select (change)="changeStatus(a.id, $event)">
-					<option [value]="a.statuses[0].statusCode">
-						{{a.statuses[0].statusCode}} - {{a.statuses[0].statusText}}
-					</option>
-					<ng-container *ngFor="let status of statuses">
-						<option *ngIf="a.statuses[0].statusCode != status.statusCode" [value]="status.statusCode">
-							{{status.statusCode}} - {{status.statusText}}
-						</option>
-					</ng-container>
-				</select>
-	    		</td>
+	    	<ng-container *ngFor="let a of articles">
+		    	<tr>
+		    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
+		    		<td class="twenty-percent">
+		    			{{a.articleTitle}}
+		    			<button type-"button" (click)="toggle(a.id)"
+		    		</td>
+		    		<td class="fifteen-percent">{{a.url}}</td>
+		    		<td class="ten-percent">{{a.statuses[0].statusCode}}</td>
+		    		<td class="ten-percent">
+		    			<!-- change per filter dropdown and what we discussed today -->
+		    			<!-- ps - didn't use the onValueChange subscribe 'cause it's a repeated element - simpler to call a function with the id -->
+		    			<select (change)="changeStatus(a.id, $event)">
+							<option [value]="a.statuses[0].statusCode">
+								{{a.statuses[0].statusCode}} - {{a.statuses[0].statusText}}
+							</option>
+							<ng-container *ngFor="let status of statuses">
+								<option *ngIf="a.statuses[0].statusCode != status.statusCode" [value]="status.statusCode">
+									{{status.statusCode}} - {{status.statusText}}
+								</option>
+							</ng-container>
+						</select>
+		    		</td>
+		    	</tr>
+		    	<tr>
+		    		<td *ngIf="articleShow[a.id]" colspan="5">
+		    			<pre>{{ a | json }}</pre>
+		    		</td>
+		    	</tr>
+	    	</ng-container>
+
 	    </tbody>
 	    </table>
 	</div>
