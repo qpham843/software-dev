@@ -142,19 +142,61 @@ public class FileService {
 			s.append(article.getUrl());
 //			s.append(" > /var/article/temp/text.txt");
 		}
+		//String[] cmd = { "bash", "-c", "/var/scrape.py", article.getUrl() };
+		//String[] cmd = { "/var/scrape.py", article.getUrl() };
+		
+		Process process;
+		logger.info("aaaaaaaaaaaaa");
+	       try{
+	    	   logger.info("bbbbbbbbbbbb");
+	    	   //process = Runtime.getRuntime().exec(new String[]{"/var/scrape.py " + article.getUrl() + " > /var/article/temp/text.txt"});
+	    	   //process = Runtime.getRuntime().exec(new String[]{"/var/scrape.py"}, null, new String[] {"/var/"});
+	    	   process = Runtime.getRuntime().exec("scrape.py");
+	             mProcess = process;
+	       }catch(Exception e) {
+	    	   logger.info("ccccccccccccccccc");
+	    	   System.out.println("Exception Raised" + e.toString());
+	       }
+	       logger.info("dddddddddddddddddddd");
+	       InputStream stdout = mProcess.getInputStream();
+	       logger.info("eeeeeeeeeeeeeeee");
+	       BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));
+	       logger.info("fffffffffffffffff");
+	       String line;
+	       try{
+	    	   logger.info("gggggggggggggggggg");
+	          while((line = reader.readLine()) != null){
+	        	  logger.info("hhhhhhhhhhhhhhhhhhhh"); 
+	        	  System.out.println("stdout: "+ line);
+	               logger.info("llllllllllllll " + line);
+	          }
+	       }catch(IOException e){
+	    	   logger.info("iiiiiiiiiiiiiiiiiiiii");
+	    	   System.out.println("Exception in reading output"+ e.toString());
+	       }
 		
 		
 		
-		logger.info("command line " + s.toString());
+		//logger.info("command line gggggg " + s.toString());
+		//logger.info("command line hhhhhh " + cmd);
+//		logger.info("using process builder");
+//		ProcessBuilder pb = new ProcessBuilder("sh", "-c", "/var/scrape.py", article.getUrl());
+//		pb.redirectErrorStream(true); // equivalent of 2>&1
+//		try {
+//			Process p = pb.start();
+//		} catch (IOException e2) {
+//			 TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
 
-		try {
-			Process p = r.exec(s.toString());
-//			mProcess = p;
-//			nProcess = p;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Process p = r.exec(cmd);
+////			mProcess = p ;
+////			nProcess = p;
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 //		// ***** stdout
 //		InputStream stdout = mProcess.getInputStream();

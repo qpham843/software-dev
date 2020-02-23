@@ -17,8 +17,9 @@ export class DashboardComponent implements OnInit {
   articles: any = [];
   stringSearched: string = "";
   statuses: any = [];
-  //articleDetails = new TSMap<number,boolean>();
   articleDetails: any = [];
+  articleShow: boolean[] = [];
+
 
   constructor(
   	private ds: DashboardService,
@@ -42,19 +43,26 @@ export class DashboardComponent implements OnInit {
   
   
   ngOnInit() {
+  	console.log("aaaaaaaaaaaaaa");
 	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
 		for(let x = 0; x < this.articles.size; x++) {
-			this.articleDetails[data[x].id] = false;
+			this.articleShow[x] = false;
 		}
-		console.log(this.articles);
-		//alert("hiiiiii");
+		
+		
   	});
 	
 	this.ds.getStatuses().subscribe((data: Status) => {
 		this.statuses = data;
 		console.log(this.statuses);
 	});
+  }
+  
+  
+
+  toggle(i:number) {
+  	this.articleShow[i] = !this.articleShow[i];
   }
 
   searchUrl() {

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.ScrapeService;
 
 @RestController
 @CrossOrigin(origins="*")
@@ -28,7 +29,7 @@ public class ArticleController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleController.class);
 	
 	@Autowired ArticleService articleService;
-	//@Autowired BuzzService buzzService;
+	@Autowired ScrapeService scrapeService;
 	//@Autowired FileService fileService;
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -83,6 +84,11 @@ public class ArticleController {
 	public ArticleEntity getArticleById(@PathVariable("id") Integer id,
 			@PathVariable("status") String status) {
 		return articleService.updateStatus(id, status, "Comment Placeholder - article controller - POST /status");
+	}
+
+	@RequestMapping(value = "/scrape", method = RequestMethod.GET)
+	public String scrape() {
+		return scrapeService.scrapeArticle();
 	}
 
 	
