@@ -4,8 +4,8 @@ const FileSystem = require("fs");
 
 /*
 This...method? Converts the csv to a json, then creates a new JSON
-that is reformatted. The last part of this method writes a new JSON file 
-with the reformatted version. Assumes that the file lives in the same 
+that is reformatted. The last part of this method writes a new JSON file
+with the reformatted version. Assumes that the file lives in the same
 folder as this documemt.
 */
 function convertAndReformat(fileName) {
@@ -26,9 +26,9 @@ CSVtoJSON().fromFile("./" + fileName).then(data => {
 
 convertAndReformat('VisualizationData_1712.csv');
 
-/* Returns whether or not the given array has a JSON object whose 
+/* Returns whether or not the given array has a JSON object whose
 'name' attribute is equivalent to name. More pratically, this
-function checks whether or not the 'children' attribute of 
+function checks whether or not the 'children' attribute of
 a JSON object contains an object with the given name.
     arrayObject: an array of JSON objects
     name: a string
@@ -46,8 +46,8 @@ function specialContains(arrayObject, name) {
 }
 
 
-/* Returns the index of the JSON object that has the given name 
-in its 'name' attribute. Returns the index where the JSON 
+/* Returns the index of the JSON object that has the given name
+in its 'name' attribute. Returns the index where the JSON
 with the given name is in the list.
     arrayObject: an array of JSON objects
     name: a string
@@ -72,7 +72,7 @@ function addCategoryNames(finalJSON, data) {
     var categoryNames = new Set()
     //Collect all the category names
     for (i=0; i <data.length; i++) {
-        var category = data[i]["Credibilty Indicator Category"]
+        var category = data[i]["Credibility Indicator Category"]
         if (!category == '') {
             categoryNames.add(category);
         }
@@ -97,7 +97,7 @@ to the JSON, and returns it.
 function addIndicatorNames(finalJSON, data) {
     for (j=0; j < data.length; j++) {
         var indicator = data[j]["Credibility Indicator Name"];
-        var parentCat = data[j]["Credibilty Indicator Category"];
+        var parentCat = data[j]["Credibility Indicator Category"];
         if (indicator == '' || parentCat == '') {
             continue;
         } else {
@@ -130,7 +130,7 @@ function addRest(finalJSON, data) {
         var end = data[l]['End'];
         var point = data[l]['Points'];
         var parentInd = data[l]["Credibility Indicator Name"];
-        var parentCat = data[l]["Credibilty Indicator Category"];
+        var parentCat = data[l]["Credibility Indicator Category"];
         if (parentInd == '' || parentCat == '') {
             continue;
         } else {
