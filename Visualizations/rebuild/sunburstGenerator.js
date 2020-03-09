@@ -28,8 +28,10 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
+//Convert the CSV to a Javascript Object (is like a Python dictionary).
 d3.csv(dataFileName, function(error, data) {
   if (error) throw error;
+  //Get rid of a column row so there are only highlight rows.
   delete data["columns"];
   data = addDummyData(data);
   root = convertToHierarchy(data);
