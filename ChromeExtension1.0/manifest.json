@@ -11,6 +11,19 @@
  ],
 
   "browser_action": {
-    "default_popup": "popup.html"
-  }
+    "default_popup": "popup.html",
+    "default_icon": {
+    	"16": "pe16.png",
+    	"32": "pe32.png",
+    	"48": "pe48.png",
+    	"128": "pe128.png"
+    	}
+    },
+
+  "icons": {
+    	"16": "pe16.png",
+    	"32": "pe32.png",
+    	"48": "pe48.png",
+    	"128": "pe128.png"
+    }
 }

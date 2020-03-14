@@ -27,3 +27,4 @@ popup.js: This is the code that handles all the work done, namely the process of
 	The comments are in the Javascript code.
 	
 
+This message will be updated eventually to be actually helpful.
