@@ -37,6 +37,7 @@ d3.csv(dataFileName, function(error, data) {
   root.sum(function(d) {
     return Math.abs(parseInt(d.data.Points));
   });
+    
   svg.selectAll("path")
       .data(partition(root).descendants())
     .enter().append("path")
@@ -45,9 +46,32 @@ d3.csv(dataFileName, function(error, data) {
         return color(d.data.data["Credibility Indicator Category"]);
       })
     .append("title")
-      .text(function(d) {
-        return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseInt(d.data.data.Points));
+      .text(function(d) { 
+        console.log(d.height);
+        //console.log(d.data.data.Points);
+        var score = scoreSum(d);
+        console.log(score);
+        //return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseFloat(d.data.data.Points));
+        return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseInt(score));
       });
+    
 });
+
+
+function scoreSum(d) {
+    if (d.data.data.Points ) {
+        return d.data.data.Points;
+    } else {
+        var sum = 0;
+        for (var i = 0; i < d.children.length; i++) {
+            sum += parseFloat(scoreSum(d.children[i]));
+        }
+        if (d.height == 2) {
+            return 100 + parseInt(sum);
+        }
+        return sum;
+    }   
+}
+
 
 d3.select(self.frameElement).style("height", height + "px");
