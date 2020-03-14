@@ -1,0 +1,16 @@
+version: '3.5'
+services:
+  article_server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8888:8080"
+
+  article_db:
+    image: mysql:8.0.19
+    environment:
+      MYSQL_ROOT_PASSWORD: "testonly_Thunohph4oobeijoos3ph"
+      MYSQL_DATABASE: "publiceditor"
+      MYSQL_USER: "MysqlUpdateUser"
+      MYSQL_PASSWORD: "TheQuickBrownFox!!123"

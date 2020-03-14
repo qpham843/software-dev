@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  article_server:
+    volumes:
+      - .:/home/hostdir
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+
+  article_db:
+    volumes:
+      - .:/home/hostdir
