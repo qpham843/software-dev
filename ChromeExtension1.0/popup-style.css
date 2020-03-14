@@ -15,7 +15,6 @@ h2 {
 
 body {
 	font-family: 'Lato', sans-serif;
-	width: 13rem;
 	padding: 1rem;
 	text-align: center;
 }
@@ -25,7 +24,7 @@ a {
 	text-decoration: none;
 }
 
-a:hover {
+a:hover > h1 {
 	color: #3f69af;
 }
 
@@ -68,6 +67,7 @@ h1 {
 	color: #323648;
 	font-size: 32px;
 	margin: 0px;
+	white-space: nowrap;
 }
 
 h2 {
@@ -75,4 +75,16 @@ h2 {
 	margin: 0px;
 	font-weight: 500;
 	color: #323648
+}
+
+/* -- flexbox -- */
+
+.container {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+.item {
+	margin: 0 0.25rem;
 }
