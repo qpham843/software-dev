@@ -28,6 +28,9 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
+
+var articleScore;
+
 d3.csv(dataFileName, function(error, data) {
   if (error) throw error;
   delete data["columns"];
@@ -45,21 +48,85 @@ d3.csv(dataFileName, function(error, data) {
       .style("fill", function(d) {
         return color(d.data.data["Credibility Indicator Category"]);
       })
+    .style('opacity', function(d) {
+      return setOpacity(d);
+  })
     .append("title")
       .text(function(d) { 
+<<<<<<< HEAD
         console.log(d.height);
         //console.log(d.data.data.Points);
         var score = scoreSum(d);
         console.log(score);
+=======
+        var score = scoreSum(d);
+>>>>>>> Displaying score functionality added, center style fixed up
         //return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseFloat(d.data.data.Points));
         return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseInt(score));
       });
     
+<<<<<<< HEAD
 });
 
 
 function scoreSum(d) {
     if (d.data.data.Points ) {
+=======
+    var g = d3.select('svg')
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    // .attr("viewBox", "0 0 250 250")
+    // .classed("svg-content", true)
+    .attr('width', width)
+    .attr('height', height)
+    .append('g')
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+    
+//Setting the center circle to the score
+g.selectAll(".center-text")
+        .style("display", "none")
+    g.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 13)
+        .style("font-family", 'Comic sans')
+        .style("font-size", 100)
+        .style("text-anchor", "middle")
+        .html((articleScore)) 
+    
+//Changing opacity based on mousover.
+g.selectAll()
+    .on('mouseover', function(d) {
+        d3.selectAll("path").transition().style("opacity", 0.5);
+            if (d.data.children) {
+                for (var i = 0; i < d.data.children.length; i += 1) {
+                    d3.select(dataToPath.get(d.data.children[i]))
+                        .transition()
+                        .style("display", "block")
+                        .style("opacity", 0.5)
+                        .duration(100)
+                }
+            } else {
+                var dataArray = Array.from(dataToParentPath.keys());
+                for (var i = 0; i < Array.from(dataToParentPath.keys()).length; i += 1) {
+                    if (PathToData.get(curPath).parent == dataArray[i].parent) {
+                        dataToPath.get(dataArray[i].data).style.opacity = 0.5;
+                    }
+                }
+            }
+});
+
+
+
+
+/*
+Recursive function that returns a number that represents the total score of the given arc.
+For the center, we simply return the score of the article (100 plus the collected points).
+@arg d = the node of the hierarchy.
+*/
+function scoreSum(d) {
+    if (d.data.data.Points) {
+>>>>>>> Displaying score functionality added, center style fixed up
         return d.data.data.Points;
     } else {
         var sum = 0;
@@ -67,11 +134,30 @@ function scoreSum(d) {
             sum += parseFloat(scoreSum(d.children[i]));
         }
         if (d.height == 2) {
+<<<<<<< HEAD
             return 100 + parseInt(sum);
+=======
+            articleScore = 100 + parseInt(sum);
+            return articleScore;
+>>>>>>> Displaying score functionality added, center style fixed up
         }
         return sum;
     }   
 }
 
+<<<<<<< HEAD
+=======
+/*
+Function that returns the desired default opacity. 0 for the center, 1 for the outer rings.
+*/
+function setOpacity(d) {
+    if (d.height == 2) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+>>>>>>> Displaying score functionality added, center style fixed up
 
 d3.select(self.frameElement).style("height", height + "px");
