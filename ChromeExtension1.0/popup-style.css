@@ -2,12 +2,12 @@
 
 h1 {
 	color: #323648;
-	font-size: 32px;
-	margin: 0px;
+	font-size: 1.4rem;
+	white-space: nowrap;
 }
 
 h2 {
-	font-size: 24px;
+	font-size: 1rem;
 	margin: 0px;
 	font-weight: 500;
 	color: #323648
@@ -17,6 +17,9 @@ body {
 	font-family: 'Lato', sans-serif;
 	padding: 1rem;
 	text-align: center;
+	/* width: 20rem; */
+	background: #fafafa;
+	margin: 2rem 1rem;
 }
 
 a {
@@ -27,6 +30,14 @@ a {
 a:hover > h1 {
 	color: #3f69af;
 }
+
+
+footer > a {
+	color: darkgray;
+	position: relative;
+	top: 1rem;
+}
+
 
 
 /* -- button -- */
@@ -63,28 +74,57 @@ a:hover > h1 {
     text-transform: uppercase;
 }
 
-h1 {
-	color: #323648;
-	font-size: 32px;
-	margin: 0px;
-	white-space: nowrap;
+.successful {
+    background-color: #80e62d;
+    color: white;
+	text-decoration: none;
+	cursor: default;
 }
 
-h2 {
-	font-size: 24px;
-	margin: 0px;
-	font-weight: 500;
-	color: #323648
+/* -- website url -- */
+
+input {
+	border-style: none none solid none;
+	border-width: 1px;
+	border-color: black;
+	background-color: inherit;
+	overflow: scroll;
+	text-align: center;
 }
 
-/* -- flexbox -- */
+.inputbox {
+	background-color: white;
+	border: none;
+	border-radius: 6px;
+	padding: 1rem;
+
+}
+
+/* -- layout -- */
 
 .container {
-	display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
+	display: grid;
+	justify-items: center;
+	grid-template-columns: 1fr;
 }
 
-.item {
-	margin: 0 0.25rem;
+#logo {
+	display: flex;
+	justify-self: start;
+	flex-wrap: nowrap;
+	align-items: center;
+	margin: 1rem;
+}
+
+#logo > * {
+	margin: 0.2rem;
+}
+
+/* -- misc -- */
+
+.shadow {
+    box-shadow:
+        0  5px 10px rgba(154,160,185,0.05),
+		0 15px 40px rgba(166,173,201,0.2);
+
 }

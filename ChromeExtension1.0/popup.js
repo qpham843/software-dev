@@ -28,11 +28,12 @@ function checkURL(targetURL) {
     //Note: this.responseText is generated before this function is called. The responseText is what our server responds to the request with, but converted into a string.
     console.log(this);
     if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("demo").innerHTML = "Thank you for submitting this article!";
+      document.getElementById("demo").innerHTML = "Thank you for submitting this article!";
+      document.getElementById("captureButton").classList.add("successful");
     } else if (this.readyState == 4) {
-	document.getElementById("demo").innerHTML = "Error : " + this.responseText;
+      document.getElementById("demo").innerHTML = "Error : " + this.responseText;
     } else {
-	document.getElementById("demo").innerHTML = "Loading...";
+	    document.getElementById("demo").innerHTML = "Loading...";
     }
   };
 
@@ -40,4 +41,5 @@ function checkURL(targetURL) {
   //The second part of the URL submits the URL to the database.
   xhttp.open("POST", "http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article/submit?url=" + targetURL.toString(), true);
   xhttp.send();
+
 }

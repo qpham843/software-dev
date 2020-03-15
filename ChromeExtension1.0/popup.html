@@ -2,16 +2,26 @@
   <head>
     <link rel="stylesheet" type="text/css" href="popup-style.css">
   </head>
-  <body>
-    <a href="http://publiceditor.io/" target="_blank" class="container">
-      <img src="pe32.png" class="item">
-      <h1 class="item"> Public Editor</h1>
-    </a>    
-    <center>
-      <button id="captureButton" class="button"> submit </button>
-    </center>
-    <a href="http://www.google.com" target="_blank"> read more </a>  
-    <!-- Link to chrome extension FAQ. Current link is temporary. -->
+  <body class="container">
+    <a href="http://publiceditor.io/" target="_blank">
+      <span id="logo">
+          <img src="pe32.png">
+          <h1>Public Editor</h1>
+      </span> 
+    </a>   
+      <div class="inputbox shadow">
+        <label><h2>website to submit</h2></label>
+        <input type="text">
+
+      </div>
+    <button id="captureButton" class="button shadow"> submit </button>
+    <output id="result"> Click me!</output>
+
+    <footer>
+      <a href="http://www.google.com" target="_blank"> read more </a> 
+      <!-- Link to chrome extension FAQ. Current link is temporary. -->
+    </footer>
+
    <script src="popup.js"></script>
   </body>
 </html>
