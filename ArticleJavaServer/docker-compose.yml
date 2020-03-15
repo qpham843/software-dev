@@ -12,7 +12,7 @@ services:
   article_db:
     image: mysql:8.0.19
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: "CLoTbYDEmdNbfSxb"
       MYSQL_DATABASE: "publiceditor"
       MYSQL_USER: "MysqlUpdateUser"
       MYSQL_PASSWORD: "TheQuickBrownFox!!123"
