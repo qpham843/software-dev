@@ -1,0 +1,25 @@
+.my.cnf
+
+.tmp
+
+.DS_Store
+
+# emacs artifacts
+*~
+*#
+
+# vim artifacts
+*.swp
+
+# intellij artifacts
+.idea/
+*.iml
+
+# python artifacts
+*.pyc
+.Python
+/bin/
+/include/
+/lib/
+pip-selfcheck.json
+__pycache__/
