@@ -59,7 +59,15 @@ export class DashboardComponent implements OnInit {
 	});
   }
   
-  
+  onClick(string)
+  {
+  var dateAdded = "dateAdded";
+  if(string === dateAdded)
+  {
+  	  	console.log("Hello worldddd!");
+  	}
+  	console.log(string);
+  }
 
   toggle(i:number) {
   	this.articleShow[i] = !this.articleShow[i];
