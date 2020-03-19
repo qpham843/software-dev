@@ -116,6 +116,8 @@ public class ArticleEntity implements Serializable {
 	@Column(name="tagworks_id")
 	protected Integer tagworksId = 0;
 
+	@Column(name="article_hash")
+	protected String articleHash = "";
 /*
 Table: article
 Columns:
@@ -150,6 +152,8 @@ facebook_shares int(11)
 num_linking_domains int(11) 
 haha_count int(11) 
 vis_data mediumtext
+tagworks_id int
+article_hash char(64)
  */
 	
 	
@@ -398,6 +402,14 @@ vis_data mediumtext
 
 	public void setTagworksId(Integer tagworksId) {
 		this.tagworksId = tagworksId;
+	}
+
+	public String getArticleHash() {
+		return articleHash;
+	}
+
+	public void setArticleHash(String articleHash) {
+		this.articleHash = articleHash;
 	}
 
 	

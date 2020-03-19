@@ -91,5 +91,11 @@ public class ArticleController {
 		return scrapeService.scrapeArticle();
 	}
 
+	@RequestMapping(value = "/{sha}/tagworksId", method = RequestMethod.POST)
+	public ArticleEntity storeVizData(@PathVariable("sha") String sha,
+			@RequestBody String visData) {
+		return articleService.updateVizData(sha, visData, "article controller - POST update vizdata vy sha");
+	}
+
 	
 }
