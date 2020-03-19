@@ -59,14 +59,45 @@ export class DashboardComponent implements OnInit {
 	});
   }
   
-  onClick(string)
+  
+  sortOrderDate: boolean = true;
+  onClick(s:string)
   {
-  var dateAdded = "dateAdded";
-  if(string === dateAdded)
-  {
+    var dateAdded = "dateAdded";
+    
+
+    if(s === "dateAdded")
+    {
   	  	console.log("Hello worldddd!");
-  	}
-  	console.log(string);
+  	  	if (this.sortOrderDate) {
+  	  		console.log("sorting ASCENDING");
+	  		this.articles.sort(
+	  	  		function(a, b) {
+					if (a.publishDate < b.publishDate) {
+						return -1;
+					}
+					if (a.publishDate > b.publishDate) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			console.log("sorting DESCENDING")
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.publishDate < b.publishDate) {
+						return 1;
+					}
+					if (a.publishDate > b.publishDate) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortOrderDate = !this.sortOrderDate;
+	}
+ 	
+  	console.log(s);
   }
 
   toggle(i:number) {
