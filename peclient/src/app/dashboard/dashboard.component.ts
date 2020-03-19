@@ -96,8 +96,96 @@ export class DashboardComponent implements OnInit {
 		}
 		this.sortOrderDate = !this.sortOrderDate;
 	}
- 	
-  	console.log(s);
+	if(s === "title")
+    {
+  	  	
+  	  	if (this.sortTitle) {
+  	  		console.log("sorting ASCENDING");
+	  		this.articles.sort(function(a, b) {
+					if (a.articleTitle < b.articleTitle) {
+
+						return -1;
+					}
+					if (a.articleTitle > b.articleTitle) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			console.log("sorting DESCENDING")
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.articleTitle < b.articleTitle) {
+						return 1;
+					}
+					if (a.articleTitle > b.articleTitle) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortTitle = !this.sortTitle;
+	}
+	if(s === "URL")
+    {
+  	  	
+  	  	if (this.sortURL) {
+  	  		console.log("sorting ASCENDING");
+	  		this.articles.sort(function(a, b) {
+					if (a.url < b.url) {
+
+						return -1;
+					}
+					if (a.url > b.url) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			console.log("sorting DESCENDING")
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.url < b.url) {
+						return 1;
+					}
+					if (a.url > b.url) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortURL = !this.sortURL;
+	}
+	if(s === "status")
+    {
+  	  	
+  	  	if (this.sortStatus) {
+  	  		console.log("sorting ASCENDING");
+	  		this.articles.sort(function(a, b) {
+					if (a.statuses < b.statuses) {
+						console.log(a.statuses);
+						return -1;
+					}
+					if (a.statuses > b.statuses) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			console.log("sorting DESCENDING")
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.statuses < b.statuses) {
+						return 1;
+					}
+					if (a.statuses > b.statuses) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortStatus = !this.sortStatus;
+	}
   }
 
   toggle(i:number) {
