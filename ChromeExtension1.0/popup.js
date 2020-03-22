@@ -3,12 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var capture = document.getElementById('captureButton');
     //Below is the event listener that waits for you to click the 'captureButton'
     capture.onclick = function() {
-        //Below is a function call to capture the current tab's URL.
-        let cat = getURL(checkURL);
-        console.log(cat);
-        if (getURL(checkURL)) {
-          //change style to show success
-        }
+        checkURL(getURL());
     };
 });
 
@@ -18,11 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
  * @param {function} func The input function calls on one param: this tab's URL.
  * @return Returns nothing
  */
-function getURL(func) {
-  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-      //Gets the first tab and it's url.
-      func(tabs[0].url);
-  });
+function getURL() {
+  return  document.getElementById("websiteURL").value;
 }
 
 //The below function will check if the current tab's URL is in the database of article URLs.
@@ -36,13 +28,10 @@ function checkURL(targetURL) {
     // console.log(this);
     if (this.readyState == 4 && this.status == 200) {
       document.getElementById("result").innerHTML = "Thank you for submitting this article!";
-      return true;
     } else if (this.readyState == 4) {
       document.getElementById("result").innerHTML = "Error : " + this.responseText;
-      return false;
     } else {
       document.getElementById("result").innerHTML = "Loading...";
-      return false;
     }
   };
 
@@ -57,5 +46,10 @@ function checkURL(targetURL) {
 function setPreviewURL(URLInput) {
   document.getElementById("websiteURL").defaultValue = URLInput;
 }
-getURL(setPreviewURL);
+
+/** Sets default value to current tab's URL. */
+chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+  //Gets the first tab and it's url.
+  setPreviewURL(tabs[0].url);
+});
 

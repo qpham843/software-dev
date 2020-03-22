@@ -1,5 +1,18 @@
 /* -- global styles -- */
 
+body {
+	font-family: 'Lato', sans-serif;
+	padding: 1rem;
+	text-align: center;
+	background: #fafafa;
+	margin: 2rem 1rem;
+}
+
+::selection {
+	color: white;
+	background: #3f69af;
+}
+
 h1 {
 	color: #323648;
 	font-size: 1.4rem;
@@ -13,20 +26,12 @@ h2 {
 	color: #323648
 }
 
-body {
-	font-family: 'Lato', sans-serif;
-	padding: 1rem;
-	text-align: center;
-	background: #fafafa;
-	margin: 2rem 1rem;
-}
-
 a {
 	color: #323648;
 	text-decoration: none;
 }
 
-a:hover > h1 {
+a:hover * {
 	color: #3f69af;
 }
 
@@ -36,7 +41,9 @@ footer > a {
 	position: relative;
 	top: 1rem;
 }
-
+footer > a:hover {
+	text-decoration: underline;
+}
 
 
 /* -- button -- */
@@ -127,4 +134,8 @@ input {
         0  5px 10px rgba(154,160,185,0.05),
 		0 15px 40px rgba(166,173,201,0.2);
 
+}
+
+output {
+	height: 1.3rem;
 }
