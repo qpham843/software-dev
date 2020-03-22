@@ -5,7 +5,7 @@ body {
 	padding: 1rem;
 	text-align: center;
 	background: #fafafa;
-	margin: 2rem 1rem;
+	margin: 1rem;
 }
 
 ::selection {
@@ -45,8 +45,8 @@ footer > a:hover {
 	text-decoration: underline;
 }
 
-
 /* -- button -- */
+
 .button {
 	cursor: pointer;
     background-color: #3f69af;
@@ -80,13 +80,6 @@ footer > a:hover {
     text-transform: uppercase;
 }
 
-.successful {
-    background-color: #80e62d;
-    color: white;
-	text-decoration: none;
-	cursor: default;
-}
-
 /* -- website url -- */
 
 input {
@@ -96,7 +89,8 @@ input {
 	background-color: inherit;
 	overflow: scroll;
 	text-align: center;
-	padding: 0 1px;
+	padding: 0 2px;
+	width: 13rem;
 }
 
 .inputbox {
