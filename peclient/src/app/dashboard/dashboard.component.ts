@@ -61,6 +61,9 @@ export class DashboardComponent implements OnInit {
   
   
   sortOrderDate: boolean = true;
+  sortTitle: boolean = true;
+  sortURL: boolean = true;
+  sortStatus: boolean = true;
   onClick(s:string)
   {
     var dateAdded = "dateAdded";
