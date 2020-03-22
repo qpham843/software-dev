@@ -39,7 +39,7 @@ public class ScrapeService {
 	public String scrapeArticle() {
 
 		logger.info("scraping article ");		
-		ProcessBuilder pb = new ProcessBuilder("/home/python3_env/bin/python3", "scrape.py");
+		ProcessBuilder pb = new ProcessBuilder("/home/python3_env/bin/python3", "/home/scraper/scrape.py");
 		pb.redirectErrorStream(true); // equivalent of 2>&1
 		StringBuffer x = new StringBuffer();
 		try {

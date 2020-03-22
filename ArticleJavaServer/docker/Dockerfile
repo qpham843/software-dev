@@ -30,9 +30,10 @@ RUN /usr/bin/python3 -m virtualenv --python=python3 ${VIRTUAL_ENV}
 
 RUN . ${ACTIVATE} && pip3 install --upgrade pip
 
-WORKDIR /home/build
+WORKDIR /home/scraper
 COPY ./docker/requirements.txt .
 RUN . ${ACTIVATE} && pip3 install -r requirements.txt
+COPY ./scraper/scrape.py .
 
 RUN rm -rf /var/lib/apt/lists/*
 

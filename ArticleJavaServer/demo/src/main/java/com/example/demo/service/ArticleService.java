@@ -168,6 +168,18 @@ public class ArticleService {
 			return null;
 		}
 	}
+
+	public ArticleEntity updateVizData(String sha, String visData, String comment) {
+		ArticleEntity article = articleRepository.findOneByArticleHash(sha);
 		
+		if (article != null) {
+			article.setVisData(visData);
+			articleRepository.save(article);
+			return article;
+		} else {
+			return null;
+		}
+	}
+
 
 }

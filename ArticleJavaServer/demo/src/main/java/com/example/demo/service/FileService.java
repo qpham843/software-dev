@@ -55,6 +55,8 @@ public class FileService {
 
 		StringBuilder articleText = new StringBuilder(scrapeArticle(article));
 		article.setArticleText(articleText.toString());
+		String sha256hex = DigestUtils.sha256Hex(articleText.toString());
+		article.setArticleHash(sha256hex);
 		articleRepository.save(article);
 				
 		// strip off https:// or http://
@@ -81,7 +83,6 @@ public class FileService {
 		
 		//*******************************************************
 		// CREATE METADATA FILE (metadata.json)
-		String sha256hex = DigestUtils.sha256Hex(articleText.toString());
 		JSONObject metadata = new JSONObject();
 		
 		metadata.put("extra", new JSONObject(article));

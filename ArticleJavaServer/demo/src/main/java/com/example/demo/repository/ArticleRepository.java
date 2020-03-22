@@ -20,4 +20,6 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer
 //	select a.* from article a, article_status_view asv where asv.status_code = "B" and asv.article_id = a.id;
 	public List<ArticleEntity> findByStatusCode(String statusCode);
 	
+	public ArticleEntity findOneByArticleHash(String articleHash);
+	
 }
