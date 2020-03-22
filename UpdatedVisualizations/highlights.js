@@ -8,16 +8,40 @@ function scoreArticle(fileName) {
       });
 }
 
+let finalHTML = "";
 function createHighlights(json) {
+  // Inserting the unique id start and end tags into the HTML text.
       var textString = document.getElementById('textArticle').innerHTML;
-      textArray = textString.split("");
+      textArray = textString.split("");  // Splitting the string into an array of strings, one item per character
       console.log(textArray);
 
       for (let i = 0; i < json.length; i++) {
-        let start = json[i].Start;
-        let end = json[i].End;
+        if (parseInt(json[i].Start) == -1 || parseInt(json[i].End) == -1 || json[i].Start == "") {
+          continue;
+        }
+        let start = parseInt(json[i].Start);
+        let end = parseInt(json[i].End);
+        let curStringAtStartIndex = textArray[start];
+        let curStringAtEndIndex = textArray[end];
+
+        // frontTag = "<id=" + start + "-" + end + " style= 'text-decoration: underline; text-decoration-color: " + colorFinder(json[i]) + "; text-decoration-thickness: 20px'>";
+        //console.log(frontTag);
+        frontTag = "<id=" + start + "-" + end + " style= 'border-bottom: 3px solid " + colorFinder(json[i]) + "'>";
+        //console.log(frontTag);
+        endTag = "</id=" + start + "-" + end + ">";
+        //console.log(endTag);
+
+        textArray[start] = frontTag + curStringAtStartIndex; // Appends our newly made id tag to the front of first character to be highlighted.
+        textArray[end] = curStringAtEndIndex + endTag;
+
+        console.log(start);
+        console.log(end);
+        //console.log(textArray[start]);
+        console.log(textArray[end]);
 
       }
+      finalHTML = textArray.join('');
+      document.getElementById('textArticle').innerHTML = finalHTML;
 }
 
 function colorFinder(jsonLine) {
