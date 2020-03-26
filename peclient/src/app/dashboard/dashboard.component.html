@@ -1,7 +1,7 @@
 <div data-collapse="medium" data-animation="default" data-duration="400" class="navigation w-nav">
 <div class="navigation-items">
 	<div class="menu-button w-nav-button">
-		<img src="/assets/images/menu-icon.png" 
+		<img src="/assets/images/menu-icon.png"
 			width="22" alt="" class="menu-icon"/>
 	</div>
 	<a href="#" class="logo-link w-nav-brand w--current"><h1 class="heading">Article Dashboard</h1></a>
@@ -26,7 +26,7 @@
 		<br>
 
 		<label for="searchTitle" class="field-label-2">TITLE Search</label>
-		
+
 		<input type="text" class="" formControlName="searchTitle" (keyup.enter)="searchTitle()" />
 		<button type="button" (click)="searchTitle();">Search</button>
 	</div>
@@ -51,17 +51,23 @@
 				<th>Action
 					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
 				</th>
+				<th>Alexa
+					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
+				</th>
+				<th>Evergreen
+					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
+				</th>
 			</tr>
 		</thead>
 	    <tbody>
 	    	<ng-container *ngFor="let a of articles">
 		    	<tr>
 		    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
-		    		<td class="twenty-percent">
+		    		<td class="fifteen-percent">
 		    			{{a.articleTitle}}
 		    			<button type="button" (click)="toggle(a.id)">details</button>
 		    		</td>
-		    		<td class="fifteen-percent">{{a.url}}</td>
+		    		<td class="ten-percent">{{a.url}}</td>
 		    		<td class="ten-percent">{{a.statuses[0].statusCode}}</td>
 		    		<td class="ten-percent">
 		    			<!-- change per filter dropdown and what we discussed today -->
@@ -77,6 +83,8 @@
 							</ng-container>
 						</select>
 		    		</td>
+						<td class="five-percent"> {{a.alexaRank}}</td>
+						<td class="five-percent"> {{a.evergreenScore}}</td>
 		    	</tr>
 		    	<tr>
 		    		<td *ngIf="articleShow[a.id]" style="overflow:hidden" colspan="5">
@@ -90,4 +98,3 @@
 	</div>
 
 </form>
-
