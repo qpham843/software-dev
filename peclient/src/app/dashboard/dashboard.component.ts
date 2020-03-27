@@ -64,8 +64,7 @@ export class DashboardComponent implements OnInit {
   sortTitle: boolean = true;
   sortURL: boolean = true;
   sortStatus: boolean = true;
-  sortAlexa: boolean = true;
-  sortevergreen: boolean = true;
+  sortTotal: boolean = true;
   onClick(s:string)
   {
     if(s === "dateAdded")
@@ -178,15 +177,15 @@ export class DashboardComponent implements OnInit {
 		}
 		this.sortStatus = !this.sortStatus;
 	}
-		if(s === "alexaRank")
+		if(s === "totalShares")
     {
   	  	
-  	  	if (this.sortAlexa) {
+  	  	if (this.sortTotal) {
 	  		this.articles.sort(function(a, b) {
-					if (a.alexaRank < b.alexaRank) {
+					if (a.totalShares < b.totalShares) {
 						return -1;
 					}
-					if (a.alexaRank > b.alexaRank) {
+					if (a.totalShares > b.totalShares) {
 						return 1;
 					}
 					return 0;
@@ -194,43 +193,16 @@ export class DashboardComponent implements OnInit {
 		} else {
 			this.articles.sort(
 	  	  		function(a, b) {
-					if (a.alexaRank < b.alexaRank) {
+					if (a.totalShares < b.totalShares) {
 						return 1;
 					}
-					if (a.alexaRank > b.alexaRank) {
+					if (a.totalShares > b.totalShares) {
 						return -1;
 					}
 					return 0;
 			});
 		}
-		this.sortAlexa = !this.sortAlexa;
-	}
-		if(s === "evergreenScore")
-    {
-  	  	
-  	  	if (this.sortevergreen) {
-	  		this.articles.sort(function(a, b) {
-					if (a.evergreenScore < b.evergreenScore) {
-						return -1;
-					}
-					if (a.evergreenScore > b.evergreenScore) {
-						return 1;
-					}
-					return 0;
-			});
-		} else {
-			this.articles.sort(
-	  	  		function(a, b) {
-					if (a.evergreenScore < b.evergreenScore) {
-						return 1;
-					}
-					if (a.evergreenScore > b.evergreenScore) {
-						return -1;
-					}
-					return 0;
-			});
-		}
-		this.sortevergreen = !this.sortevergreen;
+		this.sortTotal = !this.sortTotal;
 	}
   }
 

@@ -51,11 +51,8 @@
 				<th>Action
 					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
 				</th>
-				<th>Alexa
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
-				</th>
-				<th>Evergreen
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
+				<th>Total Shares
+					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('totalShares')"></button>
 				</th>
 			</tr>
 		</thead>
@@ -83,8 +80,7 @@
 							</ng-container>
 						</select>
 		    		</td>
-						<td class="five-percent"> {{a.alexaRank}}</td>
-						<td class="five-percent"> {{a.evergreenScore}}</td>
+						<td class="ten-percent"> {{a.totalShares}}</td>
 		    	</tr>
 		    	<tr>
 		    		<td *ngIf="articleShow[a.id]" style="overflow:hidden" colspan="5">
