@@ -61,16 +61,15 @@ export class DashboardComponent implements OnInit {
   
   
   sortOrderDate: boolean = true;
+  sortTitle: boolean = true;
+  sortURL: boolean = true;
+  sortStatus: boolean = true;
+  sortTotal: boolean = true;
   onClick(s:string)
   {
-    var dateAdded = "dateAdded";
-    
-
     if(s === "dateAdded")
     {
-  	  	console.log("Hello worldddd!");
   	  	if (this.sortOrderDate) {
-  	  		console.log("sorting ASCENDING");
 	  		this.articles.sort(
 	  	  		function(a, b) {
 					if (a.publishDate < b.publishDate) {
@@ -82,7 +81,6 @@ export class DashboardComponent implements OnInit {
 					return 0;
 			});
 		} else {
-			console.log("sorting DESCENDING")
 			this.articles.sort(
 	  	  		function(a, b) {
 					if (a.publishDate < b.publishDate) {
@@ -96,8 +94,116 @@ export class DashboardComponent implements OnInit {
 		}
 		this.sortOrderDate = !this.sortOrderDate;
 	}
- 	
-  	console.log(s);
+	if(s === "title")
+    {
+  	  	
+  	  	if (this.sortTitle) {
+	  		this.articles.sort(function(a, b) {
+					if (a.articleTitle < b.articleTitle) {
+
+						return -1;
+					}
+					if (a.articleTitle > b.articleTitle) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.articleTitle < b.articleTitle) {
+						return 1;
+					}
+					if (a.articleTitle > b.articleTitle) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortTitle = !this.sortTitle;
+	}
+	if(s === "URL")
+    {
+  	  	
+  	  	if (this.sortURL) {
+	  		this.articles.sort(function(a, b) {
+					if (a.url < b.url) {
+
+						return -1;
+					}
+					if (a.url > b.url) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.url < b.url) {
+						return 1;
+					}
+					if (a.url > b.url) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortURL = !this.sortURL;
+	}
+	if(s === "status")
+    {
+  	  	
+  	  	if (this.sortStatus) {
+	  		this.articles.sort(function(a, b) {
+					if (a.statuses[0].statusCode < b.statuses[0].statusCode) {
+						return -1;
+					}
+					if (a.statuses[0].statusCode > b.statuses[0].statusCode) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.statuses[0].statusCode < b.statuses[0].statusCode) {
+						return 1;
+					}
+					if (a.statuses[0].statusCode > b.statuses[0].statusCode) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortStatus = !this.sortStatus;
+	}
+		if(s === "totalShares")
+    {
+  	  	
+  	  	if (this.sortTotal) {
+	  		this.articles.sort(function(a, b) {
+					if (a.totalShares < b.totalShares) {
+						return -1;
+					}
+					if (a.totalShares > b.totalShares) {
+						return 1;
+					}
+					return 0;
+			});
+		} else {
+			this.articles.sort(
+	  	  		function(a, b) {
+					if (a.totalShares < b.totalShares) {
+						return 1;
+					}
+					if (a.totalShares > b.totalShares) {
+						return -1;
+					}
+					return 0;
+			});
+		}
+		this.sortTotal = !this.sortTotal;
+	}
   }
 
   toggle(i:number) {

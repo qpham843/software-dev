@@ -1,22 +1,29 @@
 /* -- global styles -- */
 
-h1 {
-	color: #323648;
-	font-size: 32px;
-	margin: 0px;
-}
-
-h2 {
-	font-size: 24px;
-	margin: 0px;
-	font-weight: 500;
-	color: #323648
-}
-
 body {
 	font-family: 'Lato', sans-serif;
 	padding: 1rem;
 	text-align: center;
+	background: #fafafa;
+	margin: 1rem;
+}
+
+::selection {
+	color: white;
+	background: #3f69af;
+}
+
+h1 {
+	color: #323648;
+	font-size: 1.4rem;
+	white-space: nowrap;
+}
+
+h2 {
+	font-size: 1rem;
+	margin: 0px;
+	font-weight: 500;
+	color: #323648
 }
 
 a {
@@ -24,12 +31,22 @@ a {
 	text-decoration: none;
 }
 
-a:hover > h1 {
+a:hover * {
 	color: #3f69af;
 }
 
 
+footer > a {
+	color: darkgray;
+	position: relative;
+	top: 1rem;
+}
+footer > a:hover {
+	text-decoration: underline;
+}
+
 /* -- button -- */
+
 .button {
 	cursor: pointer;
     background-color: #3f69af;
@@ -63,28 +80,56 @@ a:hover > h1 {
     text-transform: uppercase;
 }
 
-h1 {
-	color: #323648;
-	font-size: 32px;
-	margin: 0px;
-	white-space: nowrap;
+/* -- website url -- */
+
+input {
+	border-style: none none solid none;
+	border-width: 1px;
+	border-color: black;
+	background-color: inherit;
+	overflow: scroll;
+	text-align: center;
+	padding: 0 2px;
+	width: 13rem;
 }
 
-h2 {
-	font-size: 24px;
-	margin: 0px;
-	font-weight: 500;
-	color: #323648
+.inputbox {
+	background-color: white;
+	border: none;
+	border-radius: 6px;
+	padding: 1rem;
+
 }
 
-/* -- flexbox -- */
+/* -- layout -- */
 
 .container {
-	display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
+	display: grid;
+	justify-items: center;
+	grid-template-columns: 1fr;
 }
 
-.item {
-	margin: 0 0.25rem;
+#logo {
+	display: flex;
+	justify-self: start;
+	flex-wrap: nowrap;
+	align-items: center;
+	margin: 1rem;
+}
+
+#logo > * {
+	margin: 0.2rem;
+}
+
+/* -- misc -- */
+
+.shadow {
+    box-shadow:
+        0  5px 10px rgba(154,160,185,0.05),
+		0 15px 40px rgba(166,173,201,0.2);
+
+}
+
+output {
+	height: 1.3rem;
 }
