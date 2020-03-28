@@ -26,11 +26,11 @@ function createHighlights(json) {
               toInsert += "</span>";
               }
               for (o = 0; o < curOpens.getSize(); o++) { // reopen all currently open spans
-                toInsert += `<span class='highlight' id ='${curOpens.get(o)[0]}' style= 'border-bottom:1px solid ${curOpens.get(o)[1]}; '>`;
+                toInsert += `<span class='highlight' name ='${curOpens.get(o)[0]}' style= 'border-bottom:1px solid ${curOpens.get(o)[1]}; '>`;
               }
             }
             // lastly opening our new highlight span
-            toInsert += `<span class='highlight' id ='${sortedEntries[i][0]}' style= 'border-bottom:1px solid ${sortedEntries[i][1]};'>`;
+            toInsert += `<span class='highlight' name ='${sortedEntries[i][0]}' style= 'border-bottom:1px solid ${sortedEntries[i][1]};'>`;
             curOpens.push(sortedEntries[i]);
 
             let charAtInd = textArray[sortedEntries[i][2]];
@@ -51,7 +51,7 @@ function createHighlights(json) {
               }
               curOpens.remove(sortedEntries[i]); // removes entry with matching uniqueID
               for (o = 0; o < curOpens.getSize(); o++) { // reopen all currently open spans
-                toInsert += `<span class='highlight' id ='${curOpens.get(o)[0]}' style= 'border-bottom:1px solid ${curOpens.get(o)[1]};'>`;
+                toInsert += `<span class='highlight' name ='${curOpens.get(o)[0]}' style= 'border-bottom:1px solid ${curOpens.get(o)[1]};'>`;
               }
               let charAtInd = textArray[sortedEntries[i][2]];
               textArray[sortedEntries[i][2]] = charAtInd + toInsert; // insert our spans into index of text
