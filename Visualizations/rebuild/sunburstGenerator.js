@@ -17,10 +17,6 @@ var color = d3.scaleOrdinal(d3.schemeCategory10);
 var partition = d3.partition();
 
 
-var psuedobox = d3.select("body").append("div")
-    .attr("class", "psuedobox")
-    .style("opacity", 0);
-
 
 /* A map that relates a node in the data heirarchy to the
 SVGPathElement in the visualization.
@@ -41,17 +37,18 @@ var svg = d3.select("body").append("svg")
 
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
-    .style("opacity", 1);
+    .style("opacity", 0);
+
+var visualizationOn = false;
 
 
-var articleScore;
 
 d3.csv(dataFileName, function(error, data) {
   if (error) throw error;
   delete data["columns"];
   data = addDummyData(data);
   var root = convertToHierarchy(data);
-  
+  totalScore = 100 + scoreSum(root);
   root.sum(function(d) {
     return Math.abs(parseInt(d.data.Points));
   });
@@ -64,11 +61,13 @@ svg.selectAll("path")
         nodeToPathFinder(d, this);
         return color(d.data.data["Credibility Indicator Category"]);
       })
+    /*
     .append("title")
       .text(function(d) { 
         var score = scoreSum(d);
         return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseInt(score));
-      });
+      }).transition().duration(800);
+      */
 
 
 //Setting the center circle to the score
@@ -78,10 +77,9 @@ svg.selectAll(".center-text")
         .attr("class", "center-text")
         .attr("x", 0)
         .attr("y", 13)
-        .style("font-family", 'Comic sans')
         .style("font-size", 100)
         .style("text-anchor", "middle")
-        .html((articleScore))
+        .html((totalScore))
 
 
 //Setting the outer and inside rings to be transparent.
@@ -96,32 +94,28 @@ d3.selectAll("path").transition().each(function(d) {
 //Mouse animations.
 svg.selectAll('path')
     .on('mouseover', function(d) {
+        if (d.height == 1) {
+        }
         drawVis(d, root, this);
-        var score = scoreSum(d);
-    
-        //The textbox
-        div.transition()
-            .duration(200)
-            .style("opacity", .9);
-        console.log(div);
-        div.html(d.data.data['Credibility Indicator Name'])
-            .style("left", d3.select(this).attr("cx") + "px")
-            .style("top", d3.select(this).attr("cy") + "px")
-            .style("width", function() {
-                if (d.data.data['Credibility Indicator Name'].length < 18) {
-                    return "90px";
-                } else {
-                    return "180px";
-                }
-            })
+        visualizationOn = true;
     })
+    .on('mousemove', function(d) {
+        if (visualizationOn) {
+        div
+            .style("left", (d3.event.pageX)+ "px")
+            .style("top", (d3.event.pageY - 28) + "px")
+        } else {
+            div.transition()
+                .duration(10)
+                .style("opacity", 0);
+        }
+    
+    }) 
     .on('mouseleave', function(d) {
-        resetVis();
-        div.transition()
-            .duration(200)
-            .style("opacity", 1);
+        resetVis(d);
     })
     .style("fill", colorFinder);
+    visualizationOn = false;
 
 });
     
@@ -159,7 +153,7 @@ function colorFinder(d) {
 /* Function that resets the visualization after the mouse has been moved
    away from the sunburst.
 */
-function resetVis() {
+function resetVis(d) {
     d3.selectAll("path")
         .transition()
         .delay(300)
@@ -181,6 +175,19 @@ function resetVis() {
                 return "none";
             }
         })
+    div.transition()
+            .delay(200)
+            .duration(600)
+            .style("opacity", 0);
+    var total = parseFloat(scoreSum(d));
+    svg.selectAll(".center-text").style('display', 'none');
+    svg.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 13)
+        .style("font-size", 100)
+        .style("text-anchor", "middle")
+        .html((totalScore));
 }
 
 /*Function that draws the visualization based on what is being hovered over.
@@ -189,6 +196,10 @@ function resetVis() {
     @param me : the path that I am hovering over.
 */
 function drawVis(d, root, me) {
+    if (d.height == 2) {
+        resetVis(d);
+        return;
+    }
     d3.selectAll("path")
         .transition()
         .style("opacity", function(d) { 
@@ -230,6 +241,29 @@ function drawVis(d, root, me) {
     } else if (d.height == 1) {
         d3.select(nodeToPath.get(d.parent)).style('display', 'none');
     }
+    div.transition()
+            .duration(200)
+            .style("opacity", .9);
+        div.html(d.data.data['Credibility Indicator Name'])
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY) + "px")
+            .style("width", function() {
+                if (d.data.data['Credibility Indicator Name'].length < 18) {
+                    return "90px";
+                } else {
+                    return "180px";
+                }
+            })
+    
+    var pointsGained = scoreSum(d);
+    svg.selectAll(".center-text").style('display', 'none');
+    svg.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 13)
+        .style("font-size", 100)
+        .style("text-anchor", "middle")
+        .html((pointsGained));
 }
 
 
@@ -249,17 +283,17 @@ For the center, we simply return the score of the article (100 plus the collecte
 */
 function scoreSum(d) {
     if (d.data.data.Points) {
-        return d.data.data.Points;
+        return Math.round(d.data.data.Points);
     } else {
         var sum = 0;
         for (var i = 0; i < d.children.length; i++) {
             sum += parseFloat(scoreSum(d.children[i]));
         }
         if (d.height == 2) {
-            articleScore = 100 + parseInt(sum);
-            return articleScore;
+            articleScore = parseInt(sum);
+            return Math.round(articleScore);
         }
-        return sum;
+        return Math.round(sum);
     }   
 }
 
