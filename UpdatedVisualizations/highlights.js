@@ -22,18 +22,28 @@ function createHighlights(json) {
           let toInsert = "";
           if (sortedEntries[i][3]) { // if this entry denotes a start index
             if (i > 0 && sortedEntries[i-1][2] != sortedEntries[i][2]) {
-            for (c = 0; c < curOpens.getSize(); c++) { // close all currently open spans
+              for (c = 0; c < curOpens.getSize(); c++) { // close all currently open spans
               toInsert += "</span>";
+              }
+              for (o = 0; o < curOpens.getSize(); o++) { // reopen all currently open spans
+                toInsert += `<span class='highlight' id ='${curOpens.get(o)[0]}' style= 'border-bottom:1px solid ${curOpens.get(o)[1]}; '>`;
+              }
             }
-            for (o = 0; o < curOpens.getSize(); o++) { // reopen all currently open spans
-              toInsert += `<span class='highlight' id ='${curOpens.get(o)[0]}' style= 'border-bottom:1px solid ${curOpens.get(0)[1]}; '>`;
-            }}
             // lastly opening our new highlight span
             toInsert += `<span class='highlight' id ='${sortedEntries[i][0]}' style= 'border-bottom:1px solid ${sortedEntries[i][1]};'>`;
             curOpens.push(sortedEntries[i]);
 
             let charAtInd = textArray[sortedEntries[i][2]];
-            textArray[sortedEntries[i][2]] = toInsert + charAtInd; // insert our spans into index of text
+
+            if (i > 0 && sortedEntries[i-1][2] == sortedEntries[i][2] && sortedEntries[i+1][2] == sortedEntries[i][2]) { //edge case where there are three or more highlights starting together
+              textArray[sortedEntries[i][2]] = textArray[sortedEntries[i][2]].replace("%", toInsert + "%");
+            } else if (sortedEntries[i+1][2] == sortedEntries[i][2]) { // edge case where there are 2 highlights starting together and this is the first of the two
+              textArray[sortedEntries[i][2]] = toInsert + "%" + charAtInd;
+            } else if (sortedEntries[i-1][2] == sortedEntries[i][2]) { // edge case where there are 2 highlights starting together and this is the latter of the two
+              textArray[sortedEntries[i][2]] = textArray[sortedEntries[i][2]].replace("%", toInsert);
+            } else { // normal case where there is only one highlight starting at this index
+              textArray[sortedEntries[i][2]] = toInsert + charAtInd; // insert our spans into index of text
+            }
 
           } else { // if this entry denotes an end index
               for (c = 0; c < curOpens.getSize(); c++) { // close all currently open spans
@@ -122,41 +132,3 @@ class FlexArray { // an array that keeps order of objects and adjusts itself to 
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // for (let i = 0; i < json.length; i++) {
-        //   if (parseInt(json[i].Start) == -1 || parseInt(json[i].End) == -1 || json[i].Start == "") {
-        //     continue;
-        //   }
-        //   let start = parseInt(json[i].Start);
-        //   let end = parseInt(json[i].End);
-        //   let curStringAtStartIndex = textArray[start];
-        //   let curStringAtEndIndex = textArray[end];
-        //
-        //   // frontTag = "<id=" + start + "-" + end + " style= 'text-decoration: underline; text-decoration-color: " + colorFinder(json[i]) + "; text-decoration-thickness: 20px'>";
-        //   //console.log(frontTag);
-        //   frontTag = "<id=" + start + "-" + end + " style= 'border-bottom: 3px solid " + colorFinder(json[i]) + "'>";
-        //   //console.log(frontTag);
-        //   endTag = "</id=" + start + "-" + end + ">";
-        //   //console.log(endTag);
-        //
-        //   textArray[start] = frontTag + curStringAtStartIndex; // Appends our newly made id tag to the front of first character to be highlighted.
-        //   textArray[end] = curStringAtEndIndex + endTag;
-        //
-        //   console.log(start);
-        //   console.log(end);
-        //   //console.log(textArray[start]);
-        //   console.log(textArray[end]);
