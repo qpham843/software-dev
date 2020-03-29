@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,17 +55,23 @@ public class ArticleController {
 	}
 
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public ArticleEntity newArticle(
+	public String newArticle(
 		@RequestParam(required = true, name="url") String url
 	) {
 		ArticleEntity article = articleService.findArticleByUrl(url);
+		JSONObject returnVal = new JSONObject();
+		
 		
 		if (article != null) {
-			return null;
+			returnVal.put("firstSubmit", true);			
 		} else {
-			return articleService.processSubmitArticle(url);
+			article = articleService.processSubmitArticle(url);
+			returnVal.put("firstSubmit", false);
 		}
 		
+		returnVal.put("count", 7777777);
+		returnVal.put("article", new JSONObject(article));
+		return returnVal.toString(3);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -87,8 +94,8 @@ public class ArticleController {
 	}
 
 	@RequestMapping(value = "/scrape", method = RequestMethod.GET)
-	public String scrape() {
-		return scrapeService.scrapeArticle();
+	public String scrape(@RequestParam(required = true, name="url") String url) {
+		return scrapeService.scrapeArticle(url);
 	}
 
 	@RequestMapping(value = "/{sha}/tagworksId", method = RequestMethod.POST)
