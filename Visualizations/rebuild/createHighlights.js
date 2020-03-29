@@ -86,12 +86,22 @@ function closeHighlights(textArray, index, highlightStack) {
 }
 
 function highlight(x) {
-  console.log(x.toElement);
-  x.toElement.style.setProperty("background-color", "yellow");
+  //console.log(x.toElement);
+  //console.log(x.toElement.style);
+  var color = x.toElement.style.borderBottomColor;      // grab color of border underline in rgb form
+  var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
+  //console.log(color);
+
+  x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.25");
   x.toElement.style.setProperty("background-clip", "content-box");
 }
 
+// A function which returns all our background colors back to normal.
+// Needs fix to optimize, currently loops through all spans.
 function normal(x) {
-  console.log(x.toElement);
-  x.toElement.style.setProperty("background-color", "transparent");
+  //console.log(x.toElement);
+  var allSpans = document.getElementsByTagName('span');
+  for (var i = 0; i < allSpans.length; i++) {
+    allSpans[i].style.setProperty("background-color", "transparent");
+  }
 }
