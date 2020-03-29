@@ -1,3 +1,14 @@
+/** This file will create the hallmark. It uses the d3 library to create a sunburst visualization.
+A rough roadmap of the contents:
+    - global variables
+    - create hallmark skeleton
+    - fill center of hallmark
+    - mouse animations
+    - helper functions
+
+**/
+
+
 var dataFileName = "VisualizationData_1712.csv";
 
 var width = 960,
@@ -35,6 +46,8 @@ var svg = d3.select("body").append("svg")
     .append('g')
     .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
+
+//This variable creates the floating textbox on in the hallmark
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
@@ -43,6 +56,7 @@ var visualizationOn = false;
 
 
 
+//This code block takes the csv and creates the visualization.
 d3.csv(dataFileName, function(error, data) {
   if (error) throw error;
   delete data["columns"];
@@ -52,22 +66,16 @@ d3.csv(dataFileName, function(error, data) {
   root.sum(function(d) {
     return Math.abs(parseInt(d.data.Points));
   });
-    
+  
+//Fill in the colors
 svg.selectAll("path")
     .data(partition(root).descendants())
     .enter().append("path")
       .attr("d", arc)
       .style("fill", function(d) {
-        nodeToPathFinder(d, this);
+        nodeToPath.set(d, this)
         return color(d.data.data["Credibility Indicator Category"]);
       })
-    /*
-    .append("title")
-      .text(function(d) { 
-        var score = scoreSum(d);
-        return d.data.data["Credibility Indicator Name"] + "\n" + formatNumber(parseInt(score));
-      }).transition().duration(800);
-      */
 
 
 //Setting the center circle to the score
@@ -109,7 +117,6 @@ svg.selectAll('path')
                 .duration(10)
                 .style("opacity", 0);
         }
-    
     }) 
     .on('mouseleave', function(d) {
         resetVis(d);
@@ -120,25 +127,33 @@ svg.selectAll('path')
 });
     
 
-/* Function that decides the color */
+d3.select(self.frameElement).style("height", height + "px");
+
+
+/*** HELPER FUNCTIONS ***/
+
+/* Function that provides the color based on the node.
+    @param d: the node in the data heirarchy 
+    @return : a d3.rgb object that defines the color of the arc
+*/
 
 function colorFinder(d) {
     if (d.data.children) {
         if (d.data.data['Credibility Indicator Name'] == "Reasoning") {
-               return d3.rgb(239, 92, 84);
+               return d3.rgb(237, 134, 88);
             } else if (d.data.data['Credibility Indicator Name'] == "Evidence") {
-               return d3.rgb(0, 165, 150);
+               return d3.rgb(53, 201, 136);
             } else if (d.data.data['Credibility Indicator Name'] == "Probability") {
-                return d3.rgb(0, 191, 255);
+                return d3.rgb(153,204,255);
             } else {
-               return d3.rgb(43, 82, 230);
+               return d3.rgb(65, 105, 225);
             }
         }   else {
             if (d.data.size > 0) {
                 return d3.rgb(172,172,172);
             }
             if (d.parent.data.data['Credibility Indicator Name'] == "Reasoning") {
-                return d3.rgb(237, 134, 88);
+                return d3.rgb(255, 184, 138);
             } else if (d.parent.data.data['Credibility Indicator Name'] == "Evidence") {
                 return d3.rgb(53, 201, 136);
             } else if (d.parent.data.data['Credibility Indicator Name'] == "Probability") {
@@ -151,7 +166,10 @@ function colorFinder(d) {
 
 
 /* Function that resets the visualization after the mouse has been moved
-   away from the sunburst.
+   away from the sunburst. It resets the text score to the original 
+   article score and resets the colors to their original.
+   @param d : the node in the data heirarchy
+   @return : none
 */
 function resetVis(d) {
     d3.selectAll("path")
@@ -194,6 +212,7 @@ function resetVis(d) {
     @param d : the node in the data heirarchy that I am hovering over
     @param root : the root of the data heirarchy
     @param me : the path that I am hovering over.
+    @return : none
 */
 function drawVis(d, root, me) {
     if (d.height == 2) {
@@ -241,6 +260,7 @@ function drawVis(d, root, me) {
     } else if (d.height == 1) {
         d3.select(nodeToPath.get(d.parent)).style('display', 'none');
     }
+    
     div.transition()
             .duration(200)
             .style("opacity", .9);
@@ -266,20 +286,14 @@ function drawVis(d, root, me) {
         .html((pointsGained));
 }
 
-
-/*Function that traverses the hierarchy and associates each node with a path.
-    @param root : the root of the data heirarchy
-    @param curPath : the current path
-*/
-function nodeToPathFinder(root, curPath) {
-    nodeToPath.set(root, curPath);
-}
-
-
 /*
 Recursive function that returns a number that represents the total score of the given arc.
 For the center, we simply return the score of the article (100 plus the collected points).
     @param d = the node of the hierarchy.
+    @return : the cumulative score of a certain path. 
+              These are the points lost. The 
+              scoreSum(root) of an article with no 
+              points lost would be 0.
 */
 function scoreSum(d) {
     if (d.data.data.Points) {
@@ -296,5 +310,3 @@ function scoreSum(d) {
         return Math.round(sum);
     }   
 }
-
-d3.select(self.frameElement).style("height", height + "px");
