@@ -36,10 +36,10 @@ public class ScrapeService {
 	@Autowired ArticleService articleService;
 	@Autowired ArticleRepository articleRepository;
 	
-	public String scrapeArticle() {
+	public String scrapeArticle(String url) {
 
 		logger.info("scraping article ");		
-		ProcessBuilder pb = new ProcessBuilder("/home/python3_env/bin/python3", "/home/scraper/scrape.py");
+		ProcessBuilder pb = new ProcessBuilder("/home/python3_env/bin/python3", "/home/scraper/scrape.py", url);
 		pb.redirectErrorStream(true); // equivalent of 2>&1
 		StringBuffer x = new StringBuffer();
 		try {

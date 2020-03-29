@@ -87,8 +87,8 @@ public class ArticleController {
 	}
 
 	@RequestMapping(value = "/scrape", method = RequestMethod.GET)
-	public String scrape() {
-		return scrapeService.scrapeArticle();
+	public String scrape(@RequestParam(required = true, name="url") String url) {
+		return scrapeService.scrapeArticle(url);
 	}
 
 	@RequestMapping(value = "/{sha}/tagworksId", method = RequestMethod.POST)
