@@ -30,6 +30,7 @@ public class ArticleService {
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
 	@Autowired private BuzzService buzzService;
 	@Autowired private FileService fileService;
+	@Autowired private ScrapeService scrapeService;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -63,10 +64,13 @@ public class ArticleService {
 		//update with buzz fields
 		ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, newArticle);
 		
-		//scrape article, sha256, create metadata, tar.gz
-		fileService.makeFile(updatedArticle);
+		//scrape article, 
+		String articleText = scrapeService.scrapeArticle(url);
+		updatedArticle.setArticleText(articleText);
+		articleRepository.save(updatedArticle);
 		
-		
+		// sha256, create metadata, tar.gz
+		fileService.makeFile(updatedArticle);	
 		
 		return updatedArticle;
 
