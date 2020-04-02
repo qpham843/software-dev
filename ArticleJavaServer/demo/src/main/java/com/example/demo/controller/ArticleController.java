@@ -33,6 +33,8 @@ public class ArticleController {
 	@Autowired ScrapeService scrapeService;
 	//@Autowired FileService fileService;
 	
+	///article?status=BUZZ&url=http://washingtonpost.com/asdfasfd
+
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<ArticleEntity> getAllArticles(
 		@RequestParam(required = false, name="status") String statusCode,
@@ -54,6 +56,8 @@ public class ArticleController {
 		return articleService.findAllArticles();
 	}
 
+	// /article/submit?url=https://cnn.com/asdfasdgf
+
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public String newArticle(
 		@RequestParam(required = true, name="url") String url
@@ -63,7 +67,10 @@ public class ArticleController {
 		
 		
 		if (article != null) {
-			returnVal.put("firstSubmit", true);			
+			returnVal.put("firstSubmit", true);	
+			//increment counter here		
+			//article.setCounter(article.getCounter() + 1)
+			//article.save();
 		} else {
 			article = articleService.processSubmitArticle(url);
 			returnVal.put("firstSubmit", false);

@@ -118,6 +118,9 @@ public class ArticleEntity implements Serializable {
 
 	@Column(name="article_hash")
 	protected String articleHash = "";
+
+	//todo add counter here numeric
+	//todo add getter/setters
 /*
 Table: article
 Columns:
