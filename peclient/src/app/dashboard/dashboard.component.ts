@@ -58,13 +58,23 @@ export class DashboardComponent implements OnInit {
 		console.log(this.statuses);
 	});
   }
-  
+
+  checkAll(source)
+  {
+  	this.checkboxes = getElementsByName(a.id);
+
+  	for(var checkbox in checkboxes)
+  	{
+    	checkbox.checked = source.checked;
+    }
+  }
   
   sortOrderDate: boolean = true;
   sortTitle: boolean = true;
   sortURL: boolean = true;
   sortStatus: boolean = true;
   sortTotal: boolean = true;
+
   onClick(s:string)
   {
     if(s === "dateAdded")
