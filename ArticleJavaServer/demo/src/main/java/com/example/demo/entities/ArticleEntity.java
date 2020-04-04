@@ -118,7 +118,10 @@ public class ArticleEntity implements Serializable {
 
 	@Column(name="article_hash")
 	protected String articleHash = "";
-
+	
+	@Column(name="submit_count")
+	protected Integer submitCount = 0;
+	
 	//todo add counter here numeric
 	//todo add getter/setters
 /*
@@ -157,6 +160,7 @@ haha_count int(11)
 vis_data mediumtext
 tagworks_id int
 article_hash char(64)
+submit_count int(11)
  */
 	
 	
@@ -414,7 +418,13 @@ article_hash char(64)
 	public void setArticleHash(String articleHash) {
 		this.articleHash = articleHash;
 	}
+	
+	public Integer getSubmitCount() {
+		return submitCount;
+	}
 
-	
-	
+	public void setSubmitCount(Integer submitCount) {
+		this.submitCount = submitCount;
+	}
+
 }

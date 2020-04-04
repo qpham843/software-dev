@@ -64,6 +64,7 @@ CREATE TABLE `article` (
   `vis_data` mediumtext,
   `tagworks_id` int(11) DEFAULT NULL,
   `article_hash` char(64) DEFAULT NULL,
+  `submit_count` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

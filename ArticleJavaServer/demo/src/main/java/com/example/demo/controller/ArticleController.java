@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import com.example.demo.repository.ArticleRepository;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class ArticleController {
 	
 	@Autowired ArticleService articleService;
 	@Autowired ScrapeService scrapeService;
-	//@Autowired FileService fileService;
+	@Autowired ArticleRepository articleRepository;
 	
 	///article?status=BUZZ&url=http://washingtonpost.com/asdfasfd
 
@@ -64,19 +65,20 @@ public class ArticleController {
 	) {
 		ArticleEntity article = articleService.findArticleByUrl(url);
 		JSONObject returnVal = new JSONObject();
-		
+
 		
 		if (article != null) {
-			returnVal.put("firstSubmit", true);	
-			//increment counter here		
-			//article.setCounter(article.getCounter() + 1)
-			//article.save();
+			returnVal.put("firstSubmit", false);		
+			article.setSubmitCount(article.getSubmitCount() + 1);
+			articleRepository.save(article);
 		} else {
 			article = articleService.processSubmitArticle(url);
-			returnVal.put("firstSubmit", false);
+			returnVal.put("firstSubmit", true);
+			article.setSubmitCount(1);
+			articleRepository.save(article);
 		}
 		
-		returnVal.put("count", 7777777);
+		returnVal.put("submit_count", article.getSubmitCount());
 		returnVal.put("article", new JSONObject(article));
 		return returnVal.toString(3);
 	}

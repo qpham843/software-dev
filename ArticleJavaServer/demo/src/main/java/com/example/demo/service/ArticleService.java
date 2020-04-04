@@ -158,6 +158,7 @@ public class ArticleService {
 		article.setTwitterShares(jArticle.optInt("twitter_shares"));
 //		article.setUpdatedAt(updatedAt);
 		article.setWowCount(jArticle.optInt("wow_count"));
+		//article.setSubmitCount(jArticle.optInt("submit_count"));
 		
 		articleRepository.save(article);
 		
