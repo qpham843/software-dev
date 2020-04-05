@@ -1,4 +1,3 @@
-//This function is responsible for adding the 'onclick' listener to the 'captureButton'.
 document.addEventListener('DOMContentLoaded', function() {
     var capture = document.getElementById('captureButton');
     //Below is the event listener that waits for you to click the 'captureButton'
@@ -22,17 +21,14 @@ function getURL() {
  */ 
 function checkURL() {
   //Note: this.responseText is generated before this function is called. The responseText is what our server responds to the request with, but converted into a string.
-
   if (this.readyState == 4 && this.status == 200) {
     document.getElementById("result").innerText = "This article has already been submitted.";
   } else if (this.readyState == 4 && this.status == 500) {
     let response = JSON.parse(this.responseText);
-    console.log("First time" + response.message);
     if (response.error.localeCompare("Internal Server Error") === 0 
         && response.message.localeCompare("No message available") === 0
         && response.path.localeCompare("/demo-0.0.1-SNAPSHOT/article/submit") === 0) {
           //When submits for the first time, error 500 with specific message
-
       document.getElementById("result").innerText = "Thank you for submitting this article!";  
     }
   } else if (this.readyState == 4) {
@@ -59,35 +55,37 @@ function submitURL(targetURL) {
   xhttp.send();
 }
 
-
 /**
- * Checks if an article has been both submitted and audited. 
+ * Checks if an article has been audited (and submitted). 
  * For example, this function called on
  * https://www.vox.com/science-and-health/2017/2/16/14622198/doctors-prescribe-opioids-varies-patients-hooked
- * would return true since it has been audited by public editor.
+ * would callback on true since it has been audited by public editor.
  *
  * @param {string} url The url of the article to be verified.
- * @returns {boolean} true if the article has been audited, else false.
+ * @param {function} Calls one param with true if the article has been audited, else false.
  */
-async function verifyAudit(url) {
+async function verifyAudit(url, callback) {
+  if (!url) {
+    callback(false);
+  }
   let response = await fetch('http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article');
-  let data = await response.json()
+  let data = await response.json();
   for (let article of data) {
-    if (article.visData &&article.url.localeCompare(url, {sensitivity: 'case'}) === 0) {
+    if (article.visData && article.url.localeCompare(url, {sensitivity: 'case'}) === 0) {
       console.log(article);
-      return true;
+      callback(true);
     }
   }
-  return false;
+  callback(false);
 }
 
 /**
  * Sets placeholder form text to be current tab's URL.
  * 
- * @param {String} URLInput The URL to be previewed.
+ * @param {String} url The URL to be previewed.
  */
-function setPreviewURL(URLInput) {
-  document.getElementById("websiteURL").defaultValue = URLInput;
+function setPreviewURL(url) {
+  document.getElementById("websiteURL").defaultValue = url;
 }
 
 /** Sets default value to current tab's URL. */
