@@ -114,11 +114,12 @@ div.tooltip {
 }
 
 svg {
-    position: absolute;
+    position: fixed;
+    position: -webkit-sticky;
     top: 10%;
     left: 80%;
     stroke: #fff;
-    
+
 }
 
 

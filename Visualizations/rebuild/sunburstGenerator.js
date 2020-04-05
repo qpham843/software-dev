@@ -65,11 +65,11 @@ d3.csv(dataFileName, function(error, data) {
   data = addDummyData(data);
   var root = convertToHierarchy(data);
   totalScore = 100 + scoreSum(root);
-    
+
     root.sum(function(d) {
     return Math.abs(parseInt(d.data.Points));
   });
-  
+
 //Fill in the colors
 svg.selectAll("path")
     .data(partition(root).descendants())
@@ -101,7 +101,7 @@ d3.selectAll("path").transition().each(function(d) {
         this.style.opacity = 0;
     }
 })
-    
+
 //Mouse animations.
 svg.selectAll('path')
     .on('mouseover', function(d) {
@@ -120,22 +120,24 @@ svg.selectAll('path')
                 .duration(10)
                 .style("opacity", 0);
         }
-    }) 
+    })
     .on('mouseleave', function(d) {
         resetVis(d);
+    }).on('click', function(d) {
+      scrolltoView(d)
     })
     .style("fill", colorFinderSun);
     visualizationOn = false;
 
 });
-    
+
 d3.select(self.frameElement).style("height", height + "px");
 
 
 /*** HELPER FUNCTIONS ***/
 
 /* Function that provides the color based on the node.
-    @param d: the node in the data heirarchy 
+    @param d: the node in the data heirarchy
     @return : a d3.rgb object that defines the color of the arc
 */
 
@@ -168,12 +170,15 @@ function colorFinderSun(d) {
 
 
 /* Function that resets the visualization after the mouse has been moved
-   away from the sunburst. It resets the text score to the original 
+   away from the sunburst. It resets the text score to the original
    article score and resets the colors to their original.
    @param d : the node in the data heirarchy
    @return : none
 */
 function resetVis(d) {
+  // theresa start
+    normalSun(d);
+// theresa end
     d3.selectAll("path")
         .transition()
         .delay(300)
@@ -223,7 +228,7 @@ function drawVis(d, root, me) {
     }
     d3.selectAll("path")
         .transition()
-        .style("opacity", function(d) { 
+        .style("opacity", function(d) {
             return .5
             }
         );
@@ -244,7 +249,7 @@ function drawVis(d, root, me) {
             path.style.opacity = .5;
         }
     }
-    
+
     d3.select(me)
         .transition()
         .duration(300)
@@ -252,17 +257,26 @@ function drawVis(d, root, me) {
         .style("opacity", 1)
 
     if (d.height == 0) {
+      // let textToHighlight = document.getElementById(d["Credibility Indicator Name"] + "-" + d.Start + "-" + d.End);
+      // console.log(textToHighlight);
+      // highlight(textToHighlight);
         d3.select(nodeToPath.get(d.parent))
             .transition()
             .duration(300)
             .attr('stroke-width', 5)
             .style("opacity", 1)
-    } else if (d.height == 2) {
+
+    } if (d.height == 0) {
+        let textToHighlight = document.getElementsByName(d.data.data["Credibility Indicator ID"] + "-" + d.data.data.Start + "-" + d.data.data.End);
+        highlightSun(textToHighlight[0]);
+    }
+
+    else if (d.height == 2) {
         d3.select(me).style('display', 'none');
     } else if (d.height == 1) {
         d3.select(nodeToPath.get(d.parent)).style('display', 'none');
     }
-    
+
     div.transition()
             .duration(200)
             .style("opacity", .9);
@@ -276,7 +290,7 @@ function drawVis(d, root, me) {
                     return "180px";
                 }
             })
-    
+
     var pointsGained = scoreSum(d);
     svg.selectAll(".center-text").style('display', 'none');
     svg.append("text")
@@ -288,13 +302,16 @@ function drawVis(d, root, me) {
         .html((pointsGained));
 }
 
+
+
+
 /*
 Recursive function that returns a number that represents the total score of the given arc.
 For the center, we simply return the score of the article (100 plus the collected points).
     @param d = the node of the hierarchy.
-    @return : the cumulative score of a certain path. 
-              These are the points lost. The 
-              scoreSum(root) of an article with no 
+    @return : the cumulative score of a certain path.
+              These are the points lost. The
+              scoreSum(root) of an article with no
               points lost would be 0.
 */
 function scoreSum(d) {
@@ -310,5 +327,32 @@ function scoreSum(d) {
             return Math.round(articleScore);
         }
         return Math.round(sum);
-    }   
+    }
+}
+
+function scrolltoView(x) {
+  if (x.height == 0) {
+      let textToView = document.getElementsByName(x.data.data["Credibility Indicator ID"] + "-" + x.data.data.Start + "-" + x.data.data.End);
+      textToView[0].scrollIntoView({behavior: "smooth"});
+  }
+}
+
+function highlightSun(x) {
+  // console.log(x.toElement);
+  //console.log(x.toElement.style);
+  var color = x.style.borderBottomColor;      // grab color of border underline in rgb form
+  var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
+  //console.log(color);
+
+  x.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.25");
+  x.style.setProperty("background-clip", "content-box");
+
+}
+
+function normalSun() {
+    //console.log(x.toElement);
+    var allSpans = document.getElementsByTagName('span');
+    for (var i = 0; i < allSpans.length; i++) {
+      allSpans[i].style.setProperty("background-color", "transparent");
+    }
 }

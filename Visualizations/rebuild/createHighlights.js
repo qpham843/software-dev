@@ -86,7 +86,7 @@ function closeHighlights(textArray, index, highlightStack) {
 }
 
 function highlight(x) {
-  //console.log(x.toElement);
+  // console.log(x.toElement);
   //console.log(x.toElement.style);
   var color = x.toElement.style.borderBottomColor;      // grab color of border underline in rgb form
   var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
@@ -105,3 +105,25 @@ function normal(x) {
     allSpans[i].style.setProperty("background-color", "transparent");
   }
 }
+//
+// function highlightHallmark(id) {
+//   d3.selectAll('path').transition().each(function(d) {
+//     if (d.height == 2) {
+//       var category;
+//       for (category of d.children) {
+//         var categoryName = category.data.data['Credibility Indicator Name'];
+//         if (id.substring(0,1) == categoryName.substring(0,1)) {
+//           var indicator;
+//           for (indicator of category.children) {
+//             var indicatorName = indicator.data.data['Credibility Indicator ID'];
+//             if (id == indicatorName) {
+//               var path = nodeToPath.get(indicator);
+//               d3.select(path)
+//                 .
+//             }
+//           }
+//         }
+//       }
+//     }
+//   })
+// }
