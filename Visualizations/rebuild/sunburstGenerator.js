@@ -9,9 +9,12 @@ A rough roadmap of the contents:
 **/
 
 
-var dataFileName = "VisualizationData_1712.csv";
 
+
+
+//var dataFileName = "VisualizationData_1712.csv";
 var chartDiv = document.getElementById("chart");
+
 var width = 300,
     height = 300,
     radius = (Math.min(width, height) / 2) - 10;
@@ -41,22 +44,30 @@ var arc = d3.arc()
     .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
     .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
+
+//This variable creates the floating textbox on the hallmark
+var DIV;
+
+var ROOT;
+var SVG;
+
+function hallmark(dataFileName) {
+
+
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
     .append('g')
     .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+SVG = svg;
 
-
-//This variable creates the floating textbox on in the hallmark
-var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
 
 var visualizationOn = false;
 
-
-
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+DIV = div;
 
 //This code block takes the csv and creates the visualization.
 d3.csv(dataFileName, function(error, data) {
@@ -64,6 +75,7 @@ d3.csv(dataFileName, function(error, data) {
   delete data["columns"];
   data = addDummyData(data);
   var root = convertToHierarchy(data);
+  ROOT = root;
   totalScore = 100 + scoreSum(root);
 
     root.sum(function(d) {
@@ -105,6 +117,7 @@ d3.selectAll("path").transition().each(function(d) {
 //Mouse animations.
 svg.selectAll('path')
     .on('mouseover', function(d) {
+        console.log(d);
         if (d.height == 1) {
         }
         drawVis(d, root, this);
@@ -126,13 +139,16 @@ svg.selectAll('path')
     }).on('click', function(d) {
       scrolltoView(d)
     })
+    .on('click', function(d) {
+        scrolltoView(d);
+    })
     .style("fill", colorFinderSun);
     visualizationOn = false;
 
-});
-
+}); 
 d3.select(self.frameElement).style("height", height + "px");
 
+}
 
 /*** HELPER FUNCTIONS ***/
 
@@ -144,26 +160,26 @@ d3.select(self.frameElement).style("height", height + "px");
 function colorFinderSun(d) {
     if (d.data.children) {
         if (d.data.data['Credibility Indicator Name'] == "Reasoning") {
-               return d3.rgb(237, 134, 88);
+               return d3.rgb(240, 178, 122);
             } else if (d.data.data['Credibility Indicator Name'] == "Evidence") {
-               return d3.rgb(53, 201, 136);
+               return d3.rgb(108, 213, 143);
             } else if (d.data.data['Credibility Indicator Name'] == "Probability") {
-                return d3.rgb(153,204,255);
+                return d3.rgb(176,208,251);
             } else {
-               return d3.rgb(65, 105, 225);
+               return d3.rgb(79, 112, 173);
             }
         }   else {
             if (d.data.size > 0) {
                 return d3.rgb(172,172,172);
             }
             if (d.parent.data.data['Credibility Indicator Name'] == "Reasoning") {
-                return d3.rgb(255, 184, 138);
+                return d3.rgb(240, 178, 122);
             } else if (d.parent.data.data['Credibility Indicator Name'] == "Evidence") {
-                return d3.rgb(53, 201, 136);
+                return d3.rgb(108, 213, 143);
             } else if (d.parent.data.data['Credibility Indicator Name'] == "Probability") {
-                return d3.rgb(153,204,255);
+                return d3.rgb(176,208,251);
             } else {
-                return d3.rgb(65, 105, 225);
+                return d3.rgb(79, 112, 173);
             }
         }
   }
@@ -200,13 +216,13 @@ function resetVis(d) {
                 return "none";
             }
         })
-    div.transition()
+    DIV.transition()
             .delay(200)
             .duration(600)
             .style("opacity", 0);
     var total = parseFloat(scoreSum(d));
-    svg.selectAll(".center-text").style('display', 'none');
-    svg.append("text")
+    SVG.selectAll(".center-text").style('display', 'none');
+    SVG.append("text")
         .attr("class", "center-text")
         .attr("x", 0)
         .attr("y", 13)
@@ -265,22 +281,22 @@ function drawVis(d, root, me) {
             .duration(300)
             .attr('stroke-width', 5)
             .style("opacity", 1)
-
+// theresa start
     } if (d.height == 0) {
         let textToHighlight = document.getElementsByName(d.data.data["Credibility Indicator ID"] + "-" + d.data.data.Start + "-" + d.data.data.End);
         highlightSun(textToHighlight[0]);
     }
-
+    //theresa end
     else if (d.height == 2) {
         d3.select(me).style('display', 'none');
     } else if (d.height == 1) {
         d3.select(nodeToPath.get(d.parent)).style('display', 'none');
     }
 
-    div.transition()
+    DIV.transition()
             .duration(200)
             .style("opacity", .9);
-        div.html(d.data.data['Credibility Indicator Name'])
+        DIV.html(d.data.data['Credibility Indicator Name'])
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px")
             .style("width", function() {
@@ -292,8 +308,8 @@ function drawVis(d, root, me) {
             })
 
     var pointsGained = scoreSum(d);
-    svg.selectAll(".center-text").style('display', 'none');
-    svg.append("text")
+    SVG.selectAll(".center-text").style('display', 'none');
+    SVG.append("text")
         .attr("class", "center-text")
         .attr("x", 0)
         .attr("y", 13)
@@ -329,14 +345,13 @@ function scoreSum(d) {
         return Math.round(sum);
     }
 }
-
+// theresa start
 function scrolltoView(x) {
-  if (x.height == 0) {
-      let textToView = document.getElementsByName(x.data.data["Credibility Indicator ID"] + "-" + x.data.data.Start + "-" + x.data.data.End);
-      textToView[0].scrollIntoView({behavior: "smooth"});
-  }
+    if (x.height == 0) {
+        let textToView = document.getElementsByName(x.data.data["Credibility Indicator ID"] + '-' + x.data.data.Start + '-' + x.data.data.End);
+        textToView[0].scrollIntoView({behavior: "smooth"});
+    }
 }
-
 function highlightSun(x) {
   // console.log(x.toElement);
   //console.log(x.toElement.style);
@@ -346,7 +361,6 @@ function highlightSun(x) {
 
   x.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.25");
   x.style.setProperty("background-clip", "content-box");
-
 }
 
 function normalSun() {
@@ -356,3 +370,4 @@ function normalSun() {
       allSpans[i].style.setProperty("background-color", "transparent");
     }
 }
+//theresa end

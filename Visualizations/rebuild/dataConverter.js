@@ -1,5 +1,6 @@
 //Add dummy data so that the data has the correct nodes to form a tree.
 function addDummyData(data) {
+  console.log(data);
   var categories = new Set([]);
   var i = 0;
   //Get all categories that are non-empty.
@@ -14,14 +15,20 @@ function addDummyData(data) {
     data[i] = {"Credibility Indicator Category": "CATEGORIES", "Credibility Indicator Name": category};
     i ++;
   })
+      
+  
+
   //Add root nodes.
   data[i] = {"Credibility Indicator Category": undefined, "Credibility Indicator Name": "CATEGORIES"};
+        
+
   return data;
 }
 
 //Convert data to a hierarchical format.
 function convertToHierarchy(data) {
   //Stratify converts flat data to hierarchal data.
+
   var stratify = d3.stratify()
     .id(d => d["Credibility Indicator Name"])
     .parentId(d => d["Credibility Indicator Category"])

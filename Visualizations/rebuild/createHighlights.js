@@ -88,10 +88,12 @@ function closeHighlights(textArray, index, highlightStack) {
 function highlight(x) {
   // console.log(x.toElement);
   //console.log(x.toElement.style);
+  var id = x.toElement.getAttribute("name").substring(0, 2);
+  console.log(id);
   var color = x.toElement.style.borderBottomColor;      // grab color of border underline in rgb form
   var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
   //console.log(color);
-
+  highlightHallmark(id);
   x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.25");
   x.toElement.style.setProperty("background-clip", "content-box");
 }
@@ -100,30 +102,74 @@ function highlight(x) {
 // Needs fix to optimize, currently loops through all spans.
 function normal(x) {
   //console.log(x.toElement);
+    resetVis(ROOT);
   var allSpans = document.getElementsByTagName('span');
   for (var i = 0; i < allSpans.length; i++) {
     allSpans[i].style.setProperty("background-color", "transparent");
   }
 }
-//
-// function highlightHallmark(id) {
-//   d3.selectAll('path').transition().each(function(d) {
-//     if (d.height == 2) {
-//       var category;
-//       for (category of d.children) {
-//         var categoryName = category.data.data['Credibility Indicator Name'];
-//         if (id.substring(0,1) == categoryName.substring(0,1)) {
-//           var indicator;
-//           for (indicator of category.children) {
-//             var indicatorName = indicator.data.data['Credibility Indicator ID'];
-//             if (id == indicatorName) {
-//               var path = nodeToPath.get(indicator);
-//               d3.select(path)
-//                 .
-//             }
-//           }
-//         }
-//       }
-//     }
-//   })
-// }
+
+
+function highlightHallmark(id) {
+    d3.selectAll("path").transition().each(function(d) {
+    if (d.height == 2) {
+        var category;
+        for (category of d.children) {
+            var categoryName = category.data.data['Credibility Indicator Name'];
+            if (id.substring(0, 1) == categoryName.substring(0, 1)) {
+                var indicator;
+                for (indicator of category.children) {
+                    var indicatorName = indicator.data.data['Credibility Indicator ID']
+                    if (id == indicatorName) {
+                        var path = nodeToPath.get(indicator);
+                        d3.select(path)
+                        .transition()
+                        .style("display", "block")
+                        .style("opacity", 1)
+                        .duration(200);
+                        
+                        var element = document.getElementById('chart');
+                        var position = element.getBoundingClientRect();
+                        x = position.left + 30;
+                        y = position.top + 260;
+                        
+                        DIV.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        DIV.html(indicator.data.data['Credibility Indicator Name'])
+                            .style("left", (x) + "px")
+                            .style("top", (y) + "px")
+                            .style('position', 'fixed')
+                            .style('position', '-webkit-sticky')
+                            .style("width", function() {
+                                if (indicator.data.data['Credibility Indicator Name'].length < 18) {
+                                    return "90px";
+                                } else {
+                                    return "180px";
+                                }
+                            })
+                        
+                    } else {
+                        var path = nodeToPath.get(indicator);
+                        d3.select(path)
+                        .transition()
+                        .style("display", "block")
+                        .style("opacity", .5)
+                        .duration(200);
+                        
+                    }
+                }
+                
+            } else {
+                var path = nodeToPath.get(category);
+                d3.select(path)
+                .transition()
+                .style("opacity", 0.5)
+                .duration(300)
+            }
+            
+            //console.log(category.data.data['Credibility Indicator Name']);
+        }
+    }
+})
+}
