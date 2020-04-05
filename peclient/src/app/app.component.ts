@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'peclient';
+  constructor(private elementRef: ElementRef) {
+  	let cognitoEndpoint = this.elementRef.nativeElement.getAttribute('cognitoEndpoint');
+  }
 }
