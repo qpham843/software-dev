@@ -11,8 +11,9 @@ A rough roadmap of the contents:
 
 var dataFileName = "VisualizationData_1712.csv";
 
-var width = 960,
-    height = 700,
+var chartDiv = document.getElementById("chart");
+var width = 300,
+    height = 300,
     radius = (Math.min(width, height) / 2) - 10;
 
 var formatNumber = d3.format(",d");
@@ -56,6 +57,7 @@ var visualizationOn = false;
 
 
 
+
 //This code block takes the csv and creates the visualization.
 d3.csv(dataFileName, function(error, data) {
   if (error) throw error;
@@ -63,7 +65,8 @@ d3.csv(dataFileName, function(error, data) {
   data = addDummyData(data);
   var root = convertToHierarchy(data);
   totalScore = 100 + scoreSum(root);
-  root.sum(function(d) {
+    
+    root.sum(function(d) {
     return Math.abs(parseInt(d.data.Points));
   });
   
@@ -85,7 +88,7 @@ svg.selectAll(".center-text")
         .attr("class", "center-text")
         .attr("x", 0)
         .attr("y", 13)
-        .style("font-size", 100)
+        .style("font-size", 40)
         .style("text-anchor", "middle")
         .html((totalScore))
 
@@ -121,12 +124,11 @@ svg.selectAll('path')
     .on('mouseleave', function(d) {
         resetVis(d);
     })
-    .style("fill", colorFinder);
+    .style("fill", colorFinderSun);
     visualizationOn = false;
 
 });
     
-
 d3.select(self.frameElement).style("height", height + "px");
 
 
@@ -137,7 +139,7 @@ d3.select(self.frameElement).style("height", height + "px");
     @return : a d3.rgb object that defines the color of the arc
 */
 
-function colorFinder(d) {
+function colorFinderSun(d) {
     if (d.data.children) {
         if (d.data.data['Credibility Indicator Name'] == "Reasoning") {
                return d3.rgb(237, 134, 88);
@@ -203,7 +205,7 @@ function resetVis(d) {
         .attr("class", "center-text")
         .attr("x", 0)
         .attr("y", 13)
-        .style("font-size", 100)
+        .style("font-size", 40)
         .style("text-anchor", "middle")
         .html((totalScore));
 }
@@ -281,7 +283,7 @@ function drawVis(d, root, me) {
         .attr("class", "center-text")
         .attr("x", 0)
         .attr("y", 13)
-        .style("font-size", 100)
+        .style("font-size", 40)
         .style("text-anchor", "middle")
         .html((pointsGained));
 }

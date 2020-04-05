@@ -23,6 +23,9 @@
     <script type="text/javascript" src="createHighlights.js"></script>
     <script type="text/javascript" src="FlexArray.js"></script>
     <script type="text/javascript" src="colorFinder.js"></script>
+
+    <script src="dataConverter.js"></script>
+
 </head>
 
 <!-- Begin body -->
@@ -52,7 +55,6 @@
 
         <!-- Grid start -->
         <div class="homepage-section">
-
             <div class="categories" id="categories">
                 <h2 class="dropTitle">Categories</h2>
                 <div class="extra-small-space"></div>
@@ -74,11 +76,20 @@
                 <script type="text/javascript">
                   scoreArticle("VisualizationData_17120.csv");
                 </script>
+                <script type='application/javascript' src = 'sunburstGenerator.js'></script>
                 <div class="sunburst">
-                    <svg id="chart" viewBox="0 0 500 500"  preserveAspectRatio="xMidYMid meet">
-                    </svg>
+                    <svg id = "chart" viewBox="0 0 500 500"  preserveAspectRatio="xMidYMid meet"></svg>
                 </div>
             </div>
+            <style>
+                .sunburst {
+                    position: -webkit-sticky;
+                    position: sticky;
+                    top: 10%;
+                    left: 85%;
+                }
+            
+            </style>
             <!-- Cred score end -->
 
         </div>
