@@ -130,8 +130,8 @@ function highlightHallmark(id) {
                         
                         var element = document.getElementById('chart');
                         var position = element.getBoundingClientRect();
-                        x = position.left + 30;
-                        y = position.top + 260;
+                        x = position.left + 35;
+                        y = position.top + 280;
                         
                         DIV.transition()
                             .duration(200)
