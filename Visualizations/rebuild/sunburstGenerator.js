@@ -117,7 +117,7 @@ d3.selectAll("path").transition().each(function(d) {
 //Mouse animations.
 svg.selectAll('path')
     .on('mouseover', function(d) {
-        console.log(d);
+        //console.log(d);
         if (d.height == 1) {
         }
         drawVis(d, root, this);

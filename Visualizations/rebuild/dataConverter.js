@@ -1,6 +1,5 @@
 //Add dummy data so that the data has the correct nodes to form a tree.
 function addDummyData(data) {
-  console.log(data);
   var categories = new Set([]);
   var i = 0;
   //Get all categories that are non-empty.

@@ -15,7 +15,7 @@ function sortJSONentries(json) {
     sortArray.push(endEntry);
   }
   sortArray = sortArray.sort(highlightSort); // sorting all entries by their indices
-  console.log(sortArray);
+  //console.log(sortArray);
   return sortArray;
 }
 
