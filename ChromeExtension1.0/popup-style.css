@@ -80,6 +80,14 @@ footer > a:hover {
     text-transform: uppercase;
 }
 
+.button[disabled], 
+.button[disabled]:hover, 
+.button[disabled]:focus, 
+.button[disabled]:active {
+	background: lightgray;
+	pointer-events: none;
+}
+
 /* -- website url -- */
 
 input {
