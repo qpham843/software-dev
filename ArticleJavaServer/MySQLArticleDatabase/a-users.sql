@@ -1,9 +1,3 @@
--- create database if not exists 'publiceditor';
-create user if not exists 'MysqlUpdateUser'@'*' identified by 'TheQuickBrownFox!!123';
-grant all on publiceditor.* to 'MysqlUpdateUser'@'*';
-
-
-
 -- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
 -- Host: localhost    Database: publiceditor

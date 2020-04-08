@@ -13,19 +13,17 @@ echo "Initializing database '${MYSQL_DATABASE}' on host '${MYSQL_HOST}' with pub
 mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} ${MYSQL_DATABASE} < /docker-entrypoint-initdb.d/publiceditor-database-dump.sql
 
 # Drop this test user with known credentials.
-mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} ${MYSQL_DATABASE} <<EOF
-use mysql;
-DROP USER 'MysqlUpdateUser'@'*';
-SELECT user, host from user;
-EOF
+#mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} mysql <<EOF
+#DROP USER 'MysqlUpdateUser'@'*';
+#SELECT user, host from user;
+#EOF
 
 # Create a new user for the app with least permissions needed.
-mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} ${MYSQL_DATABASE} <<EOF
-CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-
+mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} mysql <<EOF
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, LOCK TABLES
 ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
-
+FLUSH PRIVILEGES;
 SHOW GRANTS FOR '${MYSQL_USER}'@'%';
 EOF
 
