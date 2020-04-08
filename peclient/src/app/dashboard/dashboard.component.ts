@@ -30,43 +30,58 @@ export class DashboardComponent implements OnInit {
   		searchType: new FormControl(),
   		searchUrl: new FormControl(),
 		searchTitle: new FormControl(),
-	  });
+		checkAll: new FormControl(),
+		bulkStatus: new FormControl(),
+	});
 
-	  this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
-	  	console.log("vvvvvvvvvvvvvv", val)
-	  	this.ds.searchByStatus(val).subscribe((data: Article) => {
-				this.articles = data;
-			}
-		);
-	  })
+	// load list of statuses
+	this.ds.getStatuses().subscribe((data: Status) => {
+		this.statuses = data;
+		console.log(this.statuses);
+	});
+	  
+	this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
+		console.log("filter value has changed", val)
+		this.ds.searchByStatus(val).subscribe((data: Article) => {
+			this.articles = data;
+		});
+	});
+
+	//checkall
+	this.dashboardForm.get('checkAll').valueChanges.subscribe(v => {
+		console.log("toggling all checkboxes - checked = ", v);
+	 	let checkboxes = document.getElementsByName("articleCheckbox");
+	 	console.log(checkboxes);
+	  	checkboxes.forEach(cb => {
+	  		let cbe = cb as HTMLInputElement;
+  			console.log("toggling checkbox", cbe);
+  			cbe.checked = v;
+	  	})
+	});
+  }
+
+  submitBulk() {
+  		let newStatus = this.dashboardForm.get('bulkStatus').value;
+  		console.log("submitting all checked for status change to ", newStatus);
+	 	let checkboxes = document.getElementsByName("articleCheckbox");
+	  	checkboxes.forEach(cb => {
+	  		let cbe = cb as HTMLInputElement;
+  			if (cbe.checked)  
+					// cbe.value contains the id of the checkbox (the is of the article)
+  					this.changeStatus(cbe.value as unknown as number, newStatus);
+	  	})
   }
   
   
   ngOnInit() {
-  	console.log("aaaaaaaaaaaaaa");
+  	console.log("dashboard initialized");
 	this.ds.getArticles().subscribe((data: Article) => {
 		this.articles = data;
 		for(let x = 0; x < this.articles.size; x++) {
 			this.articleShow[x] = false;
 		}
-		
-		
   	});
 	
-	this.ds.getStatuses().subscribe((data: Status) => {
-		this.statuses = data;
-		console.log(this.statuses);
-	});
-  }
-
-  checkAll(source)
-  {
-  	this.checkboxes = getElementsByName(a.id);
-
-  	for(var checkbox in checkboxes)
-  	{
-    	checkbox.checked = source.checked;
-    }
   }
   
   sortOrderDate: boolean = true;

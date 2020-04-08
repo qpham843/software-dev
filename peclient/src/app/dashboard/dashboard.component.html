@@ -37,7 +37,7 @@
 		<thead>
 			<tr>
 				<th>Select
-					<input id="check all" type="checkbox" value="on" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected." (click) = "checkAll(this)">
+					<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
 
 					<button aria-label="Sort Object Select column descending" class="sorting" (click) = "onClick('sortSelected')"></button>
 				</th>
@@ -65,7 +65,9 @@
 	    <tbody>
 	    	<ng-container *ngFor="let a of articles">
 		    	<tr>
-		    		<td class="ten-percent"><input id=a.id type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected." checked = "null"></td>
+		    		<td class="ten-percent">
+		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value="a.id">
+		    		</td>
 		    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
 		    		<td class="fifteen-percent">
 		    			{{a.articleTitle}}
@@ -97,7 +99,12 @@
 	    	</ng-container>
 
 	    </tbody>
-	    </table>
+	</table>
 	</div>
+
+	<select formControlName="bulkStatus">
+		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
+	</select>
+	<button type="button" (click)="submitBulk()">submit bulk</button>
 
 </form>
