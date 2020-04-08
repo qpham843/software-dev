@@ -67,8 +67,10 @@ public class ArticleController {
 		JSONObject returnVal = new JSONObject();
 
 		
+		
 		if (article != null) {
 			returnVal.put("firstSubmit", false);		
+			if (article.getSubmitCount() == null) article.setSubmitCount(1);
 			article.setSubmitCount(article.getSubmitCount() + 1);
 			articleRepository.save(article);
 		} else {
