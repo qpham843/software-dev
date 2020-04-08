@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +78,63 @@ public class ArticleService {
 		return updatedArticle;
 
 	}
+	
+	public void processBatchArticle() {
+		logger.info("in articleService - processBatchArticle");
+		
+		JSONArray articles = buzzService.getTodaysTop();
+		
+		logger.info("got todays top from buzz - processing articles " + articles.length());
+		
+		articles.forEach(article -> {
+			
+			// for each article, get its url
+			JSONObject ar = (JSONObject) article;
+			String url = ar.optString("url");
+
+			// see if its in the db already
+			ArticleEntity existingArticle = this.findArticleByUrl(url);
+			
+			ArticleEntity updatedArticle = new ArticleEntity();
+			
+			// if not, create it
+			if (existingArticle == null) {
+				
+				logger.info("new article - creating " + url);
+				
+				// create new record
+				ArticleEntity newArticle = createNewArticle(url, "BUZZ");
+		
+				//update with buzz fields
+				updatedArticle = updateArticleWithBuzz(ar, newArticle);
+			
+				//scrape article, 
+				String articleText = scrapeService.scrapeArticle(url);
+				updatedArticle.setArticleText(articleText);
+			
+				// sha256, create metadata, tar.gz
+				fileService.makeFile(updatedArticle);
+
+			} else {
+
+				//existing article - update metadata
+				logger.info("existing article - updating " + existingArticle.getUrl());
+				updatedArticle = updateArticleWithBuzz(ar, existingArticle);
+			}
+			
+			//set article's date updated
+			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));			//long epoch = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse("01/01/1970 01:00:00").getTime() / 1000;
+			updatedArticle.setUpdatedAt(updatedAt);
+			
+			// save newly created or updated article
+			articleRepository.save(updatedArticle);
+
+		});
+
+		
+
+	}
+		
 	public ArticleEntity createNewArticle(String url, String status) {
 		ArticleEntity a = new ArticleEntity();
 		a.setUrl(url);
@@ -137,27 +197,47 @@ public class ArticleService {
 	}
 	
 	public ArticleEntity updateArticleWithBuzz(JSONObject jArticle, ArticleEntity article) {
-		article.setAlexaRank(jArticle.optInt("alexa_rank"));
-		article.setAngryCount(jArticle.optInt("angry_count"));
+
+		logger.info("article.setAlexaRank("+jArticle.optInt("alexa_rank", 0));
+		logger.info("article.setAngryCount("+jArticle.optInt("angry_count", 0));
+		logger.info("article.setArticleTitle("+jArticle.optString("title", ""));
+		logger.info("article.setAuthor("+jArticle.optString("author_name", ""));
+		logger.info("article.setBuzzsumoArticleId("+jArticle.optInt("id", 0));
+		logger.info("article.setDomainName("+jArticle.optString("domain_name", ""));
+		logger.info("article.setEvergreenScore("+jArticle.optDouble("evergreen_score", Double.parseDouble("0")));
+		logger.info("article.setFacebookComments("+jArticle.optInt("facebook_comments", 0));
+		logger.info("article.setFacebookLikes("+jArticle.optInt("facebook_likes", 0));
+		logger.info("article.setFacebookShares("+jArticle.optInt("total_facebook_shares", 0));
+		logger.info("article.setHahaCount("+jArticle.optInt("haha_count", 0));
+		logger.info("article.setLoveCount("+jArticle.optInt("love_count", 0));
+		logger.info("article.setNumLinkingDomains("+jArticle.optInt("num_linking_domains", 0));
+		logger.info("article.setSadCount("+jArticle.optInt("sad_count", 0));
+		logger.info("article.setTotalRedditEngagements("+jArticle.optInt("total_reddit_engagements", 0));
+		logger.info("article.setTotalShares("+jArticle.optInt("total_shares", 0));
+		logger.info("article.setTwitterShares("+jArticle.optInt("twitter_shares", 0));
+		logger.info("article.setWowCount("+jArticle.optInt("wow_count", 0));
+
+		article.setAlexaRank(jArticle.optInt("alexa_rank", 0));
+		article.setAngryCount(jArticle.optInt("angry_count", 0));
 //		article.setArticleAmplifiers(articleAmplifiers);
-		article.setArticleTitle(jArticle.optString("title"));
-		article.setAuthor(jArticle.optString("author_name"));
-		article.setBuzzsumoArticleId(jArticle.optInt("id"));
-		article.setDomainName(jArticle.optString("domain_name"));
-		article.setEvergreenScore(jArticle.optDouble("evergreen_score"));
-		article.setFacebookComments(jArticle.optInt("facebook_comments"));
-		article.setFacebookLikes(jArticle.optInt("facebook_likes"));
+		article.setArticleTitle(jArticle.optString("title", ""));
+		article.setAuthor(jArticle.optString("author_name", ""));
+		article.setBuzzsumoArticleId(jArticle.optInt("id", 0));
+		article.setDomainName(jArticle.optString("domain_name", ""));
+		article.setEvergreenScore(jArticle.optDouble("evergreen_score", Double.parseDouble("0")));
+		article.setFacebookComments(jArticle.optInt("facebook_comments", 0));
+		article.setFacebookLikes(jArticle.optInt("facebook_likes", 0));
 		article.setFacebookShares(jArticle.optInt("total_facebook_shares"));
-		article.setHahaCount(jArticle.optInt("haha_count"));
-		article.setLoveCount(jArticle.optInt("love_count"));
-		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains"));
+		article.setHahaCount(jArticle.optInt("haha_count", 0));
+		article.setLoveCount(jArticle.optInt("love_count", 0));
+		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains", 0));
 //		article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000)));
-		article.setSadCount(jArticle.optInt("sad_count"));
-		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements"));
-		article.setTotalShares(jArticle.optInt("total_shares"));
-		article.setTwitterShares(jArticle.optInt("twitter_shares"));
+		article.setSadCount(jArticle.optInt("sad_count", 0));
+		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements", 0));
+		article.setTotalShares(jArticle.optInt("total_shares", 0));
+		article.setTwitterShares(jArticle.optInt("twitter_shares", 0));
 //		article.setUpdatedAt(updatedAt);
-		article.setWowCount(jArticle.optInt("wow_count"));
+		article.setWowCount(jArticle.optInt("wow_count", 0));
 		
 		articleRepository.save(article);
 		
