@@ -4,3 +4,4 @@ COPY MySQLArticleDatabase/publiceditor-database-dump.sql /docker-entrypoint-init
 
 WORKDIR /home/init_database
 COPY MySQLArticleDatabase/init_db.sh /home/init_database
+COPY MySQLArticleDatabase/mysql.sh /home/init_database
