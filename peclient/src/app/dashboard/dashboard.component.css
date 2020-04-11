@@ -54,6 +54,19 @@
   text-decoration: none;
   cursor: pointer;
 }
+/*button for bulk submit*/
+.bulksubmit {
+  background-color: #555555;
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
 /* ##### Stackable Table #####
    Inspired from: https://css-tricks.com/examples/ResponsiveTables/responsive.php

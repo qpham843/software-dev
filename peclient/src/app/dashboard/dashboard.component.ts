@@ -51,10 +51,10 @@ export class DashboardComponent implements OnInit {
 	this.dashboardForm.get('checkAll').valueChanges.subscribe(v => {
 		console.log("toggling all checkboxes - checked = ", v);
 	 	let checkboxes = document.getElementsByName("articleCheckbox");
-	 	console.log(checkboxes);
+	 	//console.log(checkboxes);
 	  	checkboxes.forEach(cb => {
 	  		let cbe = cb as HTMLInputElement;
-  			console.log("toggling checkbox", cbe);
+  			//console.log("toggling checkbox", cbe);
   			cbe.checked = v;
 	  	})
 	});
@@ -89,6 +89,7 @@ export class DashboardComponent implements OnInit {
   sortURL: boolean = true;
   sortStatus: boolean = true;
   sortTotal: boolean = true;
+  sortChecks: boolean = true;
 
   onClick(s:string)
   {
@@ -228,6 +229,20 @@ export class DashboardComponent implements OnInit {
 			});
 		}
 		this.sortTotal = !this.sortTotal;
+	}
+	if(s === "sortChecks")
+    {
+		let checkboxes = document.getElementsByName("articleCheckbox");
+		console.log(checkboxes.length);
+		for(var ch; ch < checkboxes.length;ch++)
+		{
+			console.log(ch);
+		}
+	  	checkboxes.forEach(cb => {
+	  		let cbe = cb as HTMLInputElement;
+	  	})
+
+		this.sortChecks = !this.sortChecks;
 	}
   }
 
