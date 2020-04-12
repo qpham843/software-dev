@@ -45,6 +45,11 @@ export class DashboardComponent implements OnInit {
 		this.ds.searchByStatus(val).subscribe((data: Article) => {
 			this.articles = data;
 		});
+		if(val == "popular")
+		{
+			//there's no field for publishedDate so I'm using publishDate instead
+			console.log(this.articles[55].publishDate); 
+		}
 	});
 
 	//checkall
@@ -72,7 +77,6 @@ export class DashboardComponent implements OnInit {
 	  	})
   }
   
-  
   ngOnInit() {
   	console.log("dashboard initialized");
 	this.ds.getArticles().subscribe((data: Article) => {
@@ -81,7 +85,7 @@ export class DashboardComponent implements OnInit {
 			this.articleShow[x] = false;
 		}
   	});
-	
+  	this.dashboardForm.get('statusFilter').setValue("all");
   }
   
   sortOrderDate: boolean = true;

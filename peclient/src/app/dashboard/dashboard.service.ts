@@ -23,7 +23,7 @@ export class DashboardService {
   	return this.http.get<Status>('/api/status/');
   }
   searchByStatus(statusCode: string) {
-    if(statusCode == "undefined")
+    if(statusCode == "all" || statusCode == "popular")
     {
       return this.http.get<Article>('/api/article/');
     }
