@@ -44,17 +44,32 @@ export class DashboardComponent implements OnInit {
 		console.log("filter value has changed", val)
 		this.ds.searchByStatus(val).subscribe((data: Article) => {
 			this.articles = data;
-		});
-		if(val == "popular")
-		{
+			if(val == "popular")
+			{
 			//there's no field for publishedDate so I'm using publishDate instead
-			console.log(this.articles[55].publishDate); 
+			//sorting by date
+				this.articles.sort(
+	  	  			function(a, b) {
+						if (a.publishDate < b.publishDate) {
+							return 1;
+						}
+						if (a.publishDate > b.publishDate) {
+							return -1;
+						}
+					return 0;
+			});
+			//showing articles 0-49
+			for(let i = this.articles.length - 1; i >= 50;i--) 
+			{
+			this.articles.splice(i, 1);
+			}
 		}
+		});
 	});
 
 	//checkall
 	this.dashboardForm.get('checkAll').valueChanges.subscribe(v => {
-		console.log("toggling all checkboxes - checked = ", v);
+		//console.log("toggling all checkboxes - checked = ", v);
 	 	let checkboxes = document.getElementsByName("articleCheckbox");
 	 	//console.log(checkboxes);
 	  	checkboxes.forEach(cb => {

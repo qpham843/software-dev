@@ -43,7 +43,10 @@
 		<thead>
 			<tr>
 				<th>Select
-					<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
+					<label class="container">
+  					<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
+  					<span class="checkmark"></span>
+					</label>
 
 					<button aria-label="Sort Object Select column descending" class="sorting" (click) = "onClick('sortChecks')"></button>
 				</th>
