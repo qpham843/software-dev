@@ -5,10 +5,23 @@
 	"version": "1.0",
 
 	"permissions": [
-	"tabs",
-	"http://*/",
-	"https://*/"
+		"tabs",
+		"activeTab",
+		"http://*/",
+		"https://*/"
 	],
+
+	"content_scripts": [
+		{
+		  "matches": ["<all_urls>"],
+		  "js": ["content.js"]
+		}
+	],
+
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false	
+	},
 
 	"browser_action": {
 	"default_popup": "popup.html",
@@ -18,10 +31,6 @@
 		"48": "pe48.png",
 		"128": "pe128.png"
 		}
-	},
-
-	"background": {
-		"script": ["background.html"]
 	},
 
 	"icons": {
