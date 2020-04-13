@@ -35,6 +35,9 @@ a:hover * {
 	color: #3f69af;
 }
 
+footer {
+	font-size: 10px;
+}
 
 footer > a {
 	color: darkgray;
