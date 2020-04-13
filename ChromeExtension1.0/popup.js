@@ -1,4 +1,30 @@
 /**
+ * Checks if an article has been audited (and submitted). 
+ * For example, this function called on
+ * https://www.vox.com/science-and-health/2017/2/16/14622198/doctors-prescribe-opioids-varies-patients-hooked
+ * would callback on true since it has been audited by public editor.
+ *
+ * @param {string} url The url of the article to be verified.
+ * @param {function} Calls one param with true if the article has been audited, else false.
+ */
+
+async function verifyAudit(url, callback) {
+	if (!url) {
+		callback(false);
+	}
+	let response = await fetch("http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article/");
+	let data = await response.json();
+	for (let article of data) {
+		if (article.visData && article.url.localeCompare(url, {sensitivity: 'case'}) === 0) {
+			callback(true);
+			return;
+		}
+	}
+	callback(false);
+}
+
+
+/**
  * Gets the URL previewed.
  * 
  * @return String of the URL
@@ -70,6 +96,7 @@ function indicateAudited(audited) {
 	}
 }
 
+/** When document is loaded, set up button and visualize verifyAudit. */
 document.addEventListener('DOMContentLoaded', () => {
     const capture = document.getElementById('captureButton');
     capture.onclick = () => {
@@ -77,21 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
           submitURL(getURL());
         }
 	};
-	/**
-	 * From background.js, we can determine whether the current tab has been vetted or not.
-	 * First, a message is sent to background.js to tell background.js that popup.js has opened.
-	 * Second, background script checks whether the current tab has been audited.
-	 * Third, pop.js receives the results of that check.
-	 */
-	chrome.tabs.query({active: true}, tabs => {
-		chrome.runtime.sendMessage(tabs[0].id, {});
+	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+		verifyAudit(tabs[0].url, indicateAudited);
 	});
+
 });
 
-/** Sets default value to current tab's URL. */
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 	setPreviewURL(tabs[0].url);
-});
-chrome.runtime.onMessage.addListener((request) => {
-	indicateAudited(request.audited);
 });
