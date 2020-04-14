@@ -11,6 +11,7 @@
 export default async function verifyAudit(url, callback) {
 	if (!url) {
 		callback(false);
+		return;
 	}
 	let response = await fetch("http://157.230.221.241:8080/demo-0.0.1-SNAPSHOT/article/");
 	let data = await response.json();
