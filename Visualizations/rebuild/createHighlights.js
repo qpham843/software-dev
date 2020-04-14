@@ -103,6 +103,10 @@ function highlight(x) {
 function normal(x) {
   //console.log(x.toElement);
     resetVis(ROOT);
+    PSEUDOBOX.transition()
+        .delay(300)
+        .duration(600)
+        .style("opacity", 0)
   var allSpans = document.getElementsByTagName('span');
   for (var i = 0; i < allSpans.length; i++) {
     allSpans[i].style.setProperty("background-color", "transparent");
@@ -121,6 +125,7 @@ function highlightHallmark(id) {
                 for (indicator of category.children) {
                     var indicatorName = indicator.data.data['Credibility Indicator ID']
                     if (id == indicatorName) {
+                        console.log("test");
                         var path = nodeToPath.get(indicator);
                         d3.select(path)
                         .transition()
@@ -133,14 +138,13 @@ function highlightHallmark(id) {
                         x = position.left + 35;
                         y = position.top + 280;
                         
-                        DIV.transition()
+                        PSEUDOBOX.transition()
                             .duration(200)
+                            .style("display", "block")
                             .style("opacity", .9);
-                        DIV.html(indicator.data.data['Credibility Indicator Name'])
+                        PSEUDOBOX.html(indicator.data.data['Credibility Indicator Name'])
                             .style("left", (x) + "px")
                             .style("top", (y) + "px")
-                            .style('position', 'fixed')
-                            .style('position', '-webkit-sticky')
                             .style("width", function() {
                                 if (indicator.data.data['Credibility Indicator Name'].length < 18) {
                                     return "90px";
