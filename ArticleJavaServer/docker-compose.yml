@@ -13,7 +13,11 @@ services:
       MYSQL_DATABASE: "publiceditor"
       MYSQL_USER: "MysqlUpdateUser"
       MYSQL_PASSWORD: "TheQuickBrownFox!!123"
-
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME}
+      DATAFILES_BUCKETNAME: ${DATAFILES_BUCKETNAME}
+      DATAFILES_LOCATION: ${DATAFILES_LOCATION}
   article_db:
     build:
       context: .

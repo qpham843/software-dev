@@ -66,17 +66,16 @@ public class ArticleService {
 		JSONObject jArticle = buzzService.getBuzz(url);
 		
 		//update with buzz fields
-		ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, newArticle);
+		newArticle = updateArticleWithBuzz(jArticle, newArticle);
 		
 		//scrape article, 
-		String articleText = scrapeService.scrapeArticle(url);
-		updatedArticle.setArticleText(articleText);
-		articleRepository.save(updatedArticle);
+		newArticle.setArticleText(scrapeService.scrapeArticle(url));
 		
 		// sha256, create metadata, tar.gz
-		fileService.makeFile(updatedArticle);	
+		newArticle = fileService.makeFile(newArticle);	
 		
-		return updatedArticle;
+		articleRepository.save(newArticle);
+		return newArticle;
 
 	}
 	
@@ -249,6 +248,10 @@ public class ArticleService {
 		articleRepository.save(article);
 		
 		return article;
+	}
+	
+	public ArticleEntity save(ArticleEntity article) {
+		return articleRepository.save(article);
 	}
 	
 	public ArticleEntity updateArticle(Integer id, ArticleEntity article, String comment) {

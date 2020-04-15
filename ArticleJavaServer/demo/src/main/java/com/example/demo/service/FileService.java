@@ -51,6 +51,10 @@ public class FileService {
 	@Autowired ArticleService articleService;
 	@Autowired ArticleRepository articleRepository;
 	
+	public boolean fileExists(String pathAndName) {
+		
+		return Files.exists(Paths.get(pathAndName)); 
+	}
 	public ArticleEntity makeFile(ArticleEntity article) {
 
 		String sha256hex = DigestUtils.sha256Hex(article.getArticleText());
