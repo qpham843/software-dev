@@ -110,4 +110,11 @@ public class ArticleController {
 		return "aaaaa";
 	}
 	
+	@RequestMapping(value = "/s3", method = RequestMethod.GET)
+	public String s3() {
+		
+		logger.info("in s3 controller");
+		articleService.sendToS3();
+		return "aaaaa";
+	}
 }

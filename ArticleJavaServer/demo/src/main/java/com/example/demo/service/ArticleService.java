@@ -34,6 +34,7 @@ public class ArticleService {
 	@Autowired private BuzzService buzzService;
 	@Autowired private FileService fileService;
 	@Autowired private ScrapeService scrapeService;
+	@Autowired private AWSService awsService;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -103,17 +104,16 @@ public class ArticleService {
 				logger.info("new article - creating " + url);
 				
 				// create new record
-				ArticleEntity newArticle = createNewArticle(url, "BUZZ");
+				updatedArticle = createNewArticle(url, "BUZZ");
 		
 				//update with buzz fields
-				updatedArticle = updateArticleWithBuzz(ar, newArticle);
+				updatedArticle = updateArticleWithBuzz(ar, updatedArticle);
 			
 				//scrape article, 
-				String articleText = scrapeService.scrapeArticle(url);
-				updatedArticle.setArticleText(articleText);
+				updatedArticle.setArticleText(scrapeService.scrapeArticle(url));
 			
 				// sha256, create metadata, tar.gz
-				fileService.makeFile(updatedArticle);
+				updatedArticle = fileService.makeFile(updatedArticle);
 
 			} else {
 
@@ -135,6 +135,13 @@ public class ArticleService {
 
 	}
 		
+	public void sendToS3() {
+		List<ArticleEntity> articlesToSend = articleRepository.findByStatusCode("APPROVED");
+		logger.info("in articleController.sendToS3. Sending " + articlesToSend.size() + " articles to s3"); 
+		logger.info("calling awsService.sendToS3");
+		this.awsService.sendToS3(articlesToSend);
+	}
+	
 	public ArticleEntity createNewArticle(String url, String status) {
 		ArticleEntity a = new ArticleEntity();
 		a.setUrl(url);
