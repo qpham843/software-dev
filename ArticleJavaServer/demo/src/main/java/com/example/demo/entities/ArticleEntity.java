@@ -122,8 +122,8 @@ public class ArticleEntity implements Serializable {
 	@Column(name="submit_count")
 	protected Integer submitCount = 0;
 	
-	//todo add counter here numeric
-	//todo add getter/setters
+	@Column(name="filename")
+	protected String filename = "";
 /*
 Table: article
 Columns:
@@ -418,7 +418,7 @@ submit_count int(11)
 	public void setArticleHash(String articleHash) {
 		this.articleHash = articleHash;
 	}
-	
+
 	public Integer getSubmitCount() {
 		return submitCount;
 	}
@@ -426,5 +426,14 @@ submit_count int(11)
 	public void setSubmitCount(Integer submitCount) {
 		this.submitCount = submitCount;
 	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+	
 
 }
