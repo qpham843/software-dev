@@ -94,7 +94,7 @@ function highlight(x) {
   var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
   //console.log(color);
   highlightHallmark(id);
-  x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.25");
+  x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.4");
   x.toElement.style.setProperty("background-clip", "content-box");
 }
 
@@ -132,12 +132,12 @@ function highlightHallmark(id) {
                         .style("display", "block")
                         .style("opacity", 1)
                         .duration(200);
-                        
+
                         var element = document.getElementById('chart');
                         var position = element.getBoundingClientRect();
                         x = position.left + 35;
                         y = position.top + 280;
-                        
+
                         PSEUDOBOX.transition()
                             .duration(200)
                             .style("display", "block")
@@ -152,7 +152,7 @@ function highlightHallmark(id) {
                                     return "180px";
                                 }
                             })
-                        
+
                     } else {
                         var path = nodeToPath.get(indicator);
                         d3.select(path)
@@ -160,10 +160,10 @@ function highlightHallmark(id) {
                         .style("display", "block")
                         .style("opacity", .5)
                         .duration(200);
-                        
+
                     }
                 }
-                
+
             } else {
                 var path = nodeToPath.get(category);
                 d3.select(path)
@@ -171,7 +171,7 @@ function highlightHallmark(id) {
                 .style("opacity", 0.5)
                 .duration(300)
             }
-            
+
             //console.log(category.data.data['Credibility Indicator Name']);
         }
     }
