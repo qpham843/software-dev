@@ -106,15 +106,15 @@ public class ArticleController {
 		
 		//buzzService.getTodaysTop();
 		logger.info("in buzz2 controller");
-		articleService.processBatchArticle();
-		return "aaaaa";
+		return articleService.processBatchArticle().toString();
+		
 	}
 	
 	@RequestMapping(value = "/s3", method = RequestMethod.GET)
 	public String s3() {
 		
 		logger.info("in s3 controller");
-		articleService.sendToS3();
-		return "aaaaa";
+		return articleService.sendToS3();
+		
 	}
 }

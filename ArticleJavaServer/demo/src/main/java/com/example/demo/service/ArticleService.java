@@ -79,7 +79,7 @@ public class ArticleService {
 
 	}
 	
-	public void processBatchArticle() {
+	public JSONArray processBatchArticle() {
 		logger.info("in articleService - processBatchArticle");
 		
 		JSONArray articles = buzzService.getTodaysTop();
@@ -129,16 +129,22 @@ public class ArticleService {
 			articleRepository.save(updatedArticle);
 
 		});
+		return articles;
 
 		
 
 	}
 		
-	public void sendToS3() {
+	public String sendToS3() {
+		StringBuilder s = new StringBuilder();
+		
 		List<ArticleEntity> articlesToSend = articleRepository.findByStatusCode("APPROVED");
-		logger.info("in articleController.sendToS3. Sending " + articlesToSend.size() + " articles to s3"); 
-		logger.info("calling awsService.sendToS3");
-		this.awsService.sendToS3(articlesToSend);
+		
+		String m1 = "in articleController.sendToS3. Sending " + articlesToSend.size() + " articles to s3";
+		logger.info(m1);
+		s.append(m1);
+		s.append(awsService.sendToS3(articlesToSend));
+		return s.toString();
 	}
 	
 	public ArticleEntity createNewArticle(String url, String status) {

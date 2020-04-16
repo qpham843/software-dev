@@ -10,15 +10,20 @@ import { LoginComponent } from './login/login.component';
 import { ForgotComponent } from './forgot/forgot.component';
 import { SignupComponent } from './signup/signup.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { MenuComponent } from './menu/menu.component';
+import { UtilitiesComponent } from './utilities/utilities.component';
 
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'forgot', component: ForgotComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },  
-  { path: '**', component: PageNotFoundComponent}
+  { path: 'utilities', component: UtilitiesComponent },
+  { path: 'logout', redirectTo: '/logout', pathMatch: 'full'},
+  { path: '', redirectTo: '/logout', pathMatch: 'full' },  
+  { path: '**', redirectTo: '/logout'},
+  // { path: 'forgot', component: ForgotComponent },
+  // { path: 'signup', component: SignupComponent },
+  // { path: '**', component: PageNotFoundComponent}
 ]
 
 @NgModule({
@@ -28,7 +33,9 @@ const appRoutes: Routes = [
     LoginComponent,
     ForgotComponent,
     SignupComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    MenuComponent,
+    UtilitiesComponent
   ],
   imports: [
     BrowserModule,
