@@ -33,6 +33,7 @@ WORKDIR /home/scraper
 COPY ./docker/requirements.txt .
 RUN . ${ACTIVATE} && pip3 install -r requirements.txt
 COPY ./scraper/scrape.py .
+COPY ./scraper/s3-put.py .
 
 RUN rm -rf /var/lib/apt/lists/*
 
