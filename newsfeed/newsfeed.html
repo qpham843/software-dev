@@ -49,31 +49,31 @@
             <div class="col-2">
             </div>
             <div class="col-8">
-                <div class="searchbar">
+                <div class="searchbar"  id = "search">
                     <form class="example">
-                        <input id = "searchtext" type="text" placeholder="Search.." name="search">
-                        <button type="button" onclick="generateList()">
+                        <input id = "searchtext" type="text" placeholder="Autism Starts Months before ..." name="search">
+                        <button id = "searchbutton"type="button" onclick="generateList()">
                             Search
                         </button>
                     </form>
                     <br>
 
                     Filter By:
-                    <select id = "sortByList">
+                    <select class = "sort" id = "sortByList">
                         <option value="title">Title</option>
                         <option value="date">Date</option>
                         <option value="credscore">Credibility Score</option>
                     </select>
 
                     Show:
-                    <select id = "showLimit">
+                    <select class = "sort" id = "showLimit">
                         <option value=5>5</option>
                         <option value=10>10</option>
                         <option value=15>15</option>
                     </select>
 
                     Order by:
-                    <select id = "order">
+                    <select class = "sort" id = "order">
                         <option value="descending">Descending</option>
                         <option value="ascending">Ascending</option>
                     </select>
