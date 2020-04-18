@@ -2,7 +2,6 @@ var listofarticles = [];
 
 function readVisData() {
     $.get("https://cors-anywhere.herokuapp.com/" + "https://s3-us-west-2.amazonaws.com/publiceditor.io/Articles/visData.json").done(function(data) {
-        console.log(data);
         for (var i = 0; i < Object.keys(data).length; i++) {
             var article = data[i];
             var articleEntry = new ArticleData(article["Title"], article["Author"], article["Date"], article["ID"], article["Article Link"], article["Visualization Link"], article["Plain Text"], article["Highlight Data"]);
@@ -28,7 +27,6 @@ function generateList() {
 
     //sort
     var sortedArticles = sortArticles(searchedArticles, sortBy, order);
-    console.log(sortedArticles)
     //Filter by tags (Needs additional information)
 
     //Only show the top X results
@@ -36,7 +34,6 @@ function generateList() {
     sortedArticles = sortedArticles.slice(0, showLimit);
     document.getElementById("articleList").innerHTML = "";
 
-    console.log(sortedArticles)
     for (var i = 0; i < sortedArticles.length; i++) {
         generateEntry(sortedArticles[i]);
     }
@@ -77,7 +74,15 @@ function sortArticles(listofarticles, sortBy, order) {
     return listofarticles;
 }
 
-
+function generateAndMove() {
+    setTimeout(function () {
+        generateList();
+                    
+    }, 1000);
+    setTimeout(function() {
+        moveHallmarks();
+    });
+}
 
 function generateEntry(entry) {
     var articleEntry = "<div id='" + entry.id + "' class='row'>" +
@@ -95,7 +100,10 @@ function generateEntry(entry) {
                        "</div>" +
                        "<hr>";
     document.getElementById("articleList").innerHTML += articleEntry;
-    runVisualization(entry.id, entry.highlightData);
+    if (document.querySelector("svg[articleID='" + entry.id +"']") != null) {
+        document.querySelector("svg[articleID='" + entry.id +"']").remove();
+    }
+    hallmark("https://cors-anywhere.herokuapp.com/" + entry.highlightData, entry.id);
 }
 
 function csvJSON(csv){

@@ -15,7 +15,9 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="newsfeed.js" charset="utf-8"></script>
     <script src="ArticleData.js" charset="utf-8"></script>
-    <script src="sunburstCode.js" charset="utf-8"></script>
+    <script src="newsfeedSunburstGenerator.js" charset="utf-8"></script>
+    <script src="dataconverter.js" charset="utf-8"></script>
+    <script src="moveHallmark.js" charset="utf-8"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
@@ -52,7 +54,7 @@
                 <div class="searchbar"  id = "search">
                     <form class="example">
                         <input id = "searchtext" type="text" placeholder="Autism Starts Months before ..." name="search">
-                        <button id = "searchbutton"type="button" onclick="generateList()">
+                        <button id = "searchbutton"type="button" onclick="generateAndMove()">
                             Search
                         </button>
                     </form>
@@ -88,14 +90,15 @@
         <div id="articleList" class="container section"></div>
 
         <script>
-            console.log("YO");
+            
             function doFunctions() {
                 readVisData();
                 setTimeout(function () {
-                    generateList();
+                    generateAndMove();
                 }, 1000);
             }
             doFunctions();
+            
         </script>
 
         <!-- Grid end -->

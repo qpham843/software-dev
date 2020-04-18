@@ -111,6 +111,18 @@ div.tooltip {
     left: 0;
 
 }
+
+.center-text{
+    font-family: Roboto, sans-serif;
+    font-weight: bold;
+}
+
+svg {
+    stroke-width: 2;
+    stroke: #fff;
+    
+}
+
 #header {
   height: 50px;
   background-color: rgb(83, 83, 89);
