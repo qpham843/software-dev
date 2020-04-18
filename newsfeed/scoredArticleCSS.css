@@ -190,7 +190,13 @@ div.tooltip {
         border: 2px #fff solid;
 }
 
+a:link {
+  text-decoration: none;
+
+}
+
 a:hover {
+  text-decoration: none;
 }
 
 .active, .collapsible:hover {
@@ -548,11 +554,36 @@ h2 {
     font-weight: 500;
   }
 
+
+
+
 h3 {
       color: #323648;
       font-size: 32px;
       margin: 0px;
+      background-position: right bottom;
+      /* text-decoration: underline; */
+
+      transition: .4s ease-out;
+      /*
+      background-image: linear-gradient(to right, rgba(54, 90, 150, 0.8) 50%, white 50%);
+      background-size: 200% 100%;
+      background-position: right bottom;
+      transition: all .5s ease-out;
+      */
     }
+
+h3:hover {
+  border-radius: 12px;
+  background-position: left bottom;
+  background-color: rgba(54, 120, 150, 0.12);
+  padding-left: 10px;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
 
 /* Katie come back  */
 p {
@@ -1899,27 +1930,28 @@ main {
 /* David start styling */
 
 #searchtext {
-  display: inline-inline-block;
+  border-radius: 12px;
   height: 42px;
   padding: 12px 20px;
   width: 100%;
   margin-right: 24px;
-  border-color: #365a96;
+  border-color: rgba(54, 90, 150, 0.5);
   border-width: 1px;
   outline: none;
 }
 
 #searchbutton {
+  border-radius: 12px;
   display: inline-block;
   height: 42px;
   background-color: white;
-  color: #365a96;
-  border: 1px solid #365a96;
-  transition-duration: 0.4s;
+  color: rgba(54, 90, 150, 0.5);
+  border: 1px solid rgba(54, 90, 150, 0.5);
+  transition-duration: 0.2s;
 }
 
 #searchbutton:hover {
-  background-color: #365a96;
+  background-color: rgba(54, 90, 150, 0.4);
   color: white;
 }
 
