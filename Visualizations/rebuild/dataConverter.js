@@ -6,7 +6,9 @@ function addDummyData(data) {
   data.forEach((highlight) => {
     if (highlight["Credibility Indicator Category"]) {
       categories.add(highlight["Credibility Indicator Category"]);
-      i ++;
+      console.log('Here are the indicator categories')
+      
+      i++;
     }
   });
   //Add all categories as nodes to the data with parent as CATEGORIES.

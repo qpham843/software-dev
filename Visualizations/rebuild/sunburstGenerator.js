@@ -41,9 +41,8 @@ var nodeToPath = new Map();
 var arc = d3.arc()
     .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
     .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-    .innerRadius(function(d) { 
-        return 150 * d.y0; })
-    .outerRadius(function(d) { return 140 * d.y1;});
+    .innerRadius(function(d) { return 150 * d.y0; })
+    .outerRadius(function(d) { return 140 * d.y1; });
 
 
 //This variable creates the floating textbox on the hallmark
@@ -83,6 +82,8 @@ d3.csv(dataFileName, function(error, data) {
   delete data["columns"];
   data = addDummyData(data);
   var root = convertToHierarchy(data);
+  console.log(root);
+    
   ROOT = root;
   totalScore = 100 + scoreSum(root);
 
@@ -168,26 +169,26 @@ d3.select(self.frameElement).style("height", height + "px");
 function colorFinderSun(d) {
     if (d.data.children) {
         if (d.data.data['Credibility Indicator Name'] == "Reasoning") {
-               return d3.rgb(239, 92, 84);
+               return d3.rgb(239, 117, 89);
             } else if (d.data.data['Credibility Indicator Name'] == "Evidence") {
-               return d3.rgb(0, 165, 150);
+               return d3.rgb(87, 193, 174);
             } else if (d.data.data['Credibility Indicator Name'] == "Probability") {
-                return d3.rgb(0, 191, 255);
+                return d3.rgb(118, 188, 226);
             } else {
-               return d3.rgb(43, 82, 230);
+               return d3.rgb(75, 95, 178);
             }
         }   else {
             if (d.data.size > 0) {
                 return d3.rgb(172,172,172);
             }
             if (d.parent.data.data['Credibility Indicator Name'] == "Reasoning") {
-                return d3.rgb(239, 92, 84);
+                return d3.rgb(239, 117, 89);
             } else if (d.parent.data.data['Credibility Indicator Name'] == "Evidence") {
-                return d3.rgb(0, 165, 150);
+                return d3.rgb(87, 193, 174);
             } else if (d.parent.data.data['Credibility Indicator Name'] == "Probability") {
-                return d3.rgb(0, 191, 255);
+                return d3.rgb(118, 188, 226);
             } else {
-                return d3.rgb(79, 112, 173);
+                return d3.rgb(75, 95, 178);
             }
         }
   }

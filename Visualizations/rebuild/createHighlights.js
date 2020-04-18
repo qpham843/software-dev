@@ -136,8 +136,17 @@ function highlightHallmark(id) {
                         var element = document.getElementById('chart');
                         var position = element.getBoundingClientRect();
                         x = position.left + 35;
-                        y = position.top + 280;
-
+                        y = position.top + 280;                        
+                        var pointsGained = scoreSum(indicator);
+                        console.log('This error is ' + pointsGained);
+                        SVG.selectAll(".center-text").style('display', 'none');
+                        SVG.append("text")
+                            .attr("class", "center-text")
+                            .attr("x", 0)
+                            .attr("y", 13)
+                            .style("font-size", 40)
+                            .style("text-anchor", "middle")
+                            .html((pointsGained));
                         PSEUDOBOX.transition()
                             .duration(200)
                             .style("display", "block")
