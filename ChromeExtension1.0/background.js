@@ -23,21 +23,17 @@ function changeIcon(audited) {
 	}
 }
 
-/** On tab changes, reverify. */
-chrome.tabs.onUpdated.addListener(() => {
+/**
+ * Change icon according to current URL's tab.
+ */
+function changeIconBasedOnUrl() {
 	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
 		verifyAudit(tabs[0].url, changeIcon);
 	});
-});
+}
 
-chrome.tabs.onCreated.addListener(() => {         
-	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-		verifyAudit(tabs[0].url, changeIcon);
-	});
-});
-
-chrome.tabs.onActivated.addListener(() => {         
-	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-		verifyAudit(tabs[0].url, changeIcon);
-	});
-});
+/** On url changes, reverify. */
+chrome.tabs.onUpdated.addListener(changeIconBasedOnUrl);
+chrome.tabs.onCreated.addListener(changeIconBasedOnUrl);
+chrome.tabs.onActivated.addListener(changeIconBasedOnUrl);
+chrome.windows.onFocusChanged.addListener(changeIconBasedOnUrl);

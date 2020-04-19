@@ -1,13 +1,16 @@
 # Query Mini-Extension
 
-This describes the function of each line of code in the mini-extension. Each line in the description corresponds with a line of code in the respective file.
-The only files that are actually necessary to the functioning of the Mini-Extension are the following:
+Submit articles to be vetted by Public Editor conveniently through this extension. This extension also automatically checks if the article you visit has already been vetted.
+
+
+The rest of this readme describes the function of each line of code in the mini-extension. Each line in the description corresponds with a line of code in the respective file.
+The only files that are necessary to the functioning of the Mini-Extension are the following:
 
 ## manifest.json: 
 
 This is the foundational structure of the Chrome Extension.
 This is the second version of the manifest.json file.
-This is name of this extension.
+This is the name of this extension.
 This is the description of the extension. 
 This is the version of the extension.
 This extension requires access to the "tabs" permission, which retrieves the tabs you have open.
@@ -18,7 +21,7 @@ This "browser_action" is linked to the popup defined by popup.html.
 ## popup.html:
 
 This is the code governing the appearance of the popup that appears in when you click the Query 
-Extension's icon in the top right hand corner of your browser.
+Extension's icon in the top right-hand corner of your browser.
 Start of the HTML code.
 Start Body of the HTML.
 This button checks if the current URL is in the database.
@@ -29,13 +32,12 @@ End HTML Code.
 
 ## popup-style.css
 
-Handles formatting and styling of html content.
+Handles formatting and styling of HTML content.
 
 ## popup.js: 
 
-Shows a preview of website to submitted and whether or not an article has already been vetted. 
-Imports verify.js to check if a url has already been submitted. Allows users to submit articles 
-if not already submitted.
+Shows a preview of the website to submitted and whether or not an article has already been vetted. 
+Imports verify.js to check if a URL has already been submitted. It only allows users to submit articles if not already submitted.
 	
 ## background.js: 
 
