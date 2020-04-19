@@ -53,19 +53,19 @@ function unlimitedSearchWorks(query, listofarticles) {
 
 function sortArticles(listofarticles, sortBy, order) {
     if (sortBy == "title") {
-        if (order == "ascending") {
+        if (order == "revAlpha") {
             listofarticles.sort((a, b) => (a.title < b.title) ? 1 : -1)
         } else {
             listofarticles.sort((a, b) => (a.title > b.title) ? 1 : -1)
         }
     } else if (sortBy == "date") {
-        if (order == "ascending") {
+        if (order == "older") {
             listofarticles.sort((a, b) => (a.date > b.date) ? 1 : -1)
         } else {
             listofarticles.sort((a, b) => (a.date < b.date) ? 1 : -1)
         }
     } else {
-        if (order == "ascending") {
+        if (order == "high") {
             listofarticles.sort((a, b) => (a.credibilityScore < b.credibilityScore) ? 1 : -1)
         } else {
             listofarticles.sort((a, b) => (a.credibilityScore > b.credibilityScore) ? 1 : -1)
@@ -77,7 +77,7 @@ function sortArticles(listofarticles, sortBy, order) {
 function generateAndMove() {
     setTimeout(function () {
         generateList();
-                    
+
     }, 1000);
     setTimeout(function() {
         moveHallmarks();

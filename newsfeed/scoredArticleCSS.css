@@ -120,7 +120,7 @@ div.tooltip {
 svg {
     stroke-width: 2;
     stroke: #fff;
-    
+
 }
 
 #header {
@@ -1972,8 +1972,12 @@ main {
   margin-right: 64px;
 }
 
-#showLimit {
-  margin-right: 52px;
+/* #showLimit {
+  margin-right: 100px;
+} */
+
+#showBox {
+  margin-left: 150px;
 }
 
 #search {
