@@ -1,5 +1,4 @@
 FROM mysql:8.0.19 
-COPY MySQLArticleDatabase/a-users.sql /docker-entrypoint-initdb.d/
 COPY MySQLArticleDatabase/publiceditor-database-dump.sql /docker-entrypoint-initdb.d/
 
 WORKDIR /home/init_database
