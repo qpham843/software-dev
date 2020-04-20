@@ -50,14 +50,9 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 
         ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
         String res = response.getBody();
-//        logger.info(res);
         JSONObject j = new JSONObject(res);
         logger.info(j.toString(2));
         JSONArray a = j.optJSONArray("results");
-//        a.forEach(article -> {
-//        	JSONObject ar = (JSONObject) article;
-//        	logger.info(ar.toString(2));
-//        });
         return a;
         
 	}
