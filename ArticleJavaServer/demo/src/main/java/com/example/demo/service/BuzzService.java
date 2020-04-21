@@ -42,7 +42,8 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 	public JSONArray getTodaysTop() {
 		RestTemplate restTemplate = new RestTemplate();
 		//StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&countries=United%20States&count=10");
-		StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&count=10");
+		//StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&count=10");
+		StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf&countries=United States");
         //'https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&countries=United%20States%2C%20Canada&count=50&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf'
 		url.append("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
         
