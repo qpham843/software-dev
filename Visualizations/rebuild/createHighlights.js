@@ -40,7 +40,7 @@ function createHighlights(json) {
   sortedEntries.forEach((entry) => {  // for each entry, open a span if open or close then reopen all spans if a close
     const index = entry[2];
     if (entry[3]) {
-      textArray = openHighlight(textArray, index, entry);
+      textArray = openHighlight(textArray, index, entry, highlightStack, 0);
       highlightStack.push(entry);
     } else {
       textArray = closeHighlights(textArray, index, highlightStack);
@@ -54,22 +54,33 @@ function createHighlights(json) {
   $(".highlight").hover(highlight, normal);
 }
 
-function openHighlight(textArray, index, entry) {
+function openHighlight(textArray, index, entry, highlightStack, i) {
+  let allIDsBelow = "";
+  if (i == 0) {
+    highlightStack.getArray().forEach((entry) => {
+       allIDsBelow = allIDsBelow + entry[0].toString() + " "; // all the unqiue IDs are separated by spaces
+       console.log(allIDsBelow);
+    })
+  }
+  allIDsBelow = " allIDs='" + allIDsBelow + "'";
   let text = textArray[index];
   let uniqueId = entry[0].toString();
   let color = entry[1];
   let name = " name='" + uniqueId + "'";
   let style = " style= 'border-bottom:1px solid " + color + "'";
-  let highlight = "<span class='highlight'" + name + style + ">";
+  let highlight = "<span class='highlight'" + name + allIDsBelow + style + ">";
   textArray[index] = highlight + text;
   return textArray;
 }
 
 function openHighlights(textArray, index, highlightStack) {
   let text = textArray[index];
-  highlightStack.getArray().forEach((entry) => {
-    textArray = openHighlight(textArray, index, entry);
-  })
+  for (var i = 0; i < highlightStack.getSize(); i++) {
+    textArray = openHighlight(textArray, index, highlightStack.get(i), highlightStack, i);
+  }
+  // highlightStack.getArray().forEach((entry) => {
+  //   textArray = openHighlight(textArray, index, entry);
+  // })
   return textArray;
 }
 
@@ -135,7 +146,7 @@ function highlightHallmark(id) {
                         var element = document.getElementById('chart');
                         var position = element.getBoundingClientRect();
                         x = position.left + 35;
-                        y = position.top + 280;                        
+                        y = position.top + 280;
                         var pointsGained = scoreSum(indicator);
                         SVG.selectAll(".center-text").style('display', 'none');
                         SVG.append("text")
