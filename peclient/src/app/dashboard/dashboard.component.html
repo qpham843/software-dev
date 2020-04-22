@@ -75,7 +75,7 @@
 	    	<ng-container *ngFor="let a of articles">
 		    	<tr>
 		    		<td class="ten-percent">
-		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value="a.id">
+		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value={{a.id}}>
 		    		</td>
 		    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
 		    		<td class="fifteen-percent">
