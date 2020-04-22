@@ -15,8 +15,8 @@ A rough roadmap of the contents:
 //var dataFileName = "VisualizationData_1712.csv";
 var chartDiv = document.getElementById("chart");
 
-var width = 300,
-    height = 300,
+var width = 310,
+    height = 310,
     radius = (Math.min(width, height) / 2);
 
 var formatNumber = d3.format(",d");
@@ -41,8 +41,8 @@ var nodeToPath = new Map();
 var arc = d3.arc()
     .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
     .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-    .innerRadius(function(d) { return 150 * d.y0; })
-    .outerRadius(function(d) { return 140 * d.y1; });
+    .innerRadius(function(d) { return 155 * d.y0; })
+    .outerRadius(function(d) { return 155 * d.y1; });
 
 
 //This variable creates the floating textbox on the hallmark
@@ -81,14 +81,15 @@ d3.csv(dataFileName, function(error, data) {
   if (error) throw error;
   delete data["columns"];
   data = addDummyData(data);
+  
   var root = convertToHierarchy(data);
-  console.log(root);
-    
+  condense(root);
   ROOT = root;
   totalScore = 100 + scoreSum(root);
 
     root.sum(function(d) {
-    return Math.abs(parseInt(d.data.Points));
+    
+    return Math.abs(parseFloat(d.data.Points));
   });
 
 //Fill in the colors
@@ -133,7 +134,6 @@ svg.selectAll('path')
     })
     .on('mousemove', function(d) {
         if (visualizationOn) {
-            console.log(div);
         div
             .style("opacity", .7)
             .style("left", (d3.event.pageX)+ "px")
@@ -293,8 +293,13 @@ function drawVis(d, root, me, div) {
             .style("opacity", 1)
 // theresa start
     } if (d.height == 0) {
+        //console.log(d);
         let textToHighlight = document.getElementsByName(d.data.data["Credibility Indicator ID"] + "-" + d.data.data.Start + "-" + d.data.data.End);
-        highlightSun(textToHighlight[0]);
+        if (d.data.data.Start == -1) {
+          console.log("This fallacy does not have a highlight in the article body.");   
+        } else {
+            highlightSun(textToHighlight[0]);
+        }
     }
     //theresa end
     else if (d.height == 2) {
@@ -302,7 +307,7 @@ function drawVis(d, root, me, div) {
     } else if (d.height == 1) {
         d3.select(nodeToPath.get(d.parent)).style('display', 'none');
     }
-
+    console.log(d.data.data['Credibility Indicator Name']);
     div.transition()
             .duration(200)
             .style("opacity", .9);
@@ -349,7 +354,7 @@ function scoreSum(d) {
             sum += parseFloat(scoreSum(d.children[i]));
         }
         if (d.height == 2) {
-            articleScore = parseInt(sum);
+            articleScore = parseFloat(sum);
             return Math.round(articleScore);
         }
         return Math.round(sum);

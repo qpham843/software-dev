@@ -20,14 +20,12 @@ function sortJSONentries(json) {
 }
 
 function scoreArticle(fileName) {
-      console.log(fileName);
       d3.text("17120SSSArticle.txt", function(text) {
           document.getElementById("textArticle").innerHTML = text.toString();
       });
 
       d3.csv(fileName, function(error, data) {
         if (error) throw error;
-        console.log(data);
         createHighlights(data);
       });
 }
@@ -42,7 +40,7 @@ function createHighlights(json) {
   sortedEntries.forEach((entry) => {  // for each entry, open a span if open or close then reopen all spans if a close
     const index = entry[2];
     if (entry[3]) {
-      textArray = openHighlight(textArray, index, entry);
+      textArray = openHighlight(textArray, index, entry, highlightStack, 0);
       highlightStack.push(entry);
     } else {
       textArray = closeHighlights(textArray, index, highlightStack);
@@ -56,22 +54,33 @@ function createHighlights(json) {
   $(".highlight").hover(highlight, normal);
 }
 
-function openHighlight(textArray, index, entry) {
+function openHighlight(textArray, index, entry, highlightStack, i) {
+  let allIDsBelow = "";
+  if (i == 0) {
+    highlightStack.getArray().forEach((entry) => {
+       allIDsBelow = allIDsBelow + entry[0].toString() + " "; // all the unqiue IDs are separated by spaces
+       console.log(allIDsBelow);
+    })
+  }
+  allIDsBelow = " allIDs='" + allIDsBelow + "'";
   let text = textArray[index];
   let uniqueId = entry[0].toString();
   let color = entry[1];
   let name = " name='" + uniqueId + "'";
   let style = " style= 'border-bottom:1px solid " + color + "'";
-  let highlight = "<span class='highlight'" + name + style + ">";
+  let highlight = "<span class='highlight'" + name + allIDsBelow + style + ">";
   textArray[index] = highlight + text;
   return textArray;
 }
 
 function openHighlights(textArray, index, highlightStack) {
   let text = textArray[index];
-  highlightStack.getArray().forEach((entry) => {
-    textArray = openHighlight(textArray, index, entry);
-  })
+  for (var i = 0; i < highlightStack.getSize(); i++) {
+    textArray = openHighlight(textArray, index, highlightStack.get(i), highlightStack, i);
+  }
+  // highlightStack.getArray().forEach((entry) => {
+  //   textArray = openHighlight(textArray, index, entry);
+  // })
   return textArray;
 }
 
@@ -88,8 +97,7 @@ function closeHighlights(textArray, index, highlightStack) {
 function highlight(x) {
   // console.log(x.toElement);
   //console.log(x.toElement.style);
-  var id = x.toElement.getAttribute("name").substring(0, 2);
-  console.log(id);
+  var id = x.toElement.getAttribute("name");
   var color = x.toElement.style.borderBottomColor;      // grab color of border underline in rgb form
   var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
   //console.log(color);
@@ -121,11 +129,13 @@ function highlightHallmark(id) {
         for (category of d.children) {
             var categoryName = category.data.data['Credibility Indicator Name'];
             if (id.substring(0, 1) == categoryName.substring(0, 1)) {
+                //console.log(category.data);
                 var indicator;
                 for (indicator of category.children) {
                     var indicatorName = indicator.data.data['Credibility Indicator ID']
-                    if (id == indicatorName) {
-                        console.log("test");
+                    var indices = indicator.data.data["Start"] + "-"+indicator.data.data["End"];
+                    //console.log(indicator.data.data["Start"]);
+                    if (id.substring(0, 2) == indicatorName && id.substring(3, id.length) == indices) {
                         var path = nodeToPath.get(indicator);
                         d3.select(path)
                         .transition()
@@ -136,9 +146,8 @@ function highlightHallmark(id) {
                         var element = document.getElementById('chart');
                         var position = element.getBoundingClientRect();
                         x = position.left + 35;
-                        y = position.top + 280;                        
+                        y = position.top + 280;
                         var pointsGained = scoreSum(indicator);
-                        console.log('This error is ' + pointsGained);
                         SVG.selectAll(".center-text").style('display', 'none');
                         SVG.append("text")
                             .attr("class", "center-text")
