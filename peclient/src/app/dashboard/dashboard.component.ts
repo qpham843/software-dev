@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
 	  		let cbe = cb as HTMLInputElement;
   			if (cbe.checked)  
 					// cbe.value contains the id of the checkbox (the is of the article)
-  					this.changeStatus(cbe.value as unknown as number, newStatus);
+  					this.bulkChangeStatus(cbe.value, newStatus);
 	  	})
   }
   
@@ -307,10 +307,20 @@ export class DashboardComponent implements OnInit {
 	// one of the properties of event is srcElement (an html DOM object)
 	// this object's value is the new value 
 	changeStatus(id: number, val) {
-		console.log("changing status", id, val.srcElement.value);
 		this.ds.setStatus(id, val.srcElement.value).subscribe((data: Article) => {
-			console.log("back from changing status", data);
-			this.articles = data;
+			this.ds.getArticles().subscribe((data: Article) => {
+				this.articles = data;
+  			});
+		});
+	}
+
+	//number = id, val = status
+
+	bulkChangeStatus(number, val) {
+		this.ds.setStatus(number, val).subscribe((data: Article) => {
+			this.ds.getArticles().subscribe((data: Article) => {
+				this.articles = data;
+  			});
 		});
 	}
 
