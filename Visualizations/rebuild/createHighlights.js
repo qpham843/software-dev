@@ -51,25 +51,24 @@ function createHighlights(json) {
 
   finalHTML = textArray.join('');
   document.getElementById('textArticle').innerHTML = finalHTML;
+  console.log(finalHTML);
   $(".highlight").hover(highlight, normal);
 }
 
 function openHighlight(textArray, index, entry, highlightStack, i) {
   let allIDsBelow = "";
-  if (i == 0) {
     highlightStack.getArray().forEach((entry) => {
        allIDsBelow = allIDsBelow + entry[0].toString() + " "; // all the unqiue IDs are separated by spaces
-       console.log(allIDsBelow);
-    })
-  }
-  allIDsBelow = " allIDs='" + allIDsBelow + "'";
-  let text = textArray[index];
+       // console.log(allIDsBelow);
+  })
+  allIDsBelow = " allIDsBelow='" + allIDsBelow + "'";
+  let text = textArray[index-1];
   let uniqueId = entry[0].toString();
   let color = entry[1];
   let name = " name='" + uniqueId + "'";
   let style = " style= 'border-bottom:1px solid " + color + "'";
   let highlight = "<span class='highlight'" + name + allIDsBelow + style + ">";
-  textArray[index] = highlight + text;
+  textArray[index-1] = text + highlight;
   return textArray;
 }
 
@@ -104,6 +103,8 @@ function highlight(x) {
   highlightHallmark(id);
   x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.4");
   x.toElement.style.setProperty("background-clip", "content-box");
+  console.log(id);
+  console.log(x.toElement.getAttribute("allIDsBelow"));
 }
 
 // A function which returns all our background colors back to normal.
