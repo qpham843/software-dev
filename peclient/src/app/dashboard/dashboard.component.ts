@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { DashboardService } from './dashboard.service';
@@ -13,6 +13,7 @@ import { Status } from './article';
 })
 export class DashboardComponent implements OnInit {
 
+  @ViewChild('articleText', {static: false}) articleText: ElementRef;
   dashboardForm: FormGroup;
   articles: any = [];
   stringSearched: string = "";
@@ -57,6 +58,13 @@ export class DashboardComponent implements OnInit {
 		this.statuses = data;
 		console.log(this.statuses);
 	});
+  }
+
+  loadArticleText(id: number) {
+  	console.log("aaaaaaaaaa", id);
+  	let art: Article = this.articles.find(a => a.id == id);
+  	if (art)
+  		this.articleText.nativeElement.innerHTML = art.articleText;
   }
   
   
