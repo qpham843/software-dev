@@ -79,10 +79,11 @@ public class ArticleService {
 
 	}
 	
-	public JSONArray processBatchArticle() {
+	public JSONObject processBatchArticle() {
 		logger.info("in articleService - processBatchArticle");
 		
 		JSONArray articles = buzzService.getTodaysTop();
+		JSONObject res = new JSONObject();
 		
 		logger.info("got todays top from buzz - processing articles " + articles.length());
 		
@@ -127,9 +128,12 @@ public class ArticleService {
 			
 			// save newly created or updated article
 			articleRepository.save(updatedArticle);
+			
+			res.put(updatedArticle.getUrl(), updatedArticle.getArticleTitle());
 
 		});
-		return articles;
+		logger.info(res.toString(2));
+		return res;
 
 		
 
