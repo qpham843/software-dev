@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,6 +52,19 @@ public class FileService {
 		String sha256hex = DigestUtils.sha256Hex(article.getArticleText());
 		// set HASH
 		article.setArticleHash(sha256hex);
+		
+		//set filename (first 60 chars AFTER last slash plus ".txt"
+		String[] parts = article.getUrl().split("/");
+		String filename = parts[parts.length - 1];
+		if (filename.length() == 0) filename = "noname";
+		int endChar = filename.length();
+		if (endChar > 60) 
+			endChar = 59;
+		else 
+			endChar = endChar - 1;
+		
+		filename = filename.substring(0, endChar).concat(".txt");
+		
 				
 		// strip off https:// or http://
 		String tempURL = article.getUrl();
@@ -60,14 +74,18 @@ public class FileService {
 		String articleDir = "/var/article/temp/";
 		String zipDestDir = "/var/article/";
 		String zipDestFilename = "article";
-		String articleFilename = articleDir + "text.txt";
+		String articleFilename = articleDir + filename;
 		String metadataFilename = articleDir + "metadata.json";
+		
+		File destFile = new File(zipDestDir + URLNoProtocol + "/" + sha256hex + ".tgz");
+		article.setFilename(destFile.toString());
+
 
 		//*******************************************************
 		// CREATE ARTICLE FILE (text.txt)
 		File articleFile = new File(articleFilename);
 		try {
-			FileUtils.writeStringToFile(articleFile, article.getArticleText(), true);
+			FileUtils.writeStringToFile(articleFile, article.getArticleText(), Charset.defaultCharset(), false);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,11 +97,11 @@ public class FileService {
 		
 		metadata.put("extra", new JSONObject(article));
 		metadata.put("file_sha256", sha256hex);
-		metadata.put("filename", articleFile.getName());
+		metadata.put("filename", filename);
 
 		File metadataFile = new File(metadataFilename);
 		try {
-			FileUtils.writeStringToFile(metadataFile, metadata.toString(4), false);
+			FileUtils.writeStringToFile(metadataFile, metadata.toString(4), Charset.defaultCharset(), false);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,7 +116,6 @@ public class FileService {
 		
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP);
 		
-		File destFile = new File(zipDestDir + URLNoProtocol + sha256hex + ".tgz");
 			
 		try {
 			
@@ -116,8 +133,13 @@ public class FileService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//delete temp file
+		FileUtils.deleteQuietly(articleFile);
+		
+		//delete metadata file
+		FileUtils.deleteQuietly(metadataFile);
 
-		article.setFilename(destFile.toString());
 		return article;
 
 	}
