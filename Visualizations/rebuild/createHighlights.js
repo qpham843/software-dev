@@ -51,7 +51,6 @@ function createHighlights(json) {
 
   finalHTML = textArray.join('');
   document.getElementById('textArticle').innerHTML = finalHTML;
-  console.log(finalHTML);
   $(".highlight").hover(highlight, normal);
 }
 
@@ -96,22 +95,29 @@ function closeHighlights(textArray, index, highlightStack) {
 function highlight(x) {
   // console.log(x.toElement);
   //console.log(x.toElement.style);
-  var id = x.toElement.getAttribute("name");
+  var topID = x.toElement.getAttribute("name");
   var color = x.toElement.style.borderBottomColor;      // grab color of border underline in rgb form
   var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
   //console.log(color);
-  highlightHallmark(id);
+  var allIds = x.toElement.getAttribute("allIDsBelow").concat(" " + topID).split(" ");
+    
+  if (allIds == [""]) {
+    highlightHallmark(topID);   
+  } else {
+      highlightManyHallmark(allIds, ROOT);
+  }
   x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.4");
   x.toElement.style.setProperty("background-clip", "content-box");
-  console.log(id);
-  console.log(x.toElement.getAttribute("allIDsBelow"));
+  
+
 }
 
 // A function which returns all our background colors back to normal.
 // Needs fix to optimize, currently loops through all spans.
 function normal(x) {
   //console.log(x.toElement);
-    resetVis(ROOT);
+    //resetVis(ROOT);
+    resetHallmark(ROOT);
     PSEUDOBOX.transition()
         .delay(300)
         .duration(600)
@@ -122,6 +128,129 @@ function normal(x) {
   }
 }
 
+function resetHallmark() {
+    d3.selectAll("path")
+        .transition()
+        .delay(300)
+        .duration(800)
+        .attr('stroke-width',2)
+        .style("opacity", function(d) {
+            if (d.height == 1) {
+            } else {
+                return 0;
+            }
+        })
+    d3.selectAll("path")
+        .transition()
+        .delay(1000)
+        .attr('stroke-width',2)
+        .style("opacity", function(d) {
+            if (d.height == 1) {
+            } else {
+                return 0;
+            }
+        })
+    SVG.selectAll(".center-text").style('display', 'none');
+    SVG.append("text")
+        .attr("class", "center-text")
+        .attr("x", 0)
+        .attr("y", 13)
+        .style("font-size", 40)
+        .style("text-anchor", "middle")
+        .html((totalScore));
+}
+
+
+function highlightManyHallmark(idArray, d) {
+    console.log(idArray);
+    var id;
+    var pathList = [];
+    var catList = [];
+    var indicators = "";
+    var pointsGained = 0;
+    for (id of idArray) {
+        if (id != "") {
+            var category;
+            for (category of d.children) {
+                var categoryName = category.data.data['Credibility Indicator Name'];
+                var catPath = nodeToPath.get(category);
+                d3.select(catPath)
+                .transition()
+                .style("opacity", .5);
+                if (id.substring(0, 1) == categoryName.substring(0, 1)) {
+                    catList = catList.concat(catPath);
+                    var indicator;
+                    for (indicator of category.children) {
+                        var indicatorID = indicator.data.data['Credibility Indicator ID'];
+                        var indicatorName = indicator.data.data["Credibility Indicator Name"];
+                        var path = nodeToPath.get(indicator);
+                        d3.select(path)
+                        .transition()
+                        .style("display", "block")
+                        .style("opacity", .5);
+                        if (id.substring(0, 2) == indicatorID) {
+                            console.log('test');
+                            pathList = pathList.concat(path);
+                            var score = scoreSum(indicator);
+                            pointsGained += score;
+                            if (!indicators.includes(indicatorName)) {
+                                indicators += indicatorName + ", ";
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    indicators = indicators.substring(0, indicators.length - 2);
+    console.log(indicators);
+    var c;
+    for (c of catList) {
+        d3.select(c)
+        .transition()
+        .style("display", "block")
+        .style("opacity", 1)
+        .duration(200);
+    }
+    var p;
+    console.log(pathList);
+    for (p of pathList) {
+        d3.select(p)
+        .transition()
+        .style("display", "block")
+        .style("opacity", 1);
+    }
+    
+    var element = document.getElementById('chart');
+    var position = element.getBoundingClientRect();
+    x = position.left + 35;
+    y = position.top + 330;
+    
+    PSEUDOBOX.transition()
+        .duration(200)
+        .style("opacity", .9);
+    PSEUDOBOX.html(indicators)
+        .style("left", (x) + "px")
+        .style("top", (y) + "px")
+        .style("width", "min-content")
+        .style("height", "min-content");
+    
+    
+    SVG.selectAll(".center-text").style('display', 'none');
+    SVG.append("text")
+    .attr("class", "center-text")
+    .attr("x", 0)
+    .attr("y", 13)
+    .style("font-size", 40)
+    .style("text-anchor", "middle")
+    .html((pointsGained));
+        
+    
+}
+            
+
 
 function highlightHallmark(id) {
     d3.selectAll("path").transition().each(function(d) {
@@ -130,13 +259,11 @@ function highlightHallmark(id) {
         for (category of d.children) {
             var categoryName = category.data.data['Credibility Indicator Name'];
             if (id.substring(0, 1) == categoryName.substring(0, 1)) {
-                //console.log(category.data);
                 var indicator;
                 for (indicator of category.children) {
                     var indicatorName = indicator.data.data['Credibility Indicator ID']
                     var indices = indicator.data.data["Start"] + "-"+indicator.data.data["End"];
-                    //console.log(indicator.data.data["Start"]);
-                    if (id.substring(0, 2) == indicatorName && id.substring(3, id.length) == indices) {
+                    if (id.substring(0, 2) == indicatorName) {
                         var path = nodeToPath.get(indicator);
                         d3.select(path)
                         .transition()
@@ -184,11 +311,13 @@ function highlightHallmark(id) {
                 }
 
             } else {
+                //console.log(categoryName);
                 var path = nodeToPath.get(category);
                 d3.select(path)
                 .transition()
                 .style("opacity", 0.5)
                 .duration(300)
+
             }
 
             //console.log(category.data.data['Credibility Indicator Name']);
