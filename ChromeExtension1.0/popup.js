@@ -38,7 +38,7 @@ function checkURL() {
  * @param {String} targetURL URL to be submitted.
  */
 function submitURL(targetURL) {
-	Generate a new request.
+	// Generate a new request.
 	var xhttp = new XMLHttpRequest();
 	//Do the following function when ready.
 	xhttp.onreadystatechange = checkURL;
