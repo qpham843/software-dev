@@ -47,15 +47,22 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(AWSService.clas
 			
 			// strip off first two nodes of filename: /var/article/ (13 characters, positions 0-12)
 			// be aware of destination filename manipulation in python adds /articles/ - so no leading slash needed here.
-			String destFilename = article.getFilename().substring(13,article.getFilename().length() - 1);
-			String[] nodes = destFilename.split("/");
-			String lastNode = nodes[nodes.length - 1];
+			//String destFilename = article.getFilename().substring(13,article.getFilename().length());
+			String localFilePathAndName = article.getFilename();
+			String[] nodes;
+			String filename;
 			
-			//then allow max 900 characters before slash-hash.tgz
-			if (destFilename.length() > 900) 
-				destFilename = destFilename.substring(0,900) + "/" + lastNode;
-			
-			ProcessBuilder pb = new ProcessBuilder("/home/python3_env/bin/python3", "/home/scraper/s3-put.py",destFilename);
+			ProcessBuilder pb;
+			if (System.getProperty("os.name").contains("ows")) {
+				nodes = localFilePathAndName.split("\\\\");
+				filename = nodes[nodes.length - 1];
+				pb = new ProcessBuilder("python", "\\var\\s3-put.py", localFilePathAndName, filename);
+			} else {
+				nodes = localFilePathAndName.split("/");
+				filename = nodes[nodes.length - 1];
+				pb = new ProcessBuilder("/home/python3_env/bin/python3", "/home/scraper/s3-put.py",localFilePathAndName, filename);
+			}
+
 
 			StringBuilder tmpResults = new StringBuilder("calling s3-put.py with article id = " + article.getId());
 			tmpResults.append(System.lineSeparator());
@@ -63,9 +70,9 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(AWSService.clas
 			tmpResults.append(System.lineSeparator());
 			tmpResults.append(article.getArticleHash());
 			tmpResults.append(System.lineSeparator());
-			tmpResults.append(article.getFilename());
+			tmpResults.append(localFilePathAndName);
 			tmpResults.append(System.lineSeparator());
-			tmpResults.append(destFilename);
+			tmpResults.append(filename);
 			tmpResults.append(System.lineSeparator());
 			logger.info(tmpResults.toString());
 			

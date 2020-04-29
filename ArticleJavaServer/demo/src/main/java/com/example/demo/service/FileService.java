@@ -107,7 +107,12 @@ public class FileService {
 		// CREATE METADATA FILE (metadata.json)
 		JSONObject metadata = new JSONObject();
 		
-		metadata.put("extra", new JSONObject(article));
+		JSONObject tempMeta = new JSONObject(article);
+
+		//override filename for tagworks
+		tempMeta.put("filename", filenameTag + filename);
+		
+		metadata.put("extra", tempMeta);
 		metadata.put("file_sha256", sha256hex);
 		metadata.put("filename", filename);
 
