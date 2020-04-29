@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthService {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(AuthService.class);
 	
-	@Autowired private Environment env;
+	@Autowired private EnvironmentService env;
 	// Create a new JsonWebSignature object
     private JsonWebSignature jws = new JsonWebSignature();
     private JsonWebKeySet jsonWebKeySet = null;
@@ -64,14 +64,7 @@ public class AuthService {
 	
 	private boolean authorize(String compactSerialization) {
 		
-		
-	    String d = env.getProperty("com.example.demo.environment"); 
-	    if (d != null && d.equals("DEV")) { 
-	    	dev = true;
-	    	logger.info("AuthService - running in dev");
-	    }
-
-	    if (dev && 
+		if (env.isDev() && 
 				(compactSerialization == null || compactSerialization.length() < 1)
 			) {
 			logger.info("header not present - dev mode - accept");
