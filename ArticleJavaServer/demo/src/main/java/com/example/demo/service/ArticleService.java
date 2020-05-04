@@ -17,6 +17,7 @@ import com.example.demo.controller.ArticleController;
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.entities.StatusEntity;
 import com.example.demo.entities.ArticleHasStatusEntity;
+import com.example.demo.entities.BuzzJobEntity;
 import com.example.demo.repository.ArticleHasStatusRepository;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.StatusRepository;
@@ -32,6 +33,7 @@ public class ArticleService {
 	@Autowired private StatusRepository statusRepository;
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
 	@Autowired private BuzzService buzzService;
+	@Autowired private BuzzJobService buzzJobService;
 	@Autowired private FileService fileService;
 	@Autowired private ScrapeService scrapeService;
 	@Autowired private AWSService awsService;
@@ -50,6 +52,7 @@ public class ArticleService {
 	}
 
 	public ArticleEntity findArticleByUrl(String url) {
+		logger.info("findArticleByUrl: " + url);
 		Optional<ArticleEntity> a = articleRepository.findByUrl(url);
 		if (a.isPresent()) {
 			return a.get();
@@ -82,15 +85,25 @@ public class ArticleService {
 	public JSONObject processBatchArticle() {
 		logger.info("in articleService - processBatchArticle");
 		
-		JSONArray articles = buzzService.getTodaysTop();
+		String query = "topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&countries=United States";
+		BuzzJobEntity bj = buzzJobService.startNew(query); 
+		
+		logger.info("new buzzJob record created: " + bj.toString());
+		
+		JSONArray articles = buzzService.getTodaysTop(bj, query);
+		
+		logger.info("back in articleService processBatchArticle - got todaysTop - buzzJob record updated: " + bj.toString());
+		
+		bj = buzzJobService.refresh(bj);
+		
 		JSONObject res = new JSONObject();
 		
 		logger.info("got todays top from buzz - processing articles " + articles.length());
 		
-		articles.forEach(article -> {
+		for (int x = 0; x < articles.length(); x++) {
 			
 			// for each article, get its url
-			JSONObject ar = (JSONObject) article;
+			JSONObject ar = (JSONObject) articles.get(x);
 			String url = ar.optString("url");
 
 			// see if its in the db already
@@ -100,9 +113,11 @@ public class ArticleService {
 			
 			// if not, create it
 			if (existingArticle == null) {
-				
 				logger.info("new article - creating " + url);
-				
+
+				//accumulate buzz job record
+				bj.addArticlesCreated();
+
 				// create new record
 				updatedArticle = createNewArticle(url, "BUZZ");
 		
@@ -117,12 +132,16 @@ public class ArticleService {
 
 			} else {
 
-				//existing article - update metadata
 				logger.info("existing article - updating " + existingArticle.getUrl());
+
+				//accumulate buzz job record
+				bj.addArticlesUpdated();
+
+				//existing article - update metadata
 				updatedArticle = updateArticleWithBuzz(ar, existingArticle);
 			}
 			
-			//set article's date updated
+			//set article's date updated 
 			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));			//long epoch = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse("01/01/1970 01:00:00").getTime() / 1000;
 			updatedArticle.setUpdatedAt(updatedAt);
 			
@@ -130,13 +149,21 @@ public class ArticleService {
 			articleRepository.save(updatedArticle);
 			
 			res.put(updatedArticle.getUrl(), updatedArticle.getArticleTitle());
+			bj = buzzJobService.save(bj);
 
-		});
+		}
+		
+		Date endDate = new Date();
+		Long jobDuration = (endDate.getTime() - bj.getStartDate().getTime()) / 1000; 
+		
+		bj.setEndDate(new Date());
+		bj.setFinished(1);
+		bj.setElapsedSeconds(jobDuration.intValue());
+		
+		bj = buzzJobService.save(bj);
+		
 		logger.info(res.toString(2));
 		return res;
-
-		
-
 	}
 		
 	public String sendToS3() {
@@ -214,24 +241,24 @@ public class ArticleService {
 	
 	public ArticleEntity updateArticleWithBuzz(JSONObject jArticle, ArticleEntity article) {
 
-		logger.info("article.setAlexaRank("+jArticle.optInt("alexa_rank", 0));
-		logger.info("article.setAngryCount("+jArticle.optInt("angry_count", 0));
-		logger.info("article.setArticleTitle("+jArticle.optString("title", ""));
-		logger.info("article.setAuthor("+jArticle.optString("author_name", ""));
-		logger.info("article.setBuzzsumoArticleId("+jArticle.optInt("id", 0));
-		logger.info("article.setDomainName("+jArticle.optString("domain_name", ""));
-		logger.info("article.setEvergreenScore("+jArticle.optDouble("evergreen_score", Double.parseDouble("0")));
-		logger.info("article.setFacebookComments("+jArticle.optInt("facebook_comments", 0));
-		logger.info("article.setFacebookLikes("+jArticle.optInt("facebook_likes", 0));
-		logger.info("article.setFacebookShares("+jArticle.optInt("total_facebook_shares", 0));
-		logger.info("article.setHahaCount("+jArticle.optInt("haha_count", 0));
-		logger.info("article.setLoveCount("+jArticle.optInt("love_count", 0));
-		logger.info("article.setNumLinkingDomains("+jArticle.optInt("num_linking_domains", 0));
-		logger.info("article.setSadCount("+jArticle.optInt("sad_count", 0));
-		logger.info("article.setTotalRedditEngagements("+jArticle.optInt("total_reddit_engagements", 0));
-		logger.info("article.setTotalShares("+jArticle.optInt("total_shares", 0));
-		logger.info("article.setTwitterShares("+jArticle.optInt("twitter_shares", 0));
-		logger.info("article.setWowCount("+jArticle.optInt("wow_count", 0));
+//		logger.info("article.setAlexaRank("+jArticle.optInt("alexa_rank", 0));
+//		logger.info("article.setAngryCount("+jArticle.optInt("angry_count", 0));
+//		logger.info("article.setArticleTitle("+jArticle.optString("title", ""));
+//		logger.info("article.setAuthor("+jArticle.optString("author_name", ""));
+//		logger.info("article.setBuzzsumoArticleId("+jArticle.optInt("id", 0));
+//		logger.info("article.setDomainName("+jArticle.optString("domain_name", ""));
+//		logger.info("article.setEvergreenScore("+jArticle.optDouble("evergreen_score", Double.parseDouble("0")));
+//		logger.info("article.setFacebookComments("+jArticle.optInt("facebook_comments", 0));
+//		logger.info("article.setFacebookLikes("+jArticle.optInt("facebook_likes", 0));
+//		logger.info("article.setFacebookShares("+jArticle.optInt("total_facebook_shares", 0));
+//		logger.info("article.setHahaCount("+jArticle.optInt("haha_count", 0));
+//		logger.info("article.setLoveCount("+jArticle.optInt("love_count", 0));
+//		logger.info("article.setNumLinkingDomains("+jArticle.optInt("num_linking_domains", 0));
+//		logger.info("article.setSadCount("+jArticle.optInt("sad_count", 0));
+//		logger.info("article.setTotalRedditEngagements("+jArticle.optInt("total_reddit_engagements", 0));
+//		logger.info("article.setTotalShares("+jArticle.optInt("total_shares", 0));
+//		logger.info("article.setTwitterShares("+jArticle.optInt("twitter_shares", 0));
+//		logger.info("article.setWowCount("+jArticle.optInt("wow_count", 0));
 
 		article.setAlexaRank(jArticle.optInt("alexa_rank", 0));
 		article.setAngryCount(jArticle.optInt("angry_count", 0));
@@ -247,7 +274,11 @@ public class ArticleService {
 		article.setHahaCount(jArticle.optInt("haha_count", 0));
 		article.setLoveCount(jArticle.optInt("love_count", 0));
 		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains", 0));
-//		article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000)));
+		// article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000))); // date record created - from mysql
+//		logger.info("frombuzz - published_date is " + jArticle.optLong("published_date") );  // from buzzsumo
+//		logger.info("frombuzz - published_date with default is " + jArticle.optLong("published_date", new Date().getTime() / 1000));  // from buzzsumo
+		
+		article.setPublishedDate(new Date(jArticle.optLong("published_date", new Date().getTime() / 1000) * 1000));  // from buzzsumo
 		article.setSadCount(jArticle.optInt("sad_count", 0));
 		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements", 0));
 		article.setTotalShares(jArticle.optInt("total_shares", 0));

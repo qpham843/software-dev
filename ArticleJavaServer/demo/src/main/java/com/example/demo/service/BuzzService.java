@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.entities.BuzzJobEntity;
+import com.example.demo.repository.BuzzJobRepository;
 import com.example.demo.service.ArticleService;
 
 @Service
@@ -16,6 +18,7 @@ public class BuzzService {
 private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.class);
 	
 	@Autowired ArticleService articleService;
+	@Autowired BuzzJobService buzzJobService;
 	
 	public JSONObject getBuzz(String articleUrl) {
 
@@ -39,23 +42,25 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
         return buzzEntry;
 	}
 	
-	public JSONArray getTodaysTop() {
+	public JSONArray getTodaysTop(BuzzJobEntity bj, String query) {
 		RestTemplate restTemplate = new RestTemplate();
-		//StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&countries=United%20States&count=10");
-		//StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&count=10");
-		StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/trends.json?topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf&countries=United States");
-        //'https://api.buzzsumo.com/search/trends.json?topic=politics&search_type=trending_now&hours=24&countries=United%20States%2C%20Canada&count=50&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf'
-		url.append("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
-        
-        logger.info(url.toString());
+		String url = 
+				"https://api.buzzsumo.com/search/trends.json?"
+				.concat(query)
+				.concat("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
+        logger.info(url);
 
-        ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url,String.class);
         String res = response.getBody();
         JSONObject j = new JSONObject(res);
         JSONArray a = j.optJSONArray("results");
+        bj.setArticlesReturned(a.length());
+        bj = buzzJobService.save(bj);
+        
         JSONArray filtered = new JSONArray();
-        a.forEach(art -> {
-        	JSONObject article = (JSONObject) art;
+        //a.forEach(art -> {
+        for(Integer x = 0; x < a.length(); x++) {
+        	JSONObject article = (JSONObject) a.get(x);
         	
         	boolean add = true;
             
@@ -63,12 +68,16 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
         	if (article.optString("domain_name", "").equals("youtube.com")) {
             	logger.info("skipping youtube");
             	add = false;
+            	bj.addArticlesYoutube();
+            	bj.addArticlesDropped();
             } 
     		// exclude word count > 700
             logger.info(article.toString(2));
         	if (article.optInt("num_words", 701) > 700) {
             	logger.info("skipping > 700 words");
             	add = false;
+            	bj.addArticles700();
+            	bj.addArticlesDropped();
             }
         	
             if (add) {
@@ -76,8 +85,8 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
             	filtered.put(article);
             }            	
             
-        });
-        
+        };
+        bj = buzzJobService.save(bj);
         return filtered;
         
 	}

@@ -63,7 +63,8 @@ public class ArticleEntity implements Serializable {
 	protected Integer buzzsumoArticleId = 0;
 
 	@Column(name="published_date")
-	protected Integer publishedDate = 0;
+	@Temporal(TemporalType.TIMESTAMP)
+	protected Date publishedDate = null;
 
 	@Column(name="total_shares")
 	protected Integer totalShares = 0;
@@ -263,11 +264,11 @@ article_hash char(64)
 		this.buzzsumoArticleId = buzzsumoArticleId;
 	}
 
-	public Integer getPublishedDate() {
+	public Date getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Integer publishedDate) {
+	public void setPublishedDate(Date publishedDate) {
 		this.publishedDate = publishedDate;
 	}
 

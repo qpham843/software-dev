@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entities.ArticleEntity;
+import com.example.demo.entities.BuzzJobEntity;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.AuthService;
+import com.example.demo.service.BuzzJobService;
 import com.example.demo.service.BuzzService;
 import com.example.demo.service.ScrapeService;
 
@@ -35,6 +37,7 @@ public class ArticleController {
 	@Autowired ArticleService articleService;
 	@Autowired ScrapeService scrapeService;
 	@Autowired BuzzService buzzService;
+	@Autowired BuzzJobService buzzJobService;
 	@Autowired AuthService authService; 
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -143,7 +146,6 @@ public class ArticleController {
 		
 		logger.info("in buzz2 controller");
 		JSONObject r = articleService.processBatchArticle();
-		logger.info(r.toString(2));
 		return new ResponseEntity(r.toString(2), HttpStatus.OK);
 		
 	}

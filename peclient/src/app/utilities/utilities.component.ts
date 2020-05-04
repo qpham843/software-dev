@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UtilitiesService } from './utilities.service';
+import { BuzzJob } from './buzzJob';
 
 @Component({
   selector: 'app-utilities',
@@ -11,10 +12,14 @@ import { UtilitiesService } from './utilities.service';
 export class UtilitiesComponent implements OnInit {
 
   utilitiesForm: FormGroup;
+  buzzJobs: any = [];
+  disableBuzz: boolean = false;
 
   constructor(
   	private fb: FormBuilder,
   	private us: UtilitiesService,
+    private el: ElementRef,
+    private renderer: Renderer2,
   ) { 
 
   	this.utilitiesForm = this.fb.group({
@@ -24,6 +29,8 @@ export class UtilitiesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getBuzz();
+
   }
 
   sendAcceptedToS3() {
@@ -47,17 +54,26 @@ export class UtilitiesComponent implements OnInit {
       });
   }
 
-  getBuzzSumo() {
-  	this.us.doBuzz().subscribe(d => {
-      console.log("qqqqqqqqqqqqqqqqqqqq");
-      console.log(d);
-  		let r: string = "";
-      for (let [key, value] of Object.entries(d)) {
-        r = r + `${key}: ${value}` + "\n";
-      }
+  getBuzz() {
+    this.us.getBuzzJobs().subscribe(d => {
+      this.buzzJobs = d;
+    })
+  }
 
-      this.utilitiesForm.get('buzzResults').setValue(r);
-  	})
+  getBuzzSumo() {
+    this.disableBuzz = true;
+    var intervalId: any = 0;
+  	intervalId = setInterval(
+      () => this.getBuzz(),
+      1000
+    );
+    this.us.doBuzz().subscribe(d => {
+      console.log("back from doBuzz");
+      console.log(d);
+      clearInterval(intervalId);
+      this.disableBuzz = false;
+      this.getBuzz();
+    });
   }
 
 }

@@ -92,7 +92,13 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(AWSService.clas
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
+			
+			//update article's status to 'SENT'
+			articleService.updateStatus(article.getId(), "SENT", "from api (dashboard)");
+
 		});
+		
+		
 		return results.toString();
 	}
 	

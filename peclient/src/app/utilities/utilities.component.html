@@ -5,7 +5,43 @@
 
 	</div>
 	<div>
-		<button type="button" (click)="getBuzzSumo()">Get BuzzSumo</button>
-		<textarea formControlName="buzzResults"></textarea>
+		<button type="button" [disabled]="disableBuzz" (click)="getBuzzSumo()">Get BuzzSumo</button>
 	</div>
+	<style>
+		TABLE, TR, TD {
+			border-collapse: collapse;
+			border:1px solid black;
+		}
+		TD {
+			padding: 5px;
+			text-align: center;
+		}
+	</style>
+	<table style="">
+		<tr>
+			<td>start</td>
+			<td>finished</td>
+			<td>seconds</td>
+			<td># from buzz</td>
+			<td># youtube</td>
+			<td># > 700</td>
+			<td># dropped</td>
+			<td># created</td>
+			<td># updated</td>
+		</tr>
+		<tr *ngFor="let bj of buzzJobs">
+			<td>{{ bj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
+			<td>
+				<span style="background-color: green;" *ngIf="bj.finished == 1">DONE</span>
+				<span *ngIf="bj.finished == 0">Processing</span>
+			</td>			
+			<td>{{ bj.elapsedSeconds }}</td>
+			<td>{{ bj.articlesReturned }}</td>
+			<td>{{ bj.articlesYoutube }}</td>
+			<td>{{ bj.articles700 }}</td>
+			<td>{{ bj.articlesDropped }}</td>
+			<td>{{ bj.articlesCreated }}</td>
+			<td>{{ bj.articlesUpdated }}</td>
+		</tr>
+	</table>
 </form>

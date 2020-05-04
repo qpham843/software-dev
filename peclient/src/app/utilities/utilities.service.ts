@@ -28,5 +28,9 @@ export class UtilitiesService {
   doBuzz() {
   	return this.http.get(this.apiDest + '/article/buzz2');
   }
+
+  getBuzzJobs() {
+    return this.http.get(this.apiDest + '/buzzJob');
+  }
 }
  
