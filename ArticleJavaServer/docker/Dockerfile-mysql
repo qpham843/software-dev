@@ -2,5 +2,7 @@ FROM mysql:8.0.19
 COPY MySQLArticleDatabase/publiceditor-database-dump.sql /docker-entrypoint-initdb.d/
 
 WORKDIR /home/init_database
-COPY MySQLArticleDatabase/init_db.sh /home/init_database
-COPY MySQLArticleDatabase/mysql.sh /home/init_database
+COPY MySQLArticleDatabase/init_db.sh .
+COPY MySQLArticleDatabase/mysql.sh .
+# Copy any other scripts and migrations that need to be applied manually.
+COPY MySQLArticleDatabase/ .
