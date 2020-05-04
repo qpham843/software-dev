@@ -50,7 +50,12 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(S3JobService.cl
 	}
 	
 	public List<S3JobEntity> findRecent() {
-		return s3JobRepository.findAllByOrderByStartDateDesc();
+		//return s3JobRepository.findAllByOrderByStartDateDesc();
+		Date now = new Date();
+		//60*60*24*1000*2 (miliseconds in a day) * 2
+		Long twoDaysMilliseconds = (long) (60 * 60 * 24 * 1000 * 2);
+		Date lessTwoDays = new Date(now.getTime() - twoDaysMilliseconds); 
+		return s3JobRepository.findByStartDateGreaterThanOrderByStartDateDesc(lessTwoDays);
 	}
 	
 	public S3JobEntity save(S3JobEntity s3j) {

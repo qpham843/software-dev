@@ -50,7 +50,7 @@ public class ArticleService {
 	}
 	
 	public List<ArticleEntity> findArticleByStatus(String statusCode) {
-		return articleRepository.findByStatusCode(statusCode);
+		return articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode);
 	}
 
 	public ArticleEntity findArticleByUrl(String url) {
@@ -172,7 +172,7 @@ public class ArticleService {
 		S3JobEntity s3j = s3JobService.startNew();
 		StringBuilder s = new StringBuilder();
 				
-		List<ArticleEntity> articlesToSend = articleRepository.findByStatusCode("APPROVED");
+		List<ArticleEntity> articlesToSend = articleRepository.findByStatusCodeOrderByPublishDateDesc("APPROVED");
 		
 		s3j.setArticlesToSend(articlesToSend.size());
 		s3JobService.save(s3j);
@@ -217,9 +217,7 @@ public class ArticleService {
 	}
 	
 	public List<ArticleEntity> findAllArticles() {
-		Iterable<ArticleEntity> articleIterable = articleRepository.findAll();
-		List<ArticleEntity> list = new ArrayList<ArticleEntity>();
-		articleIterable.forEach(list::add);
+		List<ArticleEntity> list = articleRepository.findAllByOrderByPublishDateDesc();
 		return list;
 		
 	}

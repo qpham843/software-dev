@@ -51,7 +51,15 @@ export class UtilitiesComponent implements OnInit {
       clearInterval(intervalId);
       this.disableBuzz = false;
       this.getBuzz();
-    });
+    },
+    err => {
+      console.log("there was an error getting buzz response", err);
+      clearInterval(intervalId);
+      this.disableBuzz = false;
+      this.getBuzz();
+    },
+    () => {}
+    );
   }
 
   getS3() {
@@ -73,7 +81,15 @@ export class UtilitiesComponent implements OnInit {
       clearInterval(intervalId);
       this.disableS3 = false;
       this.getS3();
-    });
+    },
+    err => {
+      console.log("there was an error getting s3 response", err);
+      clearInterval(intervalId);
+      this.disableS3 = false;
+      this.getS3();
+    },
+    () => {}
+    );
   }
 
 

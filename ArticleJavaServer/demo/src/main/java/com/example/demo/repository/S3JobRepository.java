@@ -16,6 +16,7 @@ import com.example.demo.entities.S3JobEntity;
 public interface S3JobRepository extends CrudRepository<S3JobEntity, Integer>{
 	public Optional<S3JobEntity> findById(Integer id);
 	public List<S3JobEntity> findAllByOrderByStartDateDesc();
+	public List<S3JobEntity> findByStartDateGreaterThanOrderByStartDateDesc(Date startDate);
 	
 	@Modifying
 	@Query(value = "UPDATE S3JobEntity SET finished = :finished, elapsedSeconds = :elapsedSeconds, articlesToSend = :articlesToSend, articlesSent = :articlesSent, articles = :articles where id = :id")

@@ -50,7 +50,13 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzJobService.
 	}
 	
 	public List<BuzzJobEntity> findRecent() {
-		return buzzJobRepository.findAllByOrderByStartDateDesc();
+		//return buzzJobRepository.findAllByOrderByStartDateDesc();
+		Date now = new Date();
+		//60*60*24*1000*2 (miliseconds in a day) * 2
+		Long twoDaysMilliseconds = (long) (60 * 60 * 24 * 1000 * 2);
+		Date lessTwoDays = new Date(now.getTime() - twoDaysMilliseconds); 
+		return buzzJobRepository.findByStartDateGreaterThanOrderByStartDateDesc(lessTwoDays);
+
 	}
 	
 	public BuzzJobEntity save(BuzzJobEntity bj) {

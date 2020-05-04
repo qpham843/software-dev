@@ -15,10 +15,12 @@ import com.example.demo.entities.BuzzJobEntity;
 public interface BuzzJobRepository extends CrudRepository<BuzzJobEntity, Integer>{
 	public Optional<BuzzJobEntity> findById(Integer id);
 	public List<BuzzJobEntity> findAllByOrderByStartDateDesc();
+	public List<BuzzJobEntity> findByStartDateGreaterThanOrderByStartDateDesc(Date lessTwoDays);
 	
 	@Modifying
 	@Query(value = "UPDATE BuzzJobEntity SET endDate = :endDate, finished = :finished, elapsedSeconds = :elapsedSeconds, articlesReturned = :articlesReturned, articlesYoutube = :articlesYoutube, articles700 = :articles700, articlesDropped = :articlesDropped, articlesCreated = :articlesCreated, articlesUpdated = :articlesUpdated where id = :id")
 	@Transactional
 	public void storeBJ(Integer id, Date endDate, Integer finished, Integer elapsedSeconds, Integer articlesReturned, Integer articlesYoutube, Integer articles700, Integer articlesDropped, Integer articlesCreated, Integer articlesUpdated);
+	
 	
 }
