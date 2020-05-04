@@ -158,7 +158,7 @@ public class ArticleController {
 		}
 		
 		logger.info("in s3 controller");
-		return new ResponseEntity<String>(articleService.sendToS3(), HttpStatus.OK);
+		return new ResponseEntity(articleService.sendToS3(), HttpStatus.OK);
 		
 	}
 }

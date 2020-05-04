@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ReplaceLineBreaksPipe implements PipeTransform {
 
 transform(value: string): string {
-      return value.replace(/\n/g, '<p>');
+      return value.replace(/\n/g, '</br>');
    }
 }

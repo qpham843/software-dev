@@ -32,5 +32,10 @@ export class UtilitiesService {
   getBuzzJobs() {
     return this.http.get(this.apiDest + '/buzzJob');
   }
+  
+  getS3Jobs() {
+    return this.http.get(this.apiDest + '/s3Job');
+  }
+
 }
  

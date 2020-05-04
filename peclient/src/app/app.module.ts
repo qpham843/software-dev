@@ -19,7 +19,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'utilities', component: UtilitiesComponent },
-  { path: 'logout', redirectTo: '/logout', pathMatch: 'full'},
+//  { path: 'logout', redirectTo: '/logout', pathMatch: 'full'},
   { path: '', redirectTo: '/logout', pathMatch: 'full' },  
   { path: '**', redirectTo: '/logout'},
   // { path: 'forgot', component: ForgotComponent },

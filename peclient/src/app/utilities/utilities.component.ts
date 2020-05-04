@@ -13,7 +13,10 @@ export class UtilitiesComponent implements OnInit {
 
   utilitiesForm: FormGroup;
   buzzJobs: any = [];
+  s3Jobs: any = [];
   disableBuzz: boolean = false;
+  disableS3: boolean = false;
+
 
   constructor(
   	private fb: FormBuilder,
@@ -21,37 +24,12 @@ export class UtilitiesComponent implements OnInit {
     private el: ElementRef,
     private renderer: Renderer2,
   ) { 
-
-  	this.utilitiesForm = this.fb.group({
-  		sendResults: new FormControl(),
-  		buzzResults: new FormControl(),
-  	});
+    this.utilitiesForm = this.fb.group({});
   }
 
   ngOnInit() {
     this.getBuzz();
-
-  }
-
-  sendAcceptedToS3() {
-  	this.us.doSend().subscribe(
-      res => {
-        console.log("response ", res)
-        //console.log(d);
-        this.utilitiesForm.get('sendResults').setValue("fffffffffff");
-      },
-      err => {
-        console.log("errrrrr", err);
-
-        console.log(err.ok);
-        console.log(err.status);
-        console.log(err.statusText);
-        console.log(err.error.text);
-        this.utilitiesForm.get('sendResults').setValue(err.error.text);
-      },
-      () => {
-        
-      });
+    this.getS3();
   }
 
   getBuzz() {
@@ -63,7 +41,7 @@ export class UtilitiesComponent implements OnInit {
   getBuzzSumo() {
     this.disableBuzz = true;
     var intervalId: any = 0;
-  	intervalId = setInterval(
+    intervalId = setInterval(
       () => this.getBuzz(),
       1000
     );
@@ -75,5 +53,28 @@ export class UtilitiesComponent implements OnInit {
       this.getBuzz();
     });
   }
+
+  getS3() {
+    this.us.getS3Jobs().subscribe(d => {
+      this.s3Jobs = d;
+    })
+  }
+
+  sendAcceptedToS3() {
+    this.disableS3 = true;
+    var intervalId: any = 0;
+    intervalId = setInterval(
+      () => this.getS3(),
+      1000
+    );
+    this.us.doSend().subscribe(d => {
+      console.log("back from doS3");
+      console.log(d);
+      clearInterval(intervalId);
+      this.disableS3 = false;
+      this.getS3();
+    });
+  }
+
 
 }

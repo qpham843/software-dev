@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.entities.BuzzJobEntity;
 
-public interface BuzzJobRepository extends JpaRepository<BuzzJobEntity, Integer>{
+public interface BuzzJobRepository extends CrudRepository<BuzzJobEntity, Integer>{
 	public Optional<BuzzJobEntity> findById(Integer id);
 	public List<BuzzJobEntity> findAllByOrderByStartDateDesc();
 	

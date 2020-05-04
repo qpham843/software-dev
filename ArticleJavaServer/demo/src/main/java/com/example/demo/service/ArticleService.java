@@ -18,6 +18,7 @@ import com.example.demo.entities.ArticleEntity;
 import com.example.demo.entities.StatusEntity;
 import com.example.demo.entities.ArticleHasStatusEntity;
 import com.example.demo.entities.BuzzJobEntity;
+import com.example.demo.entities.S3JobEntity;
 import com.example.demo.repository.ArticleHasStatusRepository;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.StatusRepository;
@@ -37,6 +38,7 @@ public class ArticleService {
 	@Autowired private FileService fileService;
 	@Autowired private ScrapeService scrapeService;
 	@Autowired private AWSService awsService;
+	@Autowired private S3JobService s3JobService;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -167,14 +169,25 @@ public class ArticleService {
 	}
 		
 	public String sendToS3() {
+		S3JobEntity s3j = s3JobService.startNew();
 		StringBuilder s = new StringBuilder();
-		
+				
 		List<ArticleEntity> articlesToSend = articleRepository.findByStatusCode("APPROVED");
+		
+		s3j.setArticlesToSend(articlesToSend.size());
+		s3JobService.save(s3j);
 		
 		String m1 = "in articleController.sendToS3. Sending " + articlesToSend.size() + " articles to s3";
 		logger.info(m1);
 		s.append(m1);
-		s.append(awsService.sendToS3(articlesToSend));
+		s.append(awsService.sendToS3(articlesToSend, s3j));
+		
+		Date endDate = new Date();
+		Long jobDuration = (endDate.getTime() - s3j.getStartDate().getTime()) / 1000; 
+
+		s3j.setFinished(1);
+		s3j.setElapsedSeconds(jobDuration.intValue());
+		s3j = s3JobService.save(s3j);
 		return s.toString();
 	}
 	

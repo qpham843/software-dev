@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.entities.ArticleEntity;
+import com.example.demo.entities.S3JobEntity;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.service.ArticleService;
 
@@ -25,8 +26,9 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(AWSService.clas
 	
 	@Autowired ArticleService articleService;
 	@Autowired FileService fileService;
+	@Autowired S3JobService s3JobService;
 	
-	public String sendToS3(List<ArticleEntity> toSend) {
+	public String sendToS3(List<ArticleEntity> toSend, S3JobEntity s3j) {
 		String m = "in AWSService.sendToS3. Sending " + toSend.size() + " articles to s3";
 		StringBuilder results = new StringBuilder(m);
 		results.append(System.lineSeparator());
@@ -95,6 +97,10 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(AWSService.clas
 			
 			//update article's status to 'SENT'
 			articleService.updateStatus(article.getId(), "SENT", "from api (dashboard)");
+			
+			s3j.addArticlesSent();
+			s3j.setArticles(s3j.getArticles().concat(article.getUrl().concat(System.lineSeparator())));
+			s3JobService.save(s3j);
 
 		});
 		
