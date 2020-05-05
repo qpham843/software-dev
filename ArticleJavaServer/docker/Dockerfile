@@ -48,5 +48,8 @@ COPY /demo .
 RUN mvn --batch-mode install
 RUN cp -av target/demo-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps
 
+WORKDIR /home/data_migration
+COPY MySQLArticleDatabase/ .
+
 WORKDIR $CATALINA_HOME
 WORKDIR /home/article_funnel
