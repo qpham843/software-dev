@@ -19,12 +19,12 @@ function sortJSONentries(json) {
   return sortArray;
 }
 
-function scoreArticle(fileName) {
-      d3.text("17120SSSArticle.txt", function(text) {
+function scoreArticle(textFileUrl, dataFileUrl) {
+      d3.text(textFileUrl, function(text) {
           document.getElementById("textArticle").innerHTML = text.toString();
       });
 
-      d3.csv(fileName, function(error, data) {
+      d3.csv(dataFileUrl, function(error, data) {
         if (error) throw error;
         createHighlights(data);
       });
