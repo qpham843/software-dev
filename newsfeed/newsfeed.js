@@ -1,7 +1,7 @@
 var listofarticles = [];
 
 function readVisData() {
-    $.get("https://cors-anywhere.herokuapp.com/" + "https://s3-us-west-2.amazonaws.com/publiceditor.io/Articles/visData.json").done(function(data) {
+    $.get("visData.json").done(function(data) {
         for (var i = 0; i < Object.keys(data).length; i++) {
             var article = data[i];
             var articleEntry = new ArticleData(article["Title"], article["Author"], article["Date"], article["ID"], article["Article Link"], article["Visualization Link"], article["Plain Text"], article["Highlight Data"]);
@@ -103,7 +103,7 @@ function generateEntry(entry) {
     if (document.querySelector("svg[articleID='" + entry.id +"']") != null) {
         document.querySelector("svg[articleID='" + entry.id +"']").remove();
     }
-    hallmark("https://cors-anywhere.herokuapp.com/" + entry.highlightData, entry.id);
+    hallmark(entry.highlightData, entry.id);
 }
 
 function csvJSON(csv){
