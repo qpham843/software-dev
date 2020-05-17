@@ -9,7 +9,7 @@ function sortJSONentries(json) {
     let uniqueID = json[i]["Credibility Indicator ID"] + "-" + json[i].Start + "-" + json[i].End;
 
     let startEntry = [uniqueID, colorFinder(json[i]), parseInt(json[i].Start), true];
-    let endEntry = [uniqueID, colorFinder(json[i]), parseInt(json[i].End), false];
+    let endEntry = [uniqueID, colorFinder(json[i]), parseInt(json[i].End)+1, false];
 
     sortArray.push(startEntry);
     sortArray.push(endEntry);
@@ -50,6 +50,7 @@ function createHighlights(json) {
   })
 
   finalHTML = textArray.join('');
+  console.log(textArray);
   document.getElementById('textArticle').innerHTML = finalHTML;
   $(".highlight").hover(highlight, normal);
 }
@@ -83,32 +84,32 @@ function openHighlights(textArray, index, highlightStack) {
 }
 
 function closeHighlights(textArray, index, highlightStack) {
-  let text = textArray[index];
+  let text = textArray[index-1];
   let closeSpans = '';
   for (var i = 0; i < highlightStack.getSize(); i++) {
     closeSpans += "</span>";
   }
-  textArray[index] = text + closeSpans;
+  textArray[index-1] = text + closeSpans;
   return textArray;
 }
 
 function highlight(x) {
+
   // console.log(x.toElement);
   //console.log(x.toElement.style);
   var topID = x.toElement.getAttribute("name");
   var color = x.toElement.style.borderBottomColor;      // grab color of border underline in rgb form
   var color = color.match(/\d+/g);                      // split rgb into r, g, b, components
-  //console.log(color);
   var allIds = x.toElement.getAttribute("allIDsBelow").concat(" " + topID).split(" ");
-    
-  if (allIds == [""]) {
-    highlightHallmark(topID);   
+  console.log(allIds);
+  if (allIds[0] == "") {
+    highlightHallmark(topID);
   } else {
       highlightManyHallmark(allIds, ROOT);
   }
   x.toElement.style.setProperty("background-color", "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + "0.4");
   x.toElement.style.setProperty("background-clip", "content-box");
-  
+
 
 }
 
@@ -162,7 +163,7 @@ function resetHallmark() {
 
 
 function highlightManyHallmark(idArray, d) {
-    console.log(idArray);
+    //console.log(idArray);
     var id;
     var pathList = [];
     var catList = [];
@@ -189,7 +190,7 @@ function highlightManyHallmark(idArray, d) {
                         .style("display", "block")
                         .style("opacity", .5);
                         if (id.substring(0, 2) == indicatorID) {
-                            console.log('test');
+                            // console.log('test');
                             pathList = pathList.concat(path);
                             var score = scoreSum(indicator);
                             pointsGained += score;
@@ -197,15 +198,15 @@ function highlightManyHallmark(idArray, d) {
                                 indicators += indicatorName + ", ";
                             }
                         }
-                        
+
                     }
                 }
             }
         }
     }
-    
+
     indicators = indicators.substring(0, indicators.length - 2);
-    console.log(indicators);
+    // console.log(indicators);
     var c;
     for (c of catList) {
         d3.select(c)
@@ -215,19 +216,19 @@ function highlightManyHallmark(idArray, d) {
         .duration(200);
     }
     var p;
-    console.log(pathList);
+    //console.log(pathList);
     for (p of pathList) {
         d3.select(p)
         .transition()
         .style("display", "block")
         .style("opacity", 1);
     }
-    
+
     var element = document.getElementById('chart');
     var position = element.getBoundingClientRect();
     x = position.left + 35;
     y = position.top + 330;
-    
+
     PSEUDOBOX.transition()
         .duration(200)
         .style("opacity", .9);
@@ -236,8 +237,8 @@ function highlightManyHallmark(idArray, d) {
         .style("top", (y) + "px")
         .style("width", "min-content")
         .style("height", "min-content");
-    
-    
+
+
     SVG.selectAll(".center-text").style('display', 'none');
     SVG.append("text")
     .attr("class", "center-text")
@@ -246,10 +247,10 @@ function highlightManyHallmark(idArray, d) {
     .style("font-size", 40)
     .style("text-anchor", "middle")
     .html((pointsGained));
-        
-    
+
+
 }
-            
+
 
 
 function highlightHallmark(id) {
