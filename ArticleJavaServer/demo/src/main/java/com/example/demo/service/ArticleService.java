@@ -16,13 +16,16 @@ import org.springframework.stereotype.Service;
 import com.example.demo.controller.ArticleController;
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.entities.StatusEntity;
+import com.example.demo.entities.TagEntity;
 import com.example.demo.entities.ArticleHasStatusEntity;
+import com.example.demo.entities.ArticleHasTagEntity;
 import com.example.demo.entities.BuzzJobEntity;
 import com.example.demo.entities.S3JobEntity;
 import com.example.demo.repository.ArticleHasStatusRepository;
+import com.example.demo.repository.ArticleHasTagRepository;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.StatusRepository;
-
+import com.example.demo.repository.TagRepository;
 import com.example.demo.service.BuzzService;
 import com.example.demo.service.FileService;
 
@@ -39,6 +42,8 @@ public class ArticleService {
 	@Autowired private ScrapeService scrapeService;
 	@Autowired private AWSService awsService;
 	@Autowired private S3JobService s3JobService;
+	@Autowired private TagRepository tagRepository;
+	@Autowired private ArticleHasTagRepository articleHasTagRepository;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -220,6 +225,48 @@ public class ArticleService {
 		List<ArticleEntity> list = articleRepository.findAllByOrderByPublishDateDesc();
 		return list;
 		
+	}
+	
+	public ArticleEntity updateTag(Integer id, String tag) {
+		Optional<ArticleEntity> articleToFind = articleRepository.findById(id);
+		Optional<TagEntity> dbTagToFind = tagRepository.findByTag(tag);
+		
+		ArticleEntity foundArticle = null;
+		TagEntity tagEntity = null;
+		ArticleHasTagEntity aht = null;
+		
+		if (articleToFind.isPresent()) 
+			foundArticle = articleToFind.get();
+		else
+			return null;
+		
+		if (dbTagToFind.isPresent()) 
+			tagEntity = dbTagToFind.get(); 
+		else 
+			return null;
+		
+		Optional<ArticleHasTagEntity> ahtToFind = articleHasTagRepository.findByArticleIdAndTagId(foundArticle.getId(), tagEntity.getId()); 
+		
+		if (ahtToFind.isPresent()) {
+			aht = ahtToFind.get();
+		}
+		
+		if (aht != null) {
+			//if tag is present AND aht is present, remove aht entry
+			articleHasTagRepository.delete(aht);
+		} else {
+			//if tag is present and ahd is not present, add aht entry
+			aht = new ArticleHasTagEntity();
+			aht.setArticleId(foundArticle.getId());
+			aht.setTagId(tagEntity.getId());
+			articleHasTagRepository.save(aht);		
+		}
+		
+		articleToFind = articleRepository.findById(foundArticle.getId());
+		if (articleToFind.isPresent())
+			return articleToFind.get();
+		else
+			return null;
 	}
 	
 	public ArticleEntity updateStatus(Integer id, String status, String comment) {

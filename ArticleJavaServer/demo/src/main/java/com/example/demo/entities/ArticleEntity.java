@@ -162,7 +162,10 @@ article_hash char(64)
 	
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "articleId")
-	private List<StatusViewEntity> statuses; 
+	private List<ArticleStatusViewEntity> statuses; 
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "articleId")
+	private List<ArticleTagViewEntity> tags; 
 
 	public Integer getId() {
 		return id;
@@ -196,10 +199,6 @@ article_hash char(64)
 		this.articleText = articleText;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public String getUrl() {
 		return url;
 	}
@@ -208,11 +207,11 @@ article_hash char(64)
 		this.url = url;
 	}
 
-	public List<StatusViewEntity> getStatuses() {
+	public List<ArticleStatusViewEntity> getStatuses() {
 		return statuses;
 	}
 
-	public void setStatuses(List<StatusViewEntity> statuses) {
+	public void setStatuses(List<ArticleStatusViewEntity> statuses) {
 		this.statuses = statuses;
 	}
 
@@ -422,6 +421,14 @@ article_hash char(64)
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+
+	public List<ArticleTagViewEntity> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<ArticleTagViewEntity> tags) {
+		this.tags = tags;
 	}
 	
 	

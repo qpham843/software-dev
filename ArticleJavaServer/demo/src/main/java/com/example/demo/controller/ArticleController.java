@@ -95,7 +95,7 @@ public class ArticleController {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity (articleService.findArticleById(id), HttpStatus.OK);
+		return new ResponseEntity<>(articleService.findArticleById(id), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
@@ -107,24 +107,30 @@ public class ArticleController {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
 		logger.info("updating article" + ">>>" + article.getTitle() + "<<< >>>" + article.getAuthor() + "<<<<");
-		return new ResponseEntity(articleService.updateArticle(id, article, "article controller - POST update article object"), HttpStatus.OK);
+		return new ResponseEntity<>(articleService.updateArticle(id, article, "article controller - POST update article object"), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}/status/{status}", method = RequestMethod.POST)
-	public ResponseEntity getArticleById(
+	public ResponseEntity setArticleStatus(
 			HttpServletRequest request,
 			@PathVariable("id") Integer id,
 			@PathVariable("status") String status) {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity(articleService.updateStatus(id, status, "Comment Placeholder - article controller - POST /status"), HttpStatus.OK);
+		return new ResponseEntity<>(articleService.updateStatus(id, status, "Comment Placeholder - article controller - POST /status"), HttpStatus.OK);
 	}
 
-//	@RequestMapping(value = "/scrape", method = RequestMethod.GET)
-//	public String scrape(@RequestParam(required = true, name="url") String url) {
-//		return scrapeService.scrapeArticle(url);
-//	}
+	@RequestMapping(value = "/{id}/tag/{tag}", method = RequestMethod.POST)
+	public ResponseEntity setArticleTag(
+			HttpServletRequest request,
+			@PathVariable("id") Integer id,
+			@PathVariable("tag") String tag) {
+		if (authService.auth(request) == false) {
+			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<>(articleService.updateTag(id, tag), HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/{sha}/tagworksId", method = RequestMethod.POST)
 	public ResponseEntity storeVizData(
@@ -134,7 +140,7 @@ public class ArticleController {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity(articleService.updateVizData(sha, visData, "article controller - POST update vizdata vy sha"), HttpStatus.OK);
+		return new ResponseEntity<>(articleService.updateVizData(sha, visData, "article controller - POST update vizdata vy sha"), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/buzz2", method = RequestMethod.GET)
@@ -146,7 +152,7 @@ public class ArticleController {
 		
 		logger.info("in buzz2 controller");
 		JSONObject r = articleService.processBatchArticle();
-		return new ResponseEntity(r.toString(2), HttpStatus.OK);
+		return new ResponseEntity<>(r.toString(2), HttpStatus.OK);
 		
 	}
 	

@@ -17,13 +17,13 @@ import org.hibernate.annotations.Immutable;
 @Entity
 @Table (name="article_status_view")
 @Immutable
-public class StatusViewEntity {
+public class ArticleStatusViewEntity {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public StatusViewEntity() {}
+	public ArticleStatusViewEntity() {}
 	
 	@Id
 	@Column(name="id")

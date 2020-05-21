@@ -15,23 +15,11 @@ export class DashboardService {
   	private http: HttpClient
   ) { 
     
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    console.log(process.env);
-    console.log(process.env.ENVIRONMENT_FLAG);
-
-    var eee = process.env.ENVIRONMENT_FLAG || 'development';
-    console.log('eeeeeeeeeeeee', eee);
-
     if (environment.production) {
       this.apiDest = '/api';
-      console.log("PRODPRODPROD");
     } else {
       this.apiDest = '/dev';
-      console.log("DEVDEVDEVDEV")
     }
-
-
-
   }
 
   
