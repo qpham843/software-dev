@@ -64,11 +64,17 @@ CREATE TABLE `article` (
   `vis_data` mediumtext,
   `tagworks_id` int(11) DEFAULT NULL,
   `article_hash` char(64) DEFAULT NULL,
+<<<<<<< HEAD
   `filename` text NULL DEFAULT NULL,
+=======
+  `submit_count` int(11) DEFAULT NULL,
+>>>>>>> funnel2.0
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+-- TODO ADD COUNTER FIELD NUMERIC
 
 --
 -- Dumping data for table `article`
