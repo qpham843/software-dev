@@ -332,11 +332,9 @@ public class ArticleService {
 		article.setHahaCount(jArticle.optInt("haha_count", 0));
 		article.setLoveCount(jArticle.optInt("love_count", 0));
 		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains", 0));
-		// article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000))); // date record created - from mysql
-//		logger.info("frombuzz - published_date is " + jArticle.optLong("published_date") );  // from buzzsumo
-//		logger.info("frombuzz - published_date with default is " + jArticle.optLong("published_date", new Date().getTime() / 1000));  // from buzzsumo
-		
-		article.setPublishedDate(new Date(jArticle.optLong("published_date", new Date().getTime() / 1000) * 1000));  // from buzzsumo
+		Long sysEpochLong = System.currentTimeMillis() / 1000;
+		article.setPublishDate(new Date((jArticle.optLong("published_date",  sysEpochLong) * 1000)));
+		article.setPublishedDate(new Date((jArticle.optLong("published_date",  sysEpochLong) * 1000)));
 		article.setSadCount(jArticle.optInt("sad_count", 0));
 		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements", 0));
 		article.setTotalShares(jArticle.optInt("total_shares", 0));

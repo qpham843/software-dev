@@ -64,7 +64,7 @@ public class ArticleEntity implements Serializable {
 
 	@Column(name="published_date")
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date publishedDate = null;
+	protected Date publishedDate = new Date();
 
 	@Column(name="total_shares")
 	protected Integer totalShares = 0;
