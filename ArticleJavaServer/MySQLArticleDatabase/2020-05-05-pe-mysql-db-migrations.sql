@@ -58,5 +58,5 @@ where
 order by 
 	`t`.`tag` desc ;
 
-drop view if exists `article_current_status`;
-drop view if exists `article_sub_status_view`;
+-- drop view if exists `article_current_status`;
+-- drop view if exists `article_sub_status_view`;
