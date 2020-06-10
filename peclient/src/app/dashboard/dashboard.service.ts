@@ -31,10 +31,12 @@ export class DashboardService {
   getStatuses() {
   	return this.http.get<Status>(this.apiDest + '/status/');
   }
-
-
   searchByStatus(statusCode: string) {
-  	return this.http.get<Article>(this.apiDest + '/article?status=' + statusCode);
+    if(!statusCode || statusCode == "popular")
+    {
+      return this.http.get<Article>('/api/article/');
+    }
+  	return this.http.get<Article>('/api/article?status=' + statusCode);
   }
 
   searchByTitle(title: string) {

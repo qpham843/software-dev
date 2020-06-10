@@ -30,29 +30,42 @@
 		<input type="text" class="" formControlName="searchTitle" (keyup.enter)="searchTitle()" />
 		<button type="button" (click)="searchTitle();">Search</button>
 	</div>
+		<select formControlName="bulkStatus">
+		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
+	</select>
+		<button class="button bulksubmit" (click)="submitBulk()">Submit Bulk</button>
 	</div>
 
 	<div class="section" style="display:inline; max-width: 80%">
 	 <table class="table3" border="1px solid">
 		<thead>
 			<tr>
+				<th>Select
+					<label class="container">
+  					<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
+  					<span class="checkmark"></span>
+					</label>
+
+					<button aria-label="Sort Object Select column descending" class="sorting" (click) = "onClick('sortChecks')"></button>
+				</th>
 				<th>Date Added
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('dateAdded')"></button>
+					<button aria-label="Sort Object Date Added column descending" class="sorting" (click) = "onClick('dateAdded')"></button>
 				</th>
 				<th>Title
-					<button aria-label="Sort Object Title column descending" class="sort__desc" (click) = "onClick('title')"></button>
+					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('title')"></button>
 				</th>
 				<th>URL
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('URL')"></button>
+					<button aria-label="Sort Object URL column descending" class="sorting" (click) = "onClick('URL')"></button>
 				</th>
 				<th>Status
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"> </button>
+					<button aria-label="Sort Object Status column descending" class="sorting" (click) = "onClick('status')"> </button>
 				</th>
 				<th>Action
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
+					<button aria-label="Sort Object Action column descending" class="sorting" (click) = "onClick('status')"></button>
+
 				</th>
 				<th>Total Shares
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('totalShares')"></button>
+					<button aria-label="Sort Object Total Shares column descending" class="sorting" (click) = "onClick('totalShares')"></button>
 				</th>
 				<th> Text</th>
 
@@ -60,7 +73,10 @@
 		</thead>
 	    <tbody>
 	    	<ng-container *ngFor="let a of articles">
-		    	<tr style="vertical-align: top">
+		    	<tr>
+		    		<td class="five-percent">
+		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value="a.id">
+		    		</td>
 		    		<td class="five-percent">{{a.publishDate | date: 'shortDate'}}</td>
 		    		<td class="five-percent">
 		    			{{a.articleTitle}}
@@ -94,7 +110,11 @@
 	    	</ng-container>
 
 	    </tbody>
-	    </table>
+	</table>
 	</div>
 
+	<select formControlName="bulkStatus">
+		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
+	</select>
+	<button class="button bulksubmit" (click)="submitBulk()">Submit Bulk</button>
 </form>

@@ -64,7 +64,7 @@ public class ArticleEntity implements Serializable {
 
 	@Column(name="published_date")
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date publishedDate = null;
+	protected Date publishedDate = new Date();
 
 	@Column(name="total_shares")
 	protected Integer totalShares = 0;
@@ -119,7 +119,10 @@ public class ArticleEntity implements Serializable {
 
 	@Column(name="article_hash")
 	protected String articleHash = "";
-
+	
+	@Column(name="submit_count")
+	protected Integer submitCount = 0;
+	
 	@Column(name="filename")
 	protected String filename = "";
 /*
@@ -158,6 +161,7 @@ haha_count int(11)
 vis_data mediumtext
 tagworks_id int
 article_hash char(64)
+submit_count int(11)
  */
 	
 	
@@ -415,6 +419,14 @@ article_hash char(64)
 		this.articleHash = articleHash;
 	}
 
+	public Integer getSubmitCount() {
+		return submitCount;
+	}
+
+	public void setSubmitCount(Integer submitCount) {
+		this.submitCount = submitCount;
+	}
+
 	public String getFilename() {
 		return filename;
 	}
@@ -431,5 +443,5 @@ article_hash char(64)
 		this.tags = tags;
 	}
 	
-	
+
 }

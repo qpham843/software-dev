@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-
+import com.example.demo.repository.ArticleRepository;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +36,13 @@ public class ArticleController {
 	
 	@Autowired ArticleService articleService;
 	@Autowired ScrapeService scrapeService;
+	@Autowired ArticleRepository articleRepository;
 	@Autowired BuzzService buzzService;
 	@Autowired BuzzJobService buzzJobService;
 	@Autowired AuthService authService; 
 	
+	///article?status=BUZZ&url=http://washingtonpost.com/asdfasfd
+
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity getAllArticles(
 		HttpServletRequest request,
@@ -63,6 +66,8 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.findAllArticles(), HttpStatus.OK);
 	}
 
+	// /article/submit?url=https://cnn.com/asdfasdgf
+
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public ResponseEntity newArticle(
 		HttpServletRequest request,
@@ -74,16 +79,22 @@ public class ArticleController {
 
 		ArticleEntity article = articleService.findArticleByUrl(url);
 		JSONObject returnVal = new JSONObject();
+
 		
 		
 		if (article != null) {
-			returnVal.put("firstSubmit", true);			
+			returnVal.put("firstSubmit", false);		
+			if (article.getSubmitCount() == null) article.setSubmitCount(1);
+			article.setSubmitCount(article.getSubmitCount() + 1);
+			articleRepository.save(article);
 		} else {
 			article = articleService.processSubmitArticle(url);
-			returnVal.put("firstSubmit", false);
+			returnVal.put("firstSubmit", true);
+			article.setSubmitCount(1);
+			articleRepository.save(article);
 		}
 		
-		returnVal.put("count", 7777777);
+		returnVal.put("submit_count", article.getSubmitCount());
 		returnVal.put("article", new JSONObject(article));
 		return new ResponseEntity<>(returnVal.toString(3), HttpStatus.OK);
 	}
