@@ -37,5 +37,9 @@ export class UtilitiesService {
     return this.http.get(this.apiDest + '/s3Job');
   }
 
+  doMetrics() {
+    return this.http.get(this.apiDest + '/article/update')
+  }
+
 }
  

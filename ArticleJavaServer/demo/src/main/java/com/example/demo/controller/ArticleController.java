@@ -79,8 +79,6 @@ public class ArticleController {
 
 		ArticleEntity article = articleService.findArticleByUrl(url);
 		JSONObject returnVal = new JSONObject();
-
-		
 		
 		if (article != null) {
 			returnVal.put("firstSubmit", false);		
@@ -97,6 +95,12 @@ public class ArticleController {
 		returnVal.put("submit_count", article.getSubmitCount());
 		returnVal.put("article", new JSONObject(article));
 		return new ResponseEntity<>(returnVal.toString(3), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.GET)
+	public String updateArticles(
+	) {
+		return articleService.updateMetrics().toString();
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

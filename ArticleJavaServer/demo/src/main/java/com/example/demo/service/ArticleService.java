@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,6 +88,74 @@ public class ArticleService {
 		articleRepository.save(newArticle);
 		return newArticle;
 
+	}
+
+	public JSONArray updateMetrics() {
+		JSONArray list = new JSONArray();
+		List<ArticleEntity> buzzArticles = articleRepository.findByStatusCodeOrderByPublishDateDesc("BUZZ");
+		List<ArticleEntity> userArticles = articleRepository.findByStatusCodeOrderByPublishDateDesc("USER");
+		for (ArticleEntity article : buzzArticles) {
+			logger.info("ITERATING THROUGH BUZZ ARTICLES:");
+			String title = article.getArticleTitle();
+			if (title.equals("")) {
+				logger.info("TITLE = \"\"");
+				continue;
+			}
+			String url = article.getUrl();
+			JSONObject jArticle = new JSONObject();
+
+			try {
+				jArticle = buzzService.getBuzz(url);
+			} catch(Exception e) {
+				logger.info("BuzzService Error");
+				continue;
+			}
+
+			if (jArticle == null) {
+				logger.info("jArticle is NULL");
+				continue;
+			}
+
+			if (jArticle.get("author_name").toString().equals("none")) {
+				continue;
+			}
+
+			ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, article);
+			logger.info("UPDATING BUZZ ARTICLE:");
+			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));
+			updatedArticle.setUpdatedAt(updatedAt);
+			articleRepository.save(updatedArticle);
+			list.put(jArticle);
+			//Avoid too many requests error
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch(InterruptedException e) {
+				logger.info("TimeUnit Error");
+			}
+			
+		}
+
+		for (ArticleEntity article : userArticles) {
+			logger.info("ITERATING THROUGH USER ARTICLES:");
+			String url = article.getUrl();
+			JSONObject jArticle = buzzService.getBuzz(url);
+			if (jArticle.get("author_name").toString().equals("none")) {
+				continue;
+			}
+			logger.info("UPDATING USER ARTICLE:");
+			ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, article);			
+			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));
+			updatedArticle.setUpdatedAt(updatedAt);
+			articleRepository.save(updatedArticle);
+			list.put(jArticle);
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch(InterruptedException e) {
+				logger.info("TimeUnit Error");
+			}
+		}
+
+		return list;
 	}
 	
 	public JSONObject processBatchArticle() {

@@ -1,4 +1,4 @@
-update article set published_date = null where published_date < 1587340800 or published_date > 1589932800;
+-- update article set published_date = null where published_date < 1587340800 or published_date > 1589932800;
 
 ALTER TABLE article CHANGE COLUMN published_date published_date timestamp default CURRENT_TIMESTAMP;
 ALTER TABLE article CHANGE COLUMN publish_date publish_date timestamp default CURRENT_TIMESTAMP;
