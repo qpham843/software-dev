@@ -15,6 +15,7 @@
 		<label for="statusFilter">Filter</label>
 		<select id="statusFilter" name="statusFilter" formControlName="statusFilter" class="select-field w-select">
 			<option value=null>All</option>
+			<option value="popular">Popular</option>
 			<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
 		</select>
 	</div>
