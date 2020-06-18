@@ -106,9 +106,16 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   	console.log("dashboard initialized");
 	this.ds.getArticles().subscribe((data: Article) => {
+		console.log(data);
 		this.articles = data;
-		for(let x = 0; x < this.articles.size; x++) {
+		for(let x = 0; x < this.articles.length; x++) {
 			this.articleShow[x] = false;
+			console.log(this.articles.tags);
+			if(this.articles.tags != undefined)
+			{
+			console.log("hiiiii22i2")
+			console.log(this.articles.tags);
+			}
 		}
   	});
   	this.dashboardForm.get('statusFilter').setValue(null);

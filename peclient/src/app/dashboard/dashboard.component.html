@@ -69,6 +69,9 @@
 					<button aria-label="Sort Object Total Shares column descending" class="sorting" (click) = "onClick('totalShares')"></button>
 				</th>
 				<th> Text</th>
+				<th>Tags
+					<button aria-label="Sort Object Total Shares column descending" class="sorting" (click) = "onClick('totalShares')"></button>
+				</th>
 
 			</tr>
 		</thead>
@@ -102,6 +105,7 @@
 						<div [innerHTML]="a.articleText | replaceLineBreaks" style="overflow: scroll; max-height: 300px;">
 						</div>
 					</td>
+					<td class="five-percent">{{a.tags[0]}}</td>
 		    	</tr>
 		    	<tr>
 		    		<td *ngIf="articleShow[a.id]" style="overflow:hidden" colspan="5">
