@@ -29,6 +29,8 @@ import com.example.demo.repository.StatusRepository;
 import com.example.demo.repository.TagRepository;
 import com.example.demo.service.BuzzService;
 import com.example.demo.service.FileService;
+import com.example.demo.entities.UpdateJobEntity;
+
 
 @Service
 public class ArticleService {
@@ -45,6 +47,7 @@ public class ArticleService {
 	@Autowired private S3JobService s3JobService;
 	@Autowired private TagRepository tagRepository;
 	@Autowired private ArticleHasTagRepository articleHasTagRepository;
+	@Autowired private UpdateJobService updateJobService;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -94,6 +97,7 @@ public class ArticleService {
 		JSONArray list = new JSONArray();
 		List<ArticleEntity> buzzArticles = articleRepository.findByStatusCodeOrderByPublishDateDesc("BUZZ");
 		List<ArticleEntity> userArticles = articleRepository.findByStatusCodeOrderByPublishDateDesc("USER");
+		UpdateJobEntity uj = updateJobService.startNew(); 
 		for (ArticleEntity article : buzzArticles) {
 			logger.info("ITERATING THROUGH BUZZ ARTICLES:");
 			String title = article.getArticleTitle();
@@ -132,7 +136,9 @@ public class ArticleService {
 			} catch(InterruptedException e) {
 				logger.info("TimeUnit Error");
 			}
-			
+			uj.addArticlesBuzz();
+			uj.addArticlesUpdated();
+			uj = updateJobService.save(uj);
 		}
 
 		for (ArticleEntity article : userArticles) {
@@ -153,7 +159,19 @@ public class ArticleService {
 			} catch(InterruptedException e) {
 				logger.info("TimeUnit Error");
 			}
+			uj.addArticlesUser();
+			uj.addArticlesUpdated();
+			uj = updateJobService.save(uj);
 		}
+
+		Date endDate = new Date();
+	    Long jobDuration = (endDate.getTime() - uj.getStartDate().getTime()) / 1000; 
+
+	    uj.setEndDate(new Date());
+	    uj.setFinished(1);
+	    uj.setElapsedSeconds(jobDuration.intValue());
+	    
+	    uj = updateJobService.save(uj);
 
 		return list;
 	}

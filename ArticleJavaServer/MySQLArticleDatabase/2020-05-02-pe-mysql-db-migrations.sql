@@ -11,7 +11,7 @@ CREATE TABLE `buzz_job` (
   `end_date` timestamp NULL DEFAULT NULL,
   `finished` tinyint NOT NULL DEFAULT 0,
   `elapsed_seconds` int null default 0,
-  `query` mediumtext default NULL,
+  `query` mediumtext default NULL,  
   `articles_returned` integer default 0,
   `articles_youtube` integer default 0,
   `articles_700` integer default 0,

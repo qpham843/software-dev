@@ -57,27 +57,27 @@
 		</tr>
 	</table>
 	<div>
-		<button type="button" (click)="updateMetrics()">Update Articles</button>
+		<button type="button" [disabled]="disableMetrics" (click)="getUpdateMetrics()"> Update Articles</button>
 	</div>
-	<!--<table style="">
+	<table style="">
 		<tr>
 			<td>start</td>
 			<td>finished</td>
 			<td>seconds</td>
 			<td># from buzz</td>
 			<td># user</td>
-			<td># updated</td>
+			<td># total updated</td>
 		</tr>
-		<tr *ngFor="let bj of buzzJobs">
-			<td>{{ bj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
+		<tr *ngFor="let uj of metricsJobs">
+			<td>{{ uj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
 			<td>
-				<span style="background-color: green;" *ngIf="bj.finished == 1">DONE</span>
-				<span *ngIf="bj.finished == 0">Processing</span>
+				<span style="background-color: green;" *ngIf="uj.finished == 1">DONE</span>
+				<span *ngIf="uj.finished == 0">Processing</span>
 			</td>			
-			<td>{{ bj.elapsedSeconds }}</td>
-			<td>{{ bj.articlesBuzz }}</td>
-			<td>{{ bj.articlesUser }}</td>
-			<td>{{ bj.articlesUpdated }}</td>
+			<td>{{ uj.elapsedSeconds }}</td>
+			<td>{{ uj.articlesBuzz }}</td>
+			<td>{{ uj.articlesUser }}</td>
+			<td>{{ uj.articlesUpdated }}</td>
 		</tr>
-	</table>-->
+	</table>
 </form>

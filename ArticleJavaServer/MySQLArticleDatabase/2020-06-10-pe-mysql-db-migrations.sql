@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS `update_job`;
 CREATE TABLE `update_job` (
   `id` int NOT NULL AUTO_INCREMENT,
   `start_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_date` timestamp NULL DEFAULT NULL,
   `finished` tinyint NOT NULL DEFAULT 0,
   `elapsed_seconds` int null default 0,
   `articles_buzz` integer default 0,

@@ -29,6 +29,10 @@ export class UtilitiesService {
   	return this.http.get(this.apiDest + '/article/buzz2');
   }
 
+  doMetrics() {
+    return this.http.get(this.apiDest + '/article/update')
+  }
+
   getBuzzJobs() {
     return this.http.get(this.apiDest + '/buzzJob');
   }
@@ -37,8 +41,8 @@ export class UtilitiesService {
     return this.http.get(this.apiDest + '/s3Job');
   }
 
-  doMetrics() {
-    return this.http.get(this.apiDest + '/article/update')
+  getMetricsJobs() {
+    return this.http.get(this.apiDest + '/updateJob')
   }
 
 }

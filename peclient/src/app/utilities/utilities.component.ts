@@ -14,8 +14,10 @@ export class UtilitiesComponent implements OnInit {
   utilitiesForm: FormGroup;
   buzzJobs: any = [];
   s3Jobs: any = [];
+  metricsJobs: any = [];
   disableBuzz: boolean = false;
   disableS3: boolean = false;
+  disableMetrics: boolean = false;
 
 
   constructor(
@@ -30,6 +32,7 @@ export class UtilitiesComponent implements OnInit {
   ngOnInit() {
     this.getBuzz();
     this.getS3();
+    this.getMetrics();
   }
 
   getBuzz() {
@@ -57,6 +60,36 @@ export class UtilitiesComponent implements OnInit {
       clearInterval(intervalId);
       this.disableBuzz = false;
       this.getBuzz();
+    },
+    () => {}
+    );
+  }
+
+  getMetrics() {
+    this.us.getMetricsJobs().subscribe(d => {
+      this.metricsJobs = d;
+    })
+  }
+
+  getUpdateMetrics() {
+    this.disableMetrics = true;
+    var intervalId: any = 0;
+    intervalId = setInterval(
+      () => this.getMetrics(),
+      1000
+    );  
+    this.us.doMetrics().subscribe(d => {
+      console.log("Update Metrics");
+      console.log(d);
+      clearInterval(intervalId);
+      this.disableMetrics = false;
+      this.getMetrics();
+    },
+    err => {
+      console.log("There was an error updating metrics", err);
+      clearInterval(intervalId);
+      this.disableMetrics = false;
+      this.getMetrics();
     },
     () => {}
     );
@@ -91,22 +124,4 @@ export class UtilitiesComponent implements OnInit {
     () => {}
     );
   }
-
-  updateMetrics() {
-    this.us.doMetrics().subscribe(res => {
-      console.log(res);
-      let r: string = "";
-      for (let [key, value] of Object.entries(res)) {
-        r = r + `${key}: ${value}` + "\n";
-      }
-      console.log("UPDATING METRICS BUTTON PRESSED")
-      console.log(r)
-
-      this.utilitiesForm.get('updateResults').setValue(r);
-
-    })
-
-  }
-
-
 }
