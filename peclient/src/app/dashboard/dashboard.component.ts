@@ -59,12 +59,22 @@ export class DashboardComponent implements OnInit {
 						}
 					return 0;
 			});
+			}
+			if(!val || val == "null")
+			{
+				console.log("hiii");
+				this.ds.getArticles().subscribe((data: Article) => {
+				this.articles = data;
+					for(let x = 0; x < this.articles.size; x++) {
+						this.articleShow[x] = true;
+					}
+  				});
+			}
 			//showing articles 0-49
 			for(let i = this.articles.length - 1; i >= 50;i--) 
 			{
 			this.articles.splice(i, 1);
 			}
-		}
 		});
 	});
 
@@ -101,7 +111,7 @@ export class DashboardComponent implements OnInit {
 			this.articleShow[x] = false;
 		}
   	});
-  	this.dashboardForm.get('statusFilter').setValue("all");
+  	this.dashboardForm.get('statusFilter').setValue(null);
   }
 
   loadArticleText(id: number) {
