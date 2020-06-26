@@ -105,7 +105,8 @@
 						<div [innerHTML]="a.articleText | replaceLineBreaks" style="overflow: scroll; max-height: 300px;">
 						</div>
 					</td>
-					<td class="five-percent">{{a.tags[0]}}</td>
+
+					<td class="five-percent"><ng-container *ngFor="let t of a.tags"> {{t.tag}}</ng-container></td>
 		    	</tr>
 		    	<tr>
 		    		<td *ngIf="articleShow[a.id]" style="overflow:hidden" colspan="5">
