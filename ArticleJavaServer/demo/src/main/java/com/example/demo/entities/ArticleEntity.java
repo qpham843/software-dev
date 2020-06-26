@@ -125,6 +125,9 @@ public class ArticleEntity implements Serializable {
 	
 	@Column(name="filename")
 	protected String filename = "";
+	
+	@Column(name="filename_tag")
+	protected String filenameTag = "";
 /*
 Table: article
 Columns:
@@ -441,6 +444,14 @@ submit_count int(11)
 
 	public void setTags(List<ArticleTagViewEntity> tags) {
 		this.tags = tags;
+	}
+
+	public String getFilenameTag() {
+		return filenameTag;
+	}
+
+	public void setFilenameTag(String filenameTag) {
+		this.filenameTag = filenameTag;
 	}
 	
 

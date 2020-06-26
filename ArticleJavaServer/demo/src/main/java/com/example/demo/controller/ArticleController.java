@@ -158,15 +158,16 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.updateVizData(sha, visData, "article controller - POST update vizdata vy sha"), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/buzz2", method = RequestMethod.GET)
+	@RequestMapping(value = "/buzz2/{id}", method = RequestMethod.GET)
 	public ResponseEntity buzz2(
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			@PathVariable Integer id) {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
 		
-		logger.info("in buzz2 controller");
-		JSONObject r = articleService.processBatchArticle();
+		logger.info("in buzz2 controller for query ".concat(id.toString()));
+		JSONObject r = articleService.processBatchArticle(id);
 		return new ResponseEntity<>(r.toString(2), HttpStatus.OK);
 		
 	}

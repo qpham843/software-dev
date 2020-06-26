@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.entities.BuzzJobEntity;
+import com.example.demo.entities.BuzzQueryEntity;
 import com.example.demo.repository.BuzzJobRepository;
 import com.example.demo.service.ArticleService;
 
@@ -42,11 +43,11 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
         return buzzEntry;
 	}
 	
-	public JSONArray getTodaysTop(BuzzJobEntity bj, String query) {
+	public JSONArray getTodaysTop(BuzzJobEntity bj, BuzzQueryEntity query) {
 		RestTemplate restTemplate = new RestTemplate();
 		String url = 
 				"https://api.buzzsumo.com/search/trends.json?"
-				.concat(query)
+				.concat(query.getQuery())
 				.concat("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
         logger.info(url);
 

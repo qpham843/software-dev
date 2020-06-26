@@ -21,6 +21,7 @@ import com.example.demo.entities.TagEntity;
 import com.example.demo.entities.ArticleHasStatusEntity;
 import com.example.demo.entities.ArticleHasTagEntity;
 import com.example.demo.entities.BuzzJobEntity;
+import com.example.demo.entities.BuzzQueryEntity;
 import com.example.demo.entities.S3JobEntity;
 import com.example.demo.repository.ArticleHasStatusRepository;
 import com.example.demo.repository.ArticleHasTagRepository;
@@ -48,6 +49,7 @@ public class ArticleService {
 	@Autowired private TagRepository tagRepository;
 	@Autowired private ArticleHasTagRepository articleHasTagRepository;
 	@Autowired private UpdateJobService updateJobService;
+	@Autowired private BuzzQueryService buzzQueryService;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -125,6 +127,7 @@ public class ArticleService {
 			}
 
 			ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, article);
+
 			logger.info("UPDATING BUZZ ARTICLE:");
 			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));
 			updatedArticle.setUpdatedAt(updatedAt);
@@ -176,15 +179,19 @@ public class ArticleService {
 		return list;
 	}
 	
-	public JSONObject processBatchArticle() {
+	public JSONObject processBatchArticle(Integer id) {
 		logger.info("in articleService - processBatchArticle");
 		
-		String query = "topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&countries=United States";
-		BuzzJobEntity bj = buzzJobService.startNew(query); 
+		BuzzQueryEntity buzzQuery = buzzQueryService.getQueryById(id);
+		if (buzzQuery == null) {
+			return new JSONObject();
+		}
+		
+		BuzzJobEntity bj = buzzJobService.startNew(buzzQuery.getQuery()); 
 		
 		logger.info("new buzzJob record created: " + bj.toString());
 		
-		JSONArray articles = buzzService.getTodaysTop(bj, query);
+		JSONArray articles = buzzService.getTodaysTop(bj, buzzQuery);
 		
 		logger.info("back in articleService processBatchArticle - got todaysTop - buzzJob record updated: " + bj.toString());
 		
@@ -214,6 +221,7 @@ public class ArticleService {
 
 				// create new record
 				updatedArticle = createNewArticle(url, "BUZZ");
+				updatedArticle.setFilenameTag(buzzQuery.getFilenameTag());
 		
 				//update with buzz fields
 				updatedArticle = updateArticleWithBuzz(ar, updatedArticle);

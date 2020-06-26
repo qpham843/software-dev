@@ -12,4 +12,5 @@ import com.example.demo.entities.TagEntity;
 public interface BuzzQueryRepository extends CrudRepository<BuzzQueryEntity, Integer>{
 	public Optional<BuzzQueryEntity> findById(Integer id);
 	public List<BuzzQueryEntity> findAll();
+	public List<BuzzQueryEntity> findByActiveFlag(Integer active);
 }

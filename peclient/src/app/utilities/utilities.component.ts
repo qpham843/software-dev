@@ -13,6 +13,7 @@ export class UtilitiesComponent implements OnInit {
 
   utilitiesForm: FormGroup;
   buzzJobs: any = [];
+  buzzQueries: any = [];
   s3Jobs: any = [];
   metricsJobs: any = [];
   disableBuzz: boolean = false;
@@ -33,6 +34,7 @@ export class UtilitiesComponent implements OnInit {
     this.getBuzz();
     this.getS3();
     this.getMetrics();
+    this.getQueries();
   }
 
   getBuzz() {
@@ -41,14 +43,14 @@ export class UtilitiesComponent implements OnInit {
     })
   }
 
-  getBuzzSumo() {
+  getBuzzSumo(id: number) {
     this.disableBuzz = true;
     var intervalId: any = 0;
     intervalId = setInterval(
       () => this.getBuzz(),
       1000
     );
-    this.us.doBuzz().subscribe(d => {
+    this.us.doBuzz(id).subscribe(d => {
       console.log("back from doBuzz");
       console.log(d);
       clearInterval(intervalId);
@@ -71,6 +73,11 @@ export class UtilitiesComponent implements OnInit {
     })
   }
 
+  getQueries() {
+    this.us.getBuzzQueries().subscribe(d => {
+      this.buzzQueries = d;
+    })
+  }
   getUpdateMetrics() {
     this.disableMetrics = true;
     var intervalId: any = 0;

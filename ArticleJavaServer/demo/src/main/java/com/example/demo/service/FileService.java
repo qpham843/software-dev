@@ -84,7 +84,9 @@ public class FileService {
 		String URLNoProtocol = tempURL2.replace("http://","");
 		
 
-		String filenameTag = "CovidArticles/";
+		//String filenameTag = "CovidArticles/";
+		String filenameTag = article.getFilenameTag();
+		if (filenameTag == null) filenameTag = "UnknownArticles/";
 		String articleDir = "/var/article/temp/";
 		//delete temp dir
 		FileUtils.deleteQuietly(new File(articleDir));

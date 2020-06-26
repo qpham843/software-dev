@@ -26,9 +26,25 @@
 		</tr>
 	</table>
 
-	<div>
-		<button type="button" [disabled]="disableBuzz" (click)="getBuzzSumo()">Get BuzzSumo</button>
-	</div>
+	<br><br><br>
+
+	<table>
+		<tr>
+			<td>Run Query</td>
+			<td>ID</td>
+			<td>Query</td>
+		</tr>
+		<tr *ngFor="let q of buzzQueries">
+			<td>
+				<button type="button" [disabled]="disableBuzz" (click)="getBuzzSumo(q.id)">Run {{q.filenameTag}}</button>
+			</td>
+			<td>{{q.id}}</td>
+			<td>{{q.query}}</td>
+		</tr>
+	</table>
+	
+	<br><br><br>
+
 	<table style="">
 		<tr>
 			<td>start</td>
@@ -56,9 +72,13 @@
 			<td>{{ bj.articlesUpdated }}</td>
 		</tr>
 	</table>
+
+	<br><br><br>
+
 	<div>
 		<button type="button" [disabled]="disableMetrics" (click)="getUpdateMetrics()"> Update Articles</button>
 	</div>
+
 	<table style="">
 		<tr>
 			<td>start</td>

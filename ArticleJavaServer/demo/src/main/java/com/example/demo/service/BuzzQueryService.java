@@ -25,7 +25,8 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzQueryServic
 	@Autowired BuzzQueryHasTagRepository buzzQueryHasTagRepository;	
 	
 	public List<BuzzQueryEntity> getQueries() {
-		return buzzQueryRepository.findAll(); 
+		//return buzzQueryRepository.findAll(); 
+		return buzzQueryRepository.findByActiveFlag(1);
 	}
 	
 	public BuzzQueryEntity getQueryById(Integer id) {

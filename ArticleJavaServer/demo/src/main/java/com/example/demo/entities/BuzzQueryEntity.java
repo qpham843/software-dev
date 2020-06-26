@@ -31,6 +31,12 @@ public class BuzzQueryEntity {
 	
 	@Column(name="query")
 	protected String query = "";
+	
+	@Column(name="active_flag")
+	protected Integer activeFlag = 1;
+	
+	@Column(name="filename_tag")
+	protected String filenameTag = "";
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "queryId")
 	private List<BuzzQueryTagViewEntity> tags; 
@@ -57,6 +63,22 @@ public class BuzzQueryEntity {
 
 	public void setTags(List<BuzzQueryTagViewEntity> tags) {
 		this.tags = tags;
+	}
+
+	public Integer getActiveFlag() {
+		return activeFlag;
+	}
+
+	public void setActiveFlag(Integer activeFlag) {
+		this.activeFlag = activeFlag;
+	}
+
+	public String getFilenameTag() {
+		return filenameTag;
+	}
+
+	public void setFilenameTag(String filenameTag) {
+		this.filenameTag = filenameTag;
 	}
 
 }
