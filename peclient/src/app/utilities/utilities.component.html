@@ -56,6 +56,7 @@
 			<td># dropped</td>
 			<td># created</td>
 			<td># updated</td>
+			<td>Query</td>
 		</tr>
 		<tr *ngFor="let bj of buzzJobs">
 			<td>{{ bj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
@@ -70,6 +71,7 @@
 			<td>{{ bj.articlesDropped }}</td>
 			<td>{{ bj.articlesCreated }}</td>
 			<td>{{ bj.articlesUpdated }}</td>
+			<td>{{ bj.query }}</td>
 		</tr>
 	</table>
 
