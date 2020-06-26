@@ -11,12 +11,13 @@ import { MenuComponent } from './menu/menu.component';
 import { UtilitiesComponent } from './utilities/utilities.component';
 import { ReplaceLineBreaksPipe } from './replace-line-breaks.pipe';
 import { BuzzQueriesComponent } from './buzz-queries/buzz-queries.component';
+import { ManageTagsComponent } from './manage-tags/manage-tags.component';
 
 
 const appRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'utilities', component: UtilitiesComponent },
-  { path: 'queries', component: BuzzQueriesComponent },
+  { path: 'manage-tags', component: ManageTagsComponent },
   { path: '', redirectTo: '/logout', pathMatch: 'full' },  
   { path: '**', redirectTo: '/logout'},
 
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
     MenuComponent,
     UtilitiesComponent,
     ReplaceLineBreaksPipe,
-    BuzzQueriesComponent
+    BuzzQueriesComponent,
+    ManageTagsComponent
   ],
   imports: [
     BrowserModule,

@@ -89,7 +89,8 @@
 	    				Title: {{a.articleTitle}}<br>
 	    				url: {{a.url}}<br>
 	    				Total Shares: {{a.totalShares}}<br>
-						Tags: {{a.tags[0]}}<br>
+						Tags: <ng-container *ngFor="let t of a.tags">({{t.tag}})</ng-container><br>
+						Filename Tag: {{a.filenameTag}}<br>
 	    				Status Code: {{a.statuses[0].statusCode}}<br>
 
 		    			<select (change)="changeStatus(a.id, $event)">
