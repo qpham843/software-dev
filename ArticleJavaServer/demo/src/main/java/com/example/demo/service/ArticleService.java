@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,15 +17,21 @@ import org.springframework.stereotype.Service;
 import com.example.demo.controller.ArticleController;
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.entities.StatusEntity;
+import com.example.demo.entities.TagEntity;
 import com.example.demo.entities.ArticleHasStatusEntity;
+import com.example.demo.entities.ArticleHasTagEntity;
 import com.example.demo.entities.BuzzJobEntity;
+import com.example.demo.entities.BuzzQueryEntity;
 import com.example.demo.entities.S3JobEntity;
 import com.example.demo.repository.ArticleHasStatusRepository;
+import com.example.demo.repository.ArticleHasTagRepository;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.StatusRepository;
-
+import com.example.demo.repository.TagRepository;
 import com.example.demo.service.BuzzService;
 import com.example.demo.service.FileService;
+import com.example.demo.entities.UpdateJobEntity;
+
 
 @Service
 public class ArticleService {
@@ -39,6 +46,10 @@ public class ArticleService {
 	@Autowired private ScrapeService scrapeService;
 	@Autowired private AWSService awsService;
 	@Autowired private S3JobService s3JobService;
+	@Autowired private TagRepository tagRepository;
+	@Autowired private ArticleHasTagRepository articleHasTagRepository;
+	@Autowired private UpdateJobService updateJobService;
+	@Autowired private BuzzQueryService buzzQueryService;
 
 	
 	public ArticleEntity findArticleById(Integer id) {
@@ -83,16 +94,104 @@ public class ArticleService {
 		return newArticle;
 
 	}
+
+	public JSONArray updateMetrics() {
+		JSONArray list = new JSONArray();
+		List<ArticleEntity> buzzArticles = articleRepository.findByStatusCodeOrderByPublishDateDesc("BUZZ");
+		List<ArticleEntity> userArticles = articleRepository.findByStatusCodeOrderByPublishDateDesc("USER");
+		UpdateJobEntity uj = updateJobService.startNew(); 
+		for (ArticleEntity article : buzzArticles) {
+			logger.info("ITERATING THROUGH BUZZ ARTICLES:");
+			String title = article.getArticleTitle();
+			if (title.equals("")) {
+				logger.info("TITLE = \"\"");
+				continue;
+			}
+			String url = article.getUrl();
+			JSONObject jArticle = new JSONObject();
+
+			try {
+				jArticle = buzzService.getBuzz(url);
+			} catch(Exception e) {
+				logger.info("BuzzService Error");
+				continue;
+			}
+
+			if (jArticle == null) {
+				logger.info("jArticle is NULL");
+				continue;
+			}
+
+			if (jArticle.get("author_name").toString().equals("none")) {
+				continue;
+			}
+
+			ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, article);
+
+			logger.info("UPDATING BUZZ ARTICLE:");
+			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));
+			updatedArticle.setUpdatedAt(updatedAt);
+			articleRepository.save(updatedArticle);
+			list.put(jArticle);
+			//Avoid too many requests error
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch(InterruptedException e) {
+				logger.info("TimeUnit Error");
+			}
+			uj.addArticlesBuzz();
+			uj.addArticlesUpdated();
+			uj = updateJobService.save(uj);
+		}
+
+		for (ArticleEntity article : userArticles) {
+			logger.info("ITERATING THROUGH USER ARTICLES:");
+			String url = article.getUrl();
+			JSONObject jArticle = buzzService.getBuzz(url);
+			if (jArticle.get("author_name").toString().equals("none")) {
+				continue;
+			}
+			logger.info("UPDATING USER ARTICLE:");
+			ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, article);			
+			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));
+			updatedArticle.setUpdatedAt(updatedAt);
+			articleRepository.save(updatedArticle);
+			list.put(jArticle);
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch(InterruptedException e) {
+				logger.info("TimeUnit Error");
+			}
+			uj.addArticlesUser();
+			uj.addArticlesUpdated();
+			uj = updateJobService.save(uj);
+		}
+
+		Date endDate = new Date();
+	    Long jobDuration = (endDate.getTime() - uj.getStartDate().getTime()) / 1000; 
+
+	    uj.setEndDate(new Date());
+	    uj.setFinished(1);
+	    uj.setElapsedSeconds(jobDuration.intValue());
+	    
+	    uj = updateJobService.save(uj);
+
+		return list;
+	}
 	
-	public JSONObject processBatchArticle() {
+	public JSONObject processBatchArticle(Integer id) {
 		logger.info("in articleService - processBatchArticle");
 		
-		String query = "topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&countries=United States";
-		BuzzJobEntity bj = buzzJobService.startNew(query); 
+		BuzzQueryEntity buzzQuery = buzzQueryService.getQueryById(id);
+		if (buzzQuery == null) {
+			return new JSONObject();
+		}
+		
+		BuzzJobEntity bj = buzzJobService.startNew(buzzQuery.getQuery()); 
 		
 		logger.info("new buzzJob record created: " + bj.toString());
 		
-		JSONArray articles = buzzService.getTodaysTop(bj, query);
+		JSONArray articles = buzzService.getTodaysTop(bj, buzzQuery);
 		
 		logger.info("back in articleService processBatchArticle - got todaysTop - buzzJob record updated: " + bj.toString());
 		
@@ -122,6 +221,7 @@ public class ArticleService {
 
 				// create new record
 				updatedArticle = createNewArticle(url, "BUZZ");
+				updatedArticle.setFilenameTag(buzzQuery.getFilenameTag());
 		
 				//update with buzz fields
 				updatedArticle = updateArticleWithBuzz(ar, updatedArticle);
@@ -222,6 +322,48 @@ public class ArticleService {
 		
 	}
 	
+	public ArticleEntity updateTag(Integer id, String tag) {
+		Optional<ArticleEntity> articleToFind = articleRepository.findById(id);
+		Optional<TagEntity> dbTagToFind = tagRepository.findByTag(tag);
+		
+		ArticleEntity foundArticle = null;
+		TagEntity tagEntity = null;
+		ArticleHasTagEntity aht = null;
+		
+		if (articleToFind.isPresent()) 
+			foundArticle = articleToFind.get();
+		else
+			return null;
+		
+		if (dbTagToFind.isPresent()) 
+			tagEntity = dbTagToFind.get(); 
+		else 
+			return null;
+		
+		Optional<ArticleHasTagEntity> ahtToFind = articleHasTagRepository.findByArticleIdAndTagId(foundArticle.getId(), tagEntity.getId()); 
+		
+		if (ahtToFind.isPresent()) {
+			aht = ahtToFind.get();
+		}
+		
+		if (aht != null) {
+			//if tag is present AND aht is present, remove aht entry
+			articleHasTagRepository.delete(aht);
+		} else {
+			//if tag is present and ahd is not present, add aht entry
+			aht = new ArticleHasTagEntity();
+			aht.setArticleId(foundArticle.getId());
+			aht.setTagId(tagEntity.getId());
+			articleHasTagRepository.save(aht);		
+		}
+		
+		articleToFind = articleRepository.findById(foundArticle.getId());
+		if (articleToFind.isPresent())
+			return articleToFind.get();
+		else
+			return null;
+	}
+	
 	public ArticleEntity updateStatus(Integer id, String status, String comment) {
 		Optional<ArticleEntity> articleToFind = articleRepository.findById(id);
 		
@@ -285,16 +427,15 @@ public class ArticleService {
 		article.setHahaCount(jArticle.optInt("haha_count", 0));
 		article.setLoveCount(jArticle.optInt("love_count", 0));
 		article.setNumLinkingDomains(jArticle.optInt("num_linking_domains", 0));
-		// article.setPublishDate(new Date((jArticle.optInt("published_date") * 1000))); // date record created - from mysql
-//		logger.info("frombuzz - published_date is " + jArticle.optLong("published_date") );  // from buzzsumo
-//		logger.info("frombuzz - published_date with default is " + jArticle.optLong("published_date", new Date().getTime() / 1000));  // from buzzsumo
-		
-		article.setPublishedDate(new Date(jArticle.optLong("published_date", new Date().getTime() / 1000) * 1000));  // from buzzsumo
+		Long sysEpochLong = System.currentTimeMillis() / 1000;
+		article.setPublishDate(new Date((jArticle.optLong("published_date",  sysEpochLong) * 1000)));
+		article.setPublishedDate(new Date((jArticle.optLong("published_date",  sysEpochLong) * 1000)));
 		article.setSadCount(jArticle.optInt("sad_count", 0));
 		article.setTotalRedditEngagements(jArticle.optInt("total_reddit_engagements", 0));
 		article.setTotalShares(jArticle.optInt("total_shares", 0));
 		article.setTwitterShares(jArticle.optInt("twitter_shares", 0));
 //		article.setUpdatedAt(updatedAt);
+		//article.setSubmitCount(jArticle.optInt("submit_count"));
 		article.setWowCount(jArticle.optInt("wow_count", 0));
 		
 		articleRepository.save(article);

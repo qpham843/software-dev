@@ -25,8 +25,12 @@ export class UtilitiesService {
   	return this.http.get(this.apiDest + '/article/s3')
   }
 
-  doBuzz() {
-  	return this.http.get(this.apiDest + '/article/buzz2');
+  doBuzz(id: number) {
+  	return this.http.get(this.apiDest + '/article/buzz2/' + id);
+  }
+
+  doMetrics() {
+    return this.http.get(this.apiDest + '/article/update')
   }
 
   getBuzzJobs() {
@@ -35,6 +39,14 @@ export class UtilitiesService {
   
   getS3Jobs() {
     return this.http.get(this.apiDest + '/s3Job');
+  }
+
+  getMetricsJobs() {
+    return this.http.get(this.apiDest + '/updateJob')
+  }
+
+  getBuzzQueries() {
+    return this.http.get(this.apiDest + '/query')
   }
 
 }

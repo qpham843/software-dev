@@ -1,0 +1,15 @@
+<form [formGroup]="queriesForm">
+	<table>
+		<tr>
+			<td>query</td>
+		</tr>
+		<tr *ngFor="let q of queries">
+			<td>{{q.query}}</td>
+		</tr>
+	</table>
+	<br/><hr><br/>
+	<input type="text" formControlName="newQuery">
+	<br/>
+	<button type="button" (click)="submitQuery()">Submit Query</button>
+
+</form>

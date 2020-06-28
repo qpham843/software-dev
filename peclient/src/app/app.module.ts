@@ -6,38 +6,33 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
-import { ForgotComponent } from './forgot/forgot.component';
-import { SignupComponent } from './signup/signup.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MenuComponent } from './menu/menu.component';
 import { UtilitiesComponent } from './utilities/utilities.component';
 import { ReplaceLineBreaksPipe } from './replace-line-breaks.pipe';
+import { BuzzQueriesComponent } from './buzz-queries/buzz-queries.component';
+import { ManageTagsComponent } from './manage-tags/manage-tags.component';
 
 
 const appRoutes: Routes = [
-  { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'utilities', component: UtilitiesComponent },
-//  { path: 'logout', redirectTo: '/logout', pathMatch: 'full'},
+  { path: 'manage-tags', component: ManageTagsComponent },
   { path: '', redirectTo: '/logout', pathMatch: 'full' },  
   { path: '**', redirectTo: '/logout'},
-  // { path: 'forgot', component: ForgotComponent },
-  // { path: 'signup', component: SignupComponent },
-  // { path: '**', component: PageNotFoundComponent}
+
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    LoginComponent,
-    ForgotComponent,
-    SignupComponent,
     PageNotFoundComponent,
     MenuComponent,
     UtilitiesComponent,
-    ReplaceLineBreaksPipe
+    ReplaceLineBreaksPipe,
+    BuzzQueriesComponent,
+    ManageTagsComponent
   ],
   imports: [
     BrowserModule,

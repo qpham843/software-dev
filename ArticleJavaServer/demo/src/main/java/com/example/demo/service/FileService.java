@@ -66,6 +66,11 @@ public class FileService {
 		String[] parts = firstPart.split("/");
 		String filename = parts[parts.length - 1];
 		if (filename.length() == 0) filename = "noname";
+
+		if (Character.isDigit(filename.charAt(0))) {
+			filename = "a-".concat(filename);
+		}
+		
 		int endChar = filename.length();
 		if (endChar > 60) 
 			endChar = 59;
@@ -79,7 +84,9 @@ public class FileService {
 		String URLNoProtocol = tempURL2.replace("http://","");
 		
 
-		String filenameTag = "CovidArticles/";
+		//String filenameTag = "CovidArticles/";
+		String filenameTag = article.getFilenameTag();
+		if (filenameTag == null) filenameTag = "UnknownArticles/";
 		String articleDir = "/var/article/temp/";
 		//delete temp dir
 		FileUtils.deleteQuietly(new File(articleDir));

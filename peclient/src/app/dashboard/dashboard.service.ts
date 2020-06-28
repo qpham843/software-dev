@@ -15,23 +15,11 @@ export class DashboardService {
   	private http: HttpClient
   ) { 
     
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    console.log(process.env);
-    console.log(process.env.ENVIRONMENT_FLAG);
-
-    var eee = process.env.ENVIRONMENT_FLAG || 'development';
-    console.log('eeeeeeeeeeeee', eee);
-
     if (environment.production) {
       this.apiDest = '/api';
-      console.log("PRODPRODPROD");
     } else {
       this.apiDest = '/dev';
-      console.log("DEVDEVDEVDEV")
     }
-
-
-
   }
 
   
@@ -43,10 +31,12 @@ export class DashboardService {
   getStatuses() {
   	return this.http.get<Status>(this.apiDest + '/status/');
   }
-
-
   searchByStatus(statusCode: string) {
-  	return this.http.get<Article>(this.apiDest + '/article?status=' + statusCode);
+    if(!statusCode || statusCode == "popular")
+    {
+      return this.http.get<Article>('/api/article/');
+    }
+  	return this.http.get<Article>('/api/article?status=' + statusCode);
   }
 
   searchByTitle(title: string) {

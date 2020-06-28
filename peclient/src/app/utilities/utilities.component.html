@@ -26,9 +26,25 @@
 		</tr>
 	</table>
 
-	<div>
-		<button type="button" [disabled]="disableBuzz" (click)="getBuzzSumo()">Get BuzzSumo</button>
-	</div>
+	<br><br><br>
+
+	<table>
+		<tr>
+			<td>Run Query</td>
+			<td>ID</td>
+			<td>Query</td>
+		</tr>
+		<tr *ngFor="let q of buzzQueries">
+			<td>
+				<button type="button" [disabled]="disableBuzz" (click)="getBuzzSumo(q.id)">Run {{q.filenameTag}}</button>
+			</td>
+			<td>{{q.id}}</td>
+			<td>{{q.query}}</td>
+		</tr>
+	</table>
+	
+	<br><br><br>
+
 	<table style="">
 		<tr>
 			<td>start</td>
@@ -40,6 +56,7 @@
 			<td># dropped</td>
 			<td># created</td>
 			<td># updated</td>
+			<td>Query</td>
 		</tr>
 		<tr *ngFor="let bj of buzzJobs">
 			<td>{{ bj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
@@ -54,6 +71,35 @@
 			<td>{{ bj.articlesDropped }}</td>
 			<td>{{ bj.articlesCreated }}</td>
 			<td>{{ bj.articlesUpdated }}</td>
+			<td>{{ bj.query }}</td>
+		</tr>
+	</table>
+
+	<br><br><br>
+
+	<div>
+		<button type="button" [disabled]="disableMetrics" (click)="getUpdateMetrics()"> Update Articles</button>
+	</div>
+
+	<table style="">
+		<tr>
+			<td>start</td>
+			<td>finished</td>
+			<td>seconds</td>
+			<td># from buzz</td>
+			<td># user</td>
+			<td># total updated</td>
+		</tr>
+		<tr *ngFor="let uj of metricsJobs">
+			<td>{{ uj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
+			<td>
+				<span style="background-color: green;" *ngIf="uj.finished == 1">DONE</span>
+				<span *ngIf="uj.finished == 0">Processing</span>
+			</td>			
+			<td>{{ uj.elapsedSeconds }}</td>
+			<td>{{ uj.articlesBuzz }}</td>
+			<td>{{ uj.articlesUser }}</td>
+			<td>{{ uj.articlesUpdated }}</td>
 		</tr>
 	</table>
 </form>

@@ -49,6 +49,7 @@ RUN mvn dependency:go-offline -B
 
 # Now copy rest of source
 COPY /demo .
+RUN mvn clean
 RUN mvn --batch-mode install
 RUN cp -av target/demo-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps
 
