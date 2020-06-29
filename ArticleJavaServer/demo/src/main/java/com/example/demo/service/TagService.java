@@ -46,6 +46,7 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(TagService.clas
 		else
 			return null;
 	}
+
 	public TagEntity getTagById(Integer id) {
 		Optional<TagEntity> foundTag = tagRepository.findById(id);
 		if (foundTag.isPresent())
@@ -53,10 +54,15 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(TagService.clas
 		else
 			return null;
 	}
+
 	public TagEntity newTag(String tag) {
 		TagEntity newTag = new TagEntity();
 		newTag.setTag(tag);
 		return tagRepository.save(newTag);
 	}
-		
+
+	public void deleteTag(Integer id) {
+		tagRepository.deleteTagById(id);
+		return;
+	}
 }
