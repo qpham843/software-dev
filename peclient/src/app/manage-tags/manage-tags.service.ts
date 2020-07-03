@@ -23,6 +23,14 @@ export class TagService {
   }
 
   getTags() {
-  	return this.http.get<Article>(this.apiDest + '/tags/getTags');
+  	return this.http.get<Article>(this.apiDest + '/tags/');
+  }
+
+  addTag(name: string) {
+    return this.http.post(this.apiDest + '/tags?name=' + name, null);
+  }
+
+  deleteTag(id: number) {
+    return this.http.delete(this.apiDest + '/tags?id=' + id);
   }
 }

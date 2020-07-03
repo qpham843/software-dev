@@ -22,8 +22,6 @@ export class DashboardService {
     }
   }
 
-  
-
   getArticles() {
   	return this.http.get<Article>(this.apiDest + '/article/');
   }
