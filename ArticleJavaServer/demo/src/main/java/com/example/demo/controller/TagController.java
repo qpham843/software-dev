@@ -43,7 +43,7 @@ public class TagController {
 		return new ResponseEntity<>(tagService.getTags(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/addTag", method = RequestMethod.POST)
+	@RequestMapping(value = "", method = RequestMethod.POST)
 	public ResponseEntity addTag(
 		HttpServletRequest request,
 		@RequestParam(required = true, name="name") String tagName
@@ -54,13 +54,18 @@ public class TagController {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
 
+		Integer count = tagRepository.getCount(tagName);
+		if (count == 1) {
+			return new ResponseEntity<>("Tag already exists", HttpStatus.OK);
+		}
+
 		TagEntity tag = tagService.newTag(tagName);
 		tagRepository.save(tag);
 		returnVal.put("name", tag.getTag());
 		return new ResponseEntity<>(returnVal.toString(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/delTag", method = RequestMethod.POST)
+	@RequestMapping(value = "", method = RequestMethod.DELETE)
 	public ResponseEntity delTag(
 		HttpServletRequest request,
 		@RequestParam(required = true, name="id") Integer tagId
@@ -75,6 +80,4 @@ public class TagController {
 		tagService.deleteTag(tagId);
 		return new ResponseEntity<>(returnVal.toString(), HttpStatus.OK);
 	}
-
-	
 }

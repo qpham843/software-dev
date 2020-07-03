@@ -65,4 +65,5 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(TagService.clas
 		tagRepository.deleteTagById(id);
 		return;
 	}
+
 }

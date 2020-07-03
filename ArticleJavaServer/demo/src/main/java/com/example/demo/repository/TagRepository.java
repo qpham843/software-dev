@@ -23,4 +23,9 @@ public interface TagRepository extends CrudRepository<TagEntity, Integer>{
 	@Query(value="select * from tag", nativeQuery=true)
 	public List<TagEntity> findAllByOrderByTag();
 
+	@Query(value="SELECT COUNT(tag) FROM tag WHERE tag = :name", nativeQuery=true)
+	public Integer getCount(String name);
+
+
+
 }
