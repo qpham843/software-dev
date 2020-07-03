@@ -148,9 +148,14 @@ public class ArticleService {
 			logger.info("ITERATING THROUGH USER ARTICLES:");
 			String url = article.getUrl();
 			JSONObject jArticle = buzzService.getBuzz(url);
+			
+			if (jArticle == null) 
+				continue;
+			
 			if (jArticle.get("author_name").toString().equals("none")) {
 				continue;
 			}
+			
 			logger.info("UPDATING USER ARTICLE:");
 			ArticleEntity updatedArticle = updateArticleWithBuzz(jArticle, article);			
 			Integer updatedAt = Integer.parseInt(new SimpleDateFormat("YYYYMMDD").format(new Date()));

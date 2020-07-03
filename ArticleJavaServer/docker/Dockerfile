@@ -22,9 +22,9 @@ RUN apt-get update -q && apt-get install -y --no-install-recommends \
         dbus libdbus-1-dev libdbus-glib-1-dev \
         libsasl2-dev libldap2-dev libssl-dev
 
-# for admin convenience - MariaDB client
+# for admin convenience - MariaDB client and mysqldump
 RUN apt-get update -q && apt-get install -y --no-install-recommends \
-        default-mysql-client-core
+        default-mysql-client
 
 ARG VIRTUAL_ENV=/home/python3_env
 ARG ACTIVATE=${VIRTUAL_ENV}/bin/activate
