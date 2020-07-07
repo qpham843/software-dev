@@ -110,15 +110,14 @@ export class DashboardComponent implements OnInit {
 		this.articles = data;
 		for(let x = 0; x < this.articles.length; x++) {
 			this.articleShow[x] = false;
-			console.log(this.articles[x].tags);
-			if(this.articles[x].tags != undefined)
-			{
-				for(let a = 0; a < this.articles[x].tags.length; a++)
-				{
-					console.log(this.articles[x].tags[a].tag);
+			//if(this.articles[x].tags != undefined)
+			//{
+				//for(let a = 0; a < this.articles[x].tags.length; a++)
+				//{
+					//console.log(this.articles[x].tags[a].tag);
 					//set article tag to article object
-				}
-			}
+				//}
+			//}
 		}
   	});
   	this.dashboardForm.get('statusFilter').setValue(null);

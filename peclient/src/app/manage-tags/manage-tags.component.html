@@ -1,1 +1,15 @@
-<p>manage-tags works!</p>
+<th>Tags
+</th>
+	<table class="table3" border="1px solid" style="margin: 10px; padding: 20px;">
+	    <tbody>
+	    	<ng-container *ngFor="let t of tags">
+	    		<tr>
+		    		<td class="fifty-percent" style="padding: 20px;">
+	    				{{t.tag}}
+	    			</td>
+	    		</tr>
+	    	</ng-container>
+	    </tbody>
+	</table>
+		<input #box type="text" class="" (keyup.enter)="addTag(box.value)"/>
+	<button type="button button1" (click) = "addTag(box.value)" style= "background-color: #008CBA">Add Tag</button>
