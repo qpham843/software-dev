@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import {TagService} from './manage-tags.service';
+import { TagService } from './manage-tags.service';
+import { Tag } from './tag';
+
 @Component({
   selector: 'app-manage-tags',
   templateUrl: './manage-tags.component.html',
   styleUrls: ['./manage-tags.component.css']
 })
+
 export class ManageTagsComponent implements OnInit {
-	constructor(private ts: TagService)
-	{ 
-	}
+	constructor(
+		private ts: TagService
+	) { }
+
+  	tags: any = [];
 
   	ngOnInit() {
-		this.ts.getTags().subscribe((data: tag) => {
+		this.ts.getTags().subscribe((data: Tag) => {
 			console.log(data);
 			this.tags = data;
 			console.log(this.tags);
@@ -27,7 +32,9 @@ export class ManageTagsComponent implements OnInit {
 
   	addTags(tag:string)
   	{
-  		this.ts.addTag(tag);
+  		this.ts.addTag(tag).subscribe((data: any) => {
+  			console.log('added tag', data);
+  		});
   	}
 
   	deleteTags() {
@@ -41,7 +48,9 @@ export class ManageTagsComponent implements OnInit {
   				for(let x = 0; x < this.tags.length; x++) {
 					if(this.tags[x] != undefined && this.tags[x].tag == cbe.value)
 					{
-						this.ts.deleteTag(this.tags[x].id);
+						this.ts.deleteTag(this.tags[x].id).subscribe((data: any) => {
+							console.log("back from deleting tag ", data);
+						});
 					}
 				}
   			}

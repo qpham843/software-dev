@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Article } from '../dashboard/article';
 import { Status } from '../dashboard/article';
 import { environment } from '../../environments/environment';
+import { Tag } from './tag';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class TagService {
   }
 
   getTags() {
-  	return this.http.get<Article>(this.apiDest + '/tags/');
+  	return this.http.get<Tag>(this.apiDest + '/tags');
   }
 
   addTag(name: string) {

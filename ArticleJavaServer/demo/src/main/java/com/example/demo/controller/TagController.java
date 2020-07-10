@@ -43,10 +43,10 @@ public class TagController {
 		return new ResponseEntity<>(tagService.getTags(), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "", method = RequestMethod.POST)
+	@RequestMapping(value = "/{name}", method = RequestMethod.POST)
 	public ResponseEntity addTag(
 		HttpServletRequest request,
-		@RequestParam(required = true, name="name") String tagName
+		@PathVariable("name") String tagName
 	) {
 
 		JSONObject returnVal = new JSONObject();
@@ -65,10 +65,10 @@ public class TagController {
 		return new ResponseEntity<>(returnVal.toString(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity delTag(
 		HttpServletRequest request,
-		@RequestParam(required = true, name="id") Integer tagId
+		@PathVariable("id") Integer tagId
 	) {
 
 		JSONObject returnVal = new JSONObject();
