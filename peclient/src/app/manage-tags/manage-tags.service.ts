@@ -28,10 +28,10 @@ export class TagService {
 
   addTag(name: string) {
     console.log("Tag added");
-    return this.http.post(this.apiDest + '/tags?name=' + name, null);
+    return this.http.post(this.apiDest + '/tags/' + name, null);
   }
 
   deleteTag(id: number) {
-    return this.http.delete(this.apiDest + '/tags?id=' + id);
+    return this.http.delete(this.apiDest + '/tags/' + id);
   }
 }
