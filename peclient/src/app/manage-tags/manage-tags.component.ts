@@ -17,16 +17,8 @@ export class ManageTagsComponent implements OnInit {
 
   	ngOnInit() {
 		this.ts.getTags().subscribe((data: Tag) => {
-			console.log(data);
 			this.tags = data;
 			console.log(this.tags);
-			console.log(this.tags.length);
-			for(let x = 0; x < this.tags.length; x++) {
-				if(this.tags[x] != undefined)
-				{
-					console.log(this.tags[x].tag);
-				}
-			}
   		});
   	}
 
@@ -34,6 +26,7 @@ export class ManageTagsComponent implements OnInit {
   	{
   		this.ts.addTag(tag).subscribe((data: any) => {
   			console.log('added tag', data);
+  			this.ngOnInit();
   		});
   	}
 
@@ -54,6 +47,7 @@ export class ManageTagsComponent implements OnInit {
 					}
 				}
   			}
+  			this.ngOnInit();
 	  	})
   }
 }
