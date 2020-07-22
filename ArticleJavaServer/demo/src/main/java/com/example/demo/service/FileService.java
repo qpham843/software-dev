@@ -86,7 +86,11 @@ public class FileService {
 
 		//String filenameTag = "CovidArticles/";
 		String filenameTag = article.getFilenameTag();
-		if (filenameTag == null) filenameTag = "UnknownArticles/";
+		if (filenameTag == null) {
+			filenameTag = "UnknownArticles/";
+		} else {
+			filenameTag= filenameTag + "/";
+		}
 		String articleDir = "/var/article/temp/";
 		//delete temp dir
 		FileUtils.deleteQuietly(new File(articleDir));
