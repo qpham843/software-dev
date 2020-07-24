@@ -147,6 +147,17 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.updateTag(id, tag), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/{id}/tag/{tag}", method = RequestMethod.DELETE)
+	public ResponseEntity deleteArticleTag(
+			HttpServletRequest request,
+			@PathVariable("id") Integer id,
+			@PathVariable("tag") String tag) {
+		if (authService.auth(request) == false) {
+			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<>(articleService.deleteTag(id, tag), HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/{sha}/tagworksId", method = RequestMethod.POST)
 	public ResponseEntity storeVizData(
 			HttpServletRequest request,
@@ -185,4 +196,6 @@ public class ArticleController {
 		return new ResponseEntity(r.toString(2), HttpStatus.OK);
 		
 	}
+
+
 }

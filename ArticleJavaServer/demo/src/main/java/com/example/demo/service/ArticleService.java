@@ -30,7 +30,9 @@ import com.example.demo.repository.StatusRepository;
 import com.example.demo.repository.TagRepository;
 import com.example.demo.service.BuzzService;
 import com.example.demo.service.FileService;
+import com.example.demo.service.TagService;
 import com.example.demo.entities.UpdateJobEntity;
+
 
 
 @Service
@@ -41,6 +43,7 @@ public class ArticleService {
 	@Autowired private StatusRepository statusRepository;
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
 	@Autowired private BuzzService buzzService;
+	@Autowired private TagService tagService;
 	@Autowired private BuzzJobService buzzJobService;
 	@Autowired private FileService fileService;
 	@Autowired private ScrapeService scrapeService;
@@ -328,6 +331,7 @@ public class ArticleService {
 	}
 	
 	public ArticleEntity updateTag(Integer id, String tag) {
+		logger.info("UPDATING TAG");
 		Optional<ArticleEntity> articleToFind = articleRepository.findById(id);
 		Optional<TagEntity> dbTagToFind = tagRepository.findByTag(tag);
 		
@@ -335,38 +339,85 @@ public class ArticleService {
 		TagEntity tagEntity = null;
 		ArticleHasTagEntity aht = null;
 		
-		if (articleToFind.isPresent()) 
+		if (articleToFind.isPresent()) {
 			foundArticle = articleToFind.get();
-		else
+			logger.info("FOUND ARTICLE:");
+			logger.info(foundArticle.getTitle());
+			logger.info("Article's filename tag: " + foundArticle.getFilenameTag());
+		} else {
+			logger.info("DID NOT FIND ARTICLE");
 			return null;
+		}
 		
-		if (dbTagToFind.isPresent()) 
+		if (dbTagToFind.isPresent()) {
 			tagEntity = dbTagToFind.get(); 
-		else 
-			return null;
+			logger.info("FOUND TAG:");
+			logger.info(tagEntity.getTag());
+			logger.info("Tag's ID: " + tagEntity.getId());
+		} else {
+			logger.info("DID NOT FIND TAG");
+			tagEntity = tagService.newTag(tag);
+		}
 		
 		Optional<ArticleHasTagEntity> ahtToFind = articleHasTagRepository.findByArticleIdAndTagId(foundArticle.getId(), tagEntity.getId()); 
 		
 		if (ahtToFind.isPresent()) {
 			aht = ahtToFind.get();
-		}
-		
-		if (aht != null) {
-			//if tag is present AND aht is present, remove aht entry
-			articleHasTagRepository.delete(aht);
+			logger.info("FOUND ArticleHasTagEntity");
+			logger.info("ArticleId: " + aht.getArticleId());
+			logger.info("TagId: " + aht.getTagId());
 		} else {
-			//if tag is present and ahd is not present, add aht entry
+			logger.info("CREATING NEW AHT entry");
 			aht = new ArticleHasTagEntity();
 			aht.setArticleId(foundArticle.getId());
 			aht.setTagId(tagEntity.getId());
-			articleHasTagRepository.save(aht);		
-		}
+			articleHasTagRepository.save(aht);	
+		}	
 		
 		articleToFind = articleRepository.findById(foundArticle.getId());
 		if (articleToFind.isPresent())
 			return articleToFind.get();
 		else
 			return null;
+	}
+
+	public ArticleEntity deleteTag(Integer id, String tag) {
+		Optional<ArticleEntity> articleToFind = articleRepository.findById(id);
+		Optional<TagEntity> dbTagToFind = tagRepository.findByTag(tag);
+		
+		ArticleEntity foundArticle = null;
+		TagEntity tagEntity = null;
+		ArticleHasTagEntity aht = null;
+		
+		if (articleToFind.isPresent()) {
+			foundArticle = articleToFind.get();
+		} else {
+			logger.info("DID NOT FIND ARTICLE");
+			return null;
+		}
+		
+		if (dbTagToFind.isPresent()) {
+			tagEntity = dbTagToFind.get(); 
+		} else {
+			logger.info("DID NOT FIND TAG");
+			return null;
+		}
+		
+		Optional<ArticleHasTagEntity> ahtToFind = articleHasTagRepository.findByArticleIdAndTagId(foundArticle.getId(), tagEntity.getId()); 
+		
+		if (ahtToFind.isPresent()) {
+			aht = ahtToFind.get();
+		}
+
+		logger.info("DELETING repeat AHT entry");
+		articleHasTagRepository.delete(aht);
+
+		articleToFind = articleRepository.findById(foundArticle.getId());
+		if (articleToFind.isPresent())
+			return articleToFind.get();
+		else
+			return null;
+
 	}
 	
 	public ArticleEntity updateStatus(Integer id, String status, String comment) {

@@ -92,6 +92,7 @@
 						Tags: <ng-container *ngFor="let t of a.tags">({{t.tag}})</ng-container><br>
 						Filename Tag: {{a.filenameTag}}<br>
 	    				Status Code: {{a.statuses[0].statusCode}}<br>
+	    				Article ID: {{a.id}} <br>
 
 		    			<select (change)="changeStatus(a.id, $event)">
 							<option [value]="a.statuses[0].statusCode">
