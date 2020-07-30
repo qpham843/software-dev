@@ -37,6 +37,9 @@ public class BuzzQueryHasTagEntity implements Serializable {
 	@Column(name="tag_id")
 	protected Integer tagId = 0;
 
+	@Column(name="tag")
+	protected String tag = "";
+
 	public Integer getId() {
 		return id;
 	}
@@ -61,5 +64,11 @@ public class BuzzQueryHasTagEntity implements Serializable {
 		this.tagId = tagId;
 	}
 
+	public String getTag() {
+		return tag;
+	}
 
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 }

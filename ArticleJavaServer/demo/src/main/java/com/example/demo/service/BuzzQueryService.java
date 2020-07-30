@@ -13,6 +13,7 @@ import com.example.demo.entities.TagEntity;
 import com.example.demo.repository.BuzzQueryHasTagRepository;
 import com.example.demo.repository.BuzzQueryRepository;
 import com.example.demo.repository.TagRepository;
+import com.example.demo.service.TagService;
 
 
 @Service
@@ -21,6 +22,7 @@ public class BuzzQueryService {
 private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzQueryService.class);
 
 	@Autowired TagRepository tagRepository;	
+	@Autowired TagService tagService;	
 	@Autowired BuzzQueryRepository buzzQueryRepository;	
 	@Autowired BuzzQueryHasTagRepository buzzQueryHasTagRepository;	
 	
@@ -42,27 +44,42 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzQueryServic
 		return buzzQueryRepository.save(newQuery);
 	}
 	public BuzzQueryEntity tagQuery(Integer queryId, String tag) {
+		System.out.println("inside tagQuery()");
+		System.out.println("query id: " + queryId);
+		System.out.println("tag name: " + tag);
 		Optional<TagEntity> tagEntity = tagRepository.findByTag(tag);
 		Optional<BuzzQueryEntity> buzzQuery = buzzQueryRepository.findById(queryId);
 		Optional<BuzzQueryHasTagEntity> buzzQueryHasTag;
 		
-		if (buzzQuery.isPresent() == false)
+		if (buzzQuery.isPresent() == false){
+			System.out.println("buzzquery doesn't exist");
 			return null;
-		
-		if (tagEntity.isPresent() == false)
-			return null;
-		
-		buzzQueryHasTag = buzzQueryHasTagRepository.findByQueryIdAndTagId(buzzQuery.get().getId(), tagEntity.get().getId());
-		if (buzzQueryHasTag.isPresent())
-			//tag is present for given query - delete it
-			buzzQueryHasTagRepository.delete(buzzQueryHasTag.get());
-		else {
-			//tag is absent for given query - create it
-			BuzzQueryHasTagEntity bqht = new BuzzQueryHasTagEntity();
-			bqht.setQueryId(buzzQuery.get().getId());
-			bqht.setTagId(tagEntity.get().getId());
-			buzzQueryHasTagRepository.save(bqht);
 		}
+
+		TagEntity newTag = null;
+		
+		if (tagEntity.isPresent() == false) {
+			System.out.println("tagentity doesn't exist, adding new tag entity");
+			newTag = tagService.newTag(tag);
+			tagRepository.save(newTag);
+		} else {
+			newTag = tagEntity.get();
+		}
+
+		buzzQueryHasTag = buzzQueryHasTagRepository.findByQueryIdAndTagId(buzzQuery.get().getId(), newTag.getId());
+		BuzzQueryHasTagEntity bqht = null;
+		if (buzzQueryHasTag.isPresent() == false) {
+			bqht = new BuzzQueryHasTagEntity();
+			bqht.setQueryId(buzzQuery.get().getId());
+			bqht.setTagId(newTag.getId());
+			bqht.setTag(tag);
+			buzzQueryHasTagRepository.save(bqht);
+			System.out.println("Made new buzzQueryHasTagEntity: " + tag);
+			
+		} else {
+			System.out.println("buzzQueryHasTagEntity already exists");
+		}
+
 		buzzQueryRepository.findById(buzzQuery.get().getId());
 		if (buzzQuery.isPresent())
 			return buzzQuery.get();

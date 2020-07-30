@@ -13,7 +13,7 @@ import com.example.demo.entities.BuzzQueryHasTagEntity;
 public interface BuzzQueryHasTagRepository extends CrudRepository<BuzzQueryHasTagEntity, Integer>{
 	public Optional<BuzzQueryHasTagEntity> findById(Integer id);
 	public Optional<BuzzQueryHasTagEntity> findByQueryIdAndTagId(Integer articleId, Integer tagId);
-	public List<BuzzQueryHasTagEntity> findByQueryId(Integer articleId);
+	public List<BuzzQueryHasTagEntity> findByQueryId(Integer queryId);
 	public List<BuzzQueryHasTagEntity> findByTagId(Integer tagId);
 	
 	

@@ -22,6 +22,8 @@ import com.example.demo.entities.ArticleHasStatusEntity;
 import com.example.demo.entities.ArticleHasTagEntity;
 import com.example.demo.entities.BuzzJobEntity;
 import com.example.demo.entities.BuzzQueryEntity;
+import com.example.demo.entities.BuzzQueryHasTagEntity;
+import com.example.demo.repository.BuzzQueryHasTagRepository;
 import com.example.demo.entities.S3JobEntity;
 import com.example.demo.repository.ArticleHasStatusRepository;
 import com.example.demo.repository.ArticleHasTagRepository;
@@ -42,6 +44,7 @@ public class ArticleService {
 	@Autowired private ArticleRepository articleRepository;
 	@Autowired private StatusRepository statusRepository;
 	@Autowired private ArticleHasStatusRepository articleHasStatusRepository;
+	@Autowired private BuzzQueryHasTagRepository buzzQueryHasTagRepository;
 	@Autowired private BuzzService buzzService;
 	@Autowired private TagService tagService;
 	@Autowired private BuzzJobService buzzJobService;
@@ -210,6 +213,7 @@ public class ArticleService {
 		logger.info("got todays top from buzz - processing articles " + articles.length());
 		
 		for (int x = 0; x < articles.length(); x++) {
+			System.out.println("Looking at article...");
 			
 			// for each article, get its url
 			JSONObject ar = (JSONObject) articles.get(x);
@@ -261,6 +265,19 @@ public class ArticleService {
 			res.put(updatedArticle.getUrl(), updatedArticle.getArticleTitle());
 			bj = buzzJobService.save(bj);
 
+			List<BuzzQueryHasTagEntity> queryTags = buzzQueryHasTagRepository.findByQueryId(buzzQuery.getId());
+			System.out.println("buzzQuery.getId(): " + buzzQuery.getId());
+			if (queryTags.size() == 0) {
+				System.out.println("Query list is empty...");
+			}
+			
+			
+			System.out.println("ABOUT TO LOOK AT TAGS");
+			for (int i = 0; i < queryTags.size(); i++) {
+				System.out.println("ADDING TAG TO ARTICLE: " + queryTags.get(i).getTag());
+				ArticleEntity a = updateTag(updatedArticle.getId(), queryTags.get(i).getTag());
+				articleRepository.save(a);
+			}
 		}
 		
 		Date endDate = new Date();
@@ -330,8 +347,13 @@ public class ArticleService {
 		
 	}
 	
+	/* Update ArticleHasTag object
+	id - Article Id
+	tag - Tag name
+	*/
 	public ArticleEntity updateTag(Integer id, String tag) {
-		logger.info("UPDATING TAG");
+		System.out.println("UPDATING TAG");
+		System.out.println("id: " + id + " tag: " + tag);
 		Optional<ArticleEntity> articleToFind = articleRepository.findById(id);
 		Optional<TagEntity> dbTagToFind = tagRepository.findByTag(tag);
 		
@@ -341,21 +363,21 @@ public class ArticleService {
 		
 		if (articleToFind.isPresent()) {
 			foundArticle = articleToFind.get();
-			logger.info("FOUND ARTICLE:");
-			logger.info(foundArticle.getTitle());
-			logger.info("Article's filename tag: " + foundArticle.getFilenameTag());
+			System.out.println("FOUND ARTICLE:");
+			System.out.println(foundArticle.getTitle());
+			System.out.println("Article's filename tag: " + foundArticle.getFilenameTag());
 		} else {
-			logger.info("DID NOT FIND ARTICLE");
+			System.out.println("DID NOT FIND ARTICLE");
 			return null;
 		}
 		
 		if (dbTagToFind.isPresent()) {
 			tagEntity = dbTagToFind.get(); 
-			logger.info("FOUND TAG:");
-			logger.info(tagEntity.getTag());
-			logger.info("Tag's ID: " + tagEntity.getId());
+			System.out.println("FOUND TAG:");
+			System.out.println(tagEntity.getTag());
+			System.out.println("Tag's ID: " + tagEntity.getId());
 		} else {
-			logger.info("DID NOT FIND TAG");
+			System.out.println("DID NOT FIND TAG");
 			tagEntity = tagService.newTag(tag);
 		}
 		
@@ -363,11 +385,11 @@ public class ArticleService {
 		
 		if (ahtToFind.isPresent()) {
 			aht = ahtToFind.get();
-			logger.info("FOUND ArticleHasTagEntity");
-			logger.info("ArticleId: " + aht.getArticleId());
-			logger.info("TagId: " + aht.getTagId());
+			System.out.println("FOUND ArticleHasTagEntity");
+			System.out.println("ArticleId: " + aht.getArticleId());
+			System.out.println("TagId: " + aht.getTagId());
 		} else {
-			logger.info("CREATING NEW AHT entry");
+			System.out.println("CREATING NEW AHT entry");
 			aht = new ArticleHasTagEntity();
 			aht.setArticleId(foundArticle.getId());
 			aht.setTagId(tagEntity.getId());
@@ -409,7 +431,7 @@ public class ArticleService {
 			aht = ahtToFind.get();
 		}
 
-		logger.info("DELETING repeat AHT entry");
+		logger.info("DELETING AHT entry");
 		articleHasTagRepository.delete(aht);
 
 		articleToFind = articleRepository.findById(foundArticle.getId());

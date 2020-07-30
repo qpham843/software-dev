@@ -48,16 +48,15 @@ public class BuzzQueryController {
 		return new ResponseEntity<>(buzzQueryService.getQueries(), HttpStatus.OK);
 	}
 	
-
-	
 	@RequestMapping(value = "/{id}/tag/{tag}", method = RequestMethod.POST)
 	public ResponseEntity toggleQueryTag(
 			HttpServletRequest request,
-			@PathVariable("id") Integer id,
-			@PathVariable("tag") String tag) {
+			@PathVariable("id") Integer id, // article ID
+			@PathVariable("tag") String tag) { // tag name
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
+		System.out.println("tagging query bp 3");
 		return new ResponseEntity<>(buzzQueryService.tagQuery(id, tag), HttpStatus.OK);
 	}
 
@@ -70,4 +69,6 @@ public class BuzzQueryController {
 		}
 		return new ResponseEntity<>(buzzQueryService.newQuery(query), HttpStatus.OK);
 	}
+
+	
 }

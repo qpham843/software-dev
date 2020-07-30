@@ -137,7 +137,7 @@ public class ArticleController {
 	}
 
 	@RequestMapping(value = "/{id}/tag/{tag}", method = RequestMethod.POST)
-	public ResponseEntity setArticleTag(
+	public ResponseEntity addArticleTag(
 			HttpServletRequest request,
 			@PathVariable("id") Integer id,
 			@PathVariable("tag") String tag) {

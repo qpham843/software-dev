@@ -384,6 +384,7 @@ CREATE TABLE `query_has_tag` (
   `id` int NOT NULL AUTO_INCREMENT,
   `tag_id` int NOT NULL,
   `query_id` int NOT NULL,
+  `tag` char(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2321 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
