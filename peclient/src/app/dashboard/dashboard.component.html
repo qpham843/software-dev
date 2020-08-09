@@ -96,7 +96,9 @@
 						Tags: <ng-container *ngFor="let t of a.tags">[{{t.tag}}]
 							<button class="button tagDelete" (click)="deleteTag(t.tag)">X</button>
 						</ng-container><br>
-						Add Tag: <br>
+						Add Tag: 
+						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class="">
+						<br>
 						Filename Tag: {{a.filenameTag}}<br>
 	    				Status Code: {{a.statuses[0].statusCode}}<br>
 	    				Article ID: {{a.id}} <br>
