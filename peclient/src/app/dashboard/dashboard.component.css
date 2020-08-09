@@ -62,6 +62,20 @@
   cursor: pointer;
 }
 
+/*button for tag delete*/
+.tagDelete {
+  background-color: #FF0000;
+  border: none;
+  color: white;
+  padding: 0px 2px;
+  text-align: left;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 /*CSS for CHECKBOXES*/
 /*FROM: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp*/
 
@@ -86,6 +100,25 @@
   cursor: pointer;
   height: 0;
   width: 0;
+}
+
+/* Creates a dropdown menu for tags */
+.tag-container-dropdown {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  max-height: 300px;
+  background: #F6F6F6;
+  overflow-y: auto;
+}
+
+.tag-format {
+  padding: 10px;
+  font-family: Arial;
+  color: #A550BC;
+}
+.tag-format:hover {
+  background: #C2C2C2;
 }
 
 /* Create a custom checkbox */
