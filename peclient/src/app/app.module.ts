@@ -12,6 +12,7 @@ import { UtilitiesComponent } from './utilities/utilities.component';
 import { ReplaceLineBreaksPipe } from './replace-line-breaks.pipe';
 import { BuzzQueriesComponent } from './buzz-queries/buzz-queries.component';
 import { ManageTagsComponent } from './manage-tags/manage-tags.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 const appRoutes: Routes = [
@@ -39,6 +40,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
     RouterModule.forRoot(
       appRoutes
     )

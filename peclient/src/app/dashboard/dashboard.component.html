@@ -81,7 +81,12 @@
 	
 	<table class="table3" border="1px solid" style="margin: 10px; padding: 20px;">
 	    <tbody>
-	    	<ng-container *ngFor="let a of articles">
+			<ng-container *ngFor="let a of articles | 
+			
+			paginate: {id: 'listing_pagination', 
+			itemsPerPage: 5,
+			currentPage: page}"
+			>
 		    	<tr>
 		    		<td class="fifty-percent" style="padding: 20px;">
 		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value="a.id"><br>
@@ -119,6 +124,15 @@
 
 	    </tbody>
 	</table>
+	<div>
+		<pagination-controls 
+			id="listing_pagination" 
+			maxSize="5" 
+			(pageChange)="page = $event" 
+			responsive="true">
+		</pagination-controls>
+	</div>
+
 	</div>
 
 	<select formControlName="bulkStatus">

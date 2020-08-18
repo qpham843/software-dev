@@ -20,6 +20,8 @@ export class DashboardComponent implements OnInit {
   statuses: any = [];
   articleDetails: any = [];
   articleShow: boolean[] = [];
+  page:Number=1
+  totalRecords:String
 
 
   constructor(
