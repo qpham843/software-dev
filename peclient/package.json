@@ -23,7 +23,10 @@
     "@types/node": "^10.12.30",
     "aws-amplify": "^3.0.7",
     "aws-amplify-angular": "^5.0.7",
+    "bootstrap": "4.1.1",
+    "ngx-bootstrap": "^5.6.1",
     "ngx-pagination": "^5.0.0",
+    "ngx-typeahead": "^9.1.0",
     "rxjs": "^6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

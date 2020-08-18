@@ -1,16 +1,21 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { TagService } from '../manage-tags/manage-tags.service';
 import { DashboardService } from './dashboard.service';
 import { Article } from './article';
 import { Status } from './article';
+import { Tag } from '../manage-tags/tag';
+
 //import { TSMap } from "typescript-map";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
 
   @ViewChild('articleText', {static: false}) articleText: ElementRef;
@@ -22,10 +27,67 @@ export class DashboardComponent implements OnInit {
   articleShow: boolean[] = [];
   page:Number=1
   totalRecords:String
+  
+  selected: string = "";
+  tags: any = [];
+  tagsString: string[] = [];
 
+  states: string[] = [
+    'Alabama',
+    'Alaska',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'Florida',
+    'Georgia',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Dakota',
+    'North Carolina',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Pennsylvania',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming'
+  ];
 
   constructor(
   	private ds: DashboardService,
+  	private ts: TagService,
   	private fb: FormBuilder,
   ) { 
   	this.dashboardForm = this.fb.group({
@@ -33,8 +95,10 @@ export class DashboardComponent implements OnInit {
   		searchType: new FormControl(),
   		searchUrl: new FormControl(),
 		searchTitle: new FormControl(),
+		searchTag: new FormControl(),
 		checkAll: new FormControl(),
 		bulkStatus: new FormControl(),
+		typeaheadControl: new FormControl()
 	});
 
 	// load list of statuses
@@ -42,7 +106,6 @@ export class DashboardComponent implements OnInit {
 		this.statuses = data;
 		console.log(this.statuses);
 	});
-	  
 	this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
 		console.log("filter value has changed", val)
 		this.ds.searchByStatus(val).subscribe((data: Article) => {
@@ -91,6 +154,11 @@ export class DashboardComponent implements OnInit {
   			cbe.checked = v;
 	  	})
 	});
+
+	this.dashboardForm.get('typeaheadControl').valueChanges.subscribe(val => {
+		console.log("value change", val);
+	});
+
   }
 
   submitBulk() {
@@ -104,25 +172,29 @@ export class DashboardComponent implements OnInit {
   					this.bulkChangeStatus(cbe.value, newStatus);
 	  	})
   }
+
   
   ngOnInit() {
   	console.log("dashboard initialized");
+
 	this.ds.getArticles().subscribe((data: Article) => {
 		console.log(data);
 		this.articles = data;
 		for(let x = 0; x < this.articles.length; x++) {
 			this.articleShow[x] = false;
-			//if(this.articles[x].tags != undefined)
-			//{
-				//for(let a = 0; a < this.articles[x].tags.length; a++)
-				//{
-					//console.log(this.articles[x].tags[a].tag);
-					//set article tag to article object
-				//}
-			//}
 		}
   	});
-  	this.dashboardForm.get('statusFilter').setValue(null);
+	this.dashboardForm.get('statusFilter').setValue(null);
+	this.ts.getTags().subscribe((data: Tag) => {
+		this.tags = data;
+		for(let x = 0; x < this.tags.length; x++) {
+			if(this.tags[x] != undefined)
+			{
+				this.tagsString.push(this.tags[x].tag);
+			}
+		}
+		console.log(this.tagsString)
+	});
   }
 
   loadArticleText(id: number) {
@@ -292,6 +364,17 @@ export class DashboardComponent implements OnInit {
 
 		this.sortChecks = !this.sortChecks;
 	}
+  }
+
+  deleteTag(tag:string) {
+	  //unfinished, suppose to delete the tag from the specific article
+	console.log(tag)
+	this.ts.getTags().subscribe((data: Tag) => {
+		this.tags = data;
+		console.log(this.tags)
+	});
+
+	//this.ts.deleteTag(1)
   }
 
   toggle(i:number) {

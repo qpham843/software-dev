@@ -13,6 +13,8 @@ import { ReplaceLineBreaksPipe } from './replace-line-breaks.pipe';
 import { BuzzQueriesComponent } from './buzz-queries/buzz-queries.component';
 import { ManageTagsComponent } from './manage-tags/manage-tags.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 
 const appRoutes: Routes = [
@@ -43,7 +45,9 @@ const appRoutes: Routes = [
     NgxPaginationModule,
     RouterModule.forRoot(
       appRoutes
-    )
+    ),
+    BrowserAnimationsModule,
+    TypeaheadModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

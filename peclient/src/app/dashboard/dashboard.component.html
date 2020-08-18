@@ -30,6 +30,10 @@
 
 		<input type="text" class="" formControlName="searchTitle" (keyup.enter)="searchTitle()" />
 		<button type="button" (click)="searchTitle();">Search</button>
+
+		<pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
+		<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class="form-control">
+	   
 	</div>
 		<select formControlName="bulkStatus">
 		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
@@ -94,7 +98,12 @@
 	    				Title: {{a.articleTitle}}<br>
 	    				url: {{a.url}}<br>
 	    				Total Shares: {{a.totalShares}}<br>
-						Tags: <ng-container *ngFor="let t of a.tags">({{t.tag}})</ng-container><br>
+						Tags: <ng-container *ngFor="let t of a.tags">[{{t.tag}}]
+							<button class="button tagDelete" (click)="deleteTag(t.tag)">X</button>
+						</ng-container><br>
+						Add Tag: 
+						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class="">
+						<br>
 						Filename Tag: {{a.filenameTag}}<br>
 	    				Status Code: {{a.statuses[0].statusCode}}<br>
 	    				Article ID: {{a.id}} <br>
@@ -111,7 +120,7 @@
 						</select>
 		    		</td>
 					<td class="fifty-percent" >
-						<div [innerHTML]="a.articleText | replaceLineBreaks" style="overflow: scroll; max-height: 300px;">
+						<div [innerHTML]="a.articleText | replaceLineBreaks" style="overflow: scroll; max-height: 400px;">
 						</div>
 					</td>
 		    	</tr>
