@@ -313,22 +313,23 @@ export class DashboardComponent implements OnInit {
 	}
   }
 
-  addTag(article_id:number, tag:string) {
-
+  addTag(article_id:number, tag:any) {
+	console.log(article_id, tag);
+	this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
+	  this.ds.getArticles().subscribe((data: Article) => {
+		  this.articles = data;
+	  });
+	});
   }
 
-deleteTag(article_id:number, tag:string) {
-	//unfinished, suppose to delete the tag from the specific article
-  //this.ts.getTags().subscribe((data: Tag) => {
-  //	this.tags = data;
-  //	console.log(this.tags)
-  //});
-  this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
-
-  });
-
-  //this.ts.deleteTag(1)
-}
+  deleteTag(article_id:number, tag:string) {
+    console.log(article_id, tag);
+    this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
+	  this.ds.getArticles().subscribe((data: Article) => {
+		this.articles = data;
+	  });
+    });
+  }
 
   toggle(i:number) {
   	this.articleShow[i] = !this.articleShow[i];

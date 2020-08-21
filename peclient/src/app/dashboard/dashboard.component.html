@@ -106,7 +106,8 @@
 							<button class="button tagDelete" (click)="deleteTag(a.id, t.tag)">X</button>
 						</ng-container><br>
 						Add Tag: 
-						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class="">
+						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class=""
+						(typeaheadOnSelect)="addTag(a.id, $event)">
 						<br>
 						Filename Tag: {{a.filenameTag}}<br>
 	    				Status Code: {{a.statuses[0].statusCode}}<br>
