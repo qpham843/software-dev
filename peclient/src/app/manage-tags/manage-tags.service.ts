@@ -27,7 +27,6 @@ export class TagService {
   }
 
   addTag(name: string) {
-    console.log("Tag added");
     return this.http.post(this.apiDest + '/tags/' + name, null);
   }
 

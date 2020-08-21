@@ -6,7 +6,7 @@ import { Article } from './article';
 import { Status } from './article';
 import { Tag } from '../manage-tags/tag';
 
-//import { TSMap } from "typescript-map";
+//idk if needed
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
