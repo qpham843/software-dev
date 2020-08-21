@@ -29,10 +29,14 @@
 		<label for="searchTitle" class="field-label-2">TITLE Search</label>
 
 		<input type="text" class="" formControlName="searchTitle" (keyup.enter)="searchTitle()" />
-		<button type="button" (click)="searchTitle();">Search</button>
+		<button type="button" (click)="searchTitle();">Search</button>	
+		
+		<br>
 
-		<pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
-		<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class="form-control">
+		<label for="searchTitle" class="field-label-2">Tag Search</label>
+		<input type="text" class="" formControlName="typeaheadControl" (keyup.enter)="searchTag()"
+		 [value]="selected" [typeahead]="tagsString"/>
+		<button type="button" (click)="searchTag();">Search</button>
 	   
 	</div>
 		<select formControlName="bulkStatus">
@@ -99,7 +103,7 @@
 	    				url: {{a.url}}<br>
 	    				Total Shares: {{a.totalShares}}<br>
 						Tags: <ng-container *ngFor="let t of a.tags">[{{t.tag}}]
-							<button class="button tagDelete" (click)="deleteTag(t.tag)">X</button>
+							<button class="button tagDelete" (click)="deleteTag(a.id, t.tag)">X</button>
 						</ng-container><br>
 						Add Tag: 
 						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class="">

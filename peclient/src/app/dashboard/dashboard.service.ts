@@ -29,6 +29,12 @@ export class DashboardService {
   getStatuses() {
   	return this.http.get<Status>(this.apiDest + '/status/');
   }
+  
+  changeArticle(id: number, tagStr: string) {
+    console.log("/article/" + id + "/tag/" + tagStr)
+    return this.http.post(this.apiDest + "/article/" + id + "/tag/" + tagStr, null);
+  }
+
   searchByStatus(statusCode: string) {
     if(!statusCode || statusCode == "popular")
     {

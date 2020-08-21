@@ -32,59 +32,6 @@ export class DashboardComponent implements OnInit {
   tags: any = [];
   tagsString: string[] = [];
 
-  states: string[] = [
-    'Alabama',
-    'Alaska',
-    'Arizona',
-    'Arkansas',
-    'California',
-    'Colorado',
-    'Connecticut',
-    'Delaware',
-    'Florida',
-    'Georgia',
-    'Hawaii',
-    'Idaho',
-    'Illinois',
-    'Indiana',
-    'Iowa',
-    'Kansas',
-    'Kentucky',
-    'Louisiana',
-    'Maine',
-    'Maryland',
-    'Massachusetts',
-    'Michigan',
-    'Minnesota',
-    'Mississippi',
-    'Missouri',
-    'Montana',
-    'Nebraska',
-    'Nevada',
-    'New Hampshire',
-    'New Jersey',
-    'New Mexico',
-    'New York',
-    'North Dakota',
-    'North Carolina',
-    'Ohio',
-    'Oklahoma',
-    'Oregon',
-    'Pennsylvania',
-    'Rhode Island',
-    'South Carolina',
-    'South Dakota',
-    'Tennessee',
-    'Texas',
-    'Utah',
-    'Vermont',
-    'Virginia',
-    'Washington',
-    'West Virginia',
-    'Wisconsin',
-    'Wyoming'
-  ];
-
   constructor(
   	private ds: DashboardService,
   	private ts: TagService,
@@ -366,16 +313,22 @@ export class DashboardComponent implements OnInit {
 	}
   }
 
-  deleteTag(tag:string) {
-	  //unfinished, suppose to delete the tag from the specific article
-	console.log(tag)
-	this.ts.getTags().subscribe((data: Tag) => {
-		this.tags = data;
-		console.log(this.tags)
-	});
+  addTag(article_id:number, tag:string) {
 
-	//this.ts.deleteTag(1)
   }
+
+deleteTag(article_id:number, tag:string) {
+	//unfinished, suppose to delete the tag from the specific article
+  //this.ts.getTags().subscribe((data: Tag) => {
+  //	this.tags = data;
+  //	console.log(this.tags)
+  //});
+  this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
+
+  });
+
+  //this.ts.deleteTag(1)
+}
 
   toggle(i:number) {
   	this.articleShow[i] = !this.articleShow[i];
