@@ -31,6 +31,7 @@ export class DashboardService {
   }
   
   changeArticle(id: number, tagStr: string) {
+    console.log(id, tagStr, "id + tag string");
     return this.http.post(this.apiDest + "/article/" + id + "/tag/" + tagStr, null);
   }
 

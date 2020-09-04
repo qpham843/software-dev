@@ -308,7 +308,7 @@ export class DashboardComponent implements OnInit {
 	}
   }
 
-  addTag(article_id:number, tag:any) {
+  addTag(article_id:number, tag:string) {
 	this.dashboardForm.get('typeaheadControl').setValue("");
 	let hasTag = 0;
 	for(let count = 0; count < this.articles.length;count++)
@@ -336,11 +336,11 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteTag(article_id:number, tag:string) {
-    console.log(article_id, tag);
+    console.log(article_id, tag, "tag deleting");
     this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
-	  this.ds.getArticles().subscribe((data: Article) => {
-		this.articles = data;
-	  });
+		this.ds.getArticles().subscribe((data: Article) => {
+			this.articles = data;
+	  	});
     });
   }
 
