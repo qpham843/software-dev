@@ -4,6 +4,10 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { UtilitiesService } from './utilities.service';
 import { BuzzJob } from './buzzJob';
 
+import { TagService } from '../manage-tags/manage-tags.service';
+import { Tag } from '../manage-tags/tag';
+import { stringify } from 'querystring';
+
 @Component({
   selector: 'app-utilities',
   templateUrl: './utilities.component.html',
@@ -20,14 +24,21 @@ export class UtilitiesComponent implements OnInit {
   disableS3: boolean = false;
   disableMetrics: boolean = false;
 
+  selected: string = "";
+  tags: any = [];
+  tagsString: string[] = [];
+  tagsSelected: string[] = [];
 
   constructor(
   	private fb: FormBuilder,
   	private us: UtilitiesService,
     private el: ElementRef,
     private renderer: Renderer2,
+    private ts: TagService,
   ) { 
-    this.utilitiesForm = this.fb.group({});
+    this.utilitiesForm = this.fb.group({
+      typeaheadControl: new FormControl()
+    });
   }
 
   ngOnInit() {
@@ -35,6 +46,16 @@ export class UtilitiesComponent implements OnInit {
     this.getS3();
     this.getMetrics();
     this.getQueries();
+    this.ts.getTags().subscribe((data: Tag) => {
+      this.tags = data;
+      for(let x = 0; x < this.tags.length; x++) {
+        if(this.tags[x] != undefined)
+        {
+          this.tagsString.push(this.tags[x].tag);
+        }
+      }
+      console.log(this.tagsString)
+    });
   }
 
   getBuzz() {
@@ -53,6 +74,7 @@ export class UtilitiesComponent implements OnInit {
     this.us.doBuzz(id).subscribe(d => {
       console.log("back from doBuzz");
       console.log(d);
+      console.log(d, "article id");
       clearInterval(intervalId);
       this.disableBuzz = false;
       this.getBuzz();
@@ -131,4 +153,22 @@ export class UtilitiesComponent implements OnInit {
     () => {}
     );
   }
+
+  addTag(tag:string) {
+    let counter = 0;
+    for(let x = 0; x < this.tagsSelected.length; x++) {
+			if(this.tagsSelected[x].toString() == tag.toString())
+			{
+				counter = 1;
+			}
+    }
+    if (counter == 0) {
+      this.tagsSelected.push(tag);
+    }
+  }
+
+  deleteTag(tag:string) {
+    this.tagsSelected.splice(this.tagsSelected.indexOf(tag), 1);
+  }
 }
+

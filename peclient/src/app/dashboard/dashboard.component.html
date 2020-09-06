@@ -35,7 +35,8 @@
 
 		<label for="searchTitle" class="field-label-2">Tag Search</label>
 		<input type="text" class="" formControlName="searchTag" (keyup.enter)="searchTag()"
-		 [value]="selected" [typeahead]="tagsString" [typeaheadOptionsLimit]="7" [typeaheadMinLength]="0"/>
+		 [value]="selected" [typeahead]="tagsString" [typeaheadOptionsLimit]="500" [typeaheadMinLength]="0"
+		  [typeaheadScrollable]="true"/>
 		<button type="button" (click)="searchTag();">Search</button>
 	   
 	</div>
@@ -107,7 +108,8 @@
 						</ng-container><br>
 						Add Tag: 
 						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class=""
-						(typeaheadOnSelect)="addTag(a.id, $event)"[typeaheadOptionsLimit]="5" [typeaheadMinLength]="0">
+						(typeaheadOnSelect)="addTag(a.id, $event)"[typeaheadOptionsLimit]="500" [typeaheadMinLength]="0"
+						 [typeaheadScrollable]="true">
 						<br>
 						Filename Tag: {{a.filenameTag}}<br>
 	    				Status Code: {{a.statuses[0].statusCode}}<br>

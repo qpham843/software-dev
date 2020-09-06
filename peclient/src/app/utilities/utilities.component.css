@@ -6,3 +6,17 @@ TD {
 	padding: 5px;
 	text-align: center;
 }
+
+/*button for tag delete*/
+.tagDelete {
+	background-color: #FF0000;
+	border: none;
+	color: white;
+	padding: 0px 2px;
+	text-align: left;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 14px;
+	margin: 4px 2px;
+	cursor: pointer;
+  }

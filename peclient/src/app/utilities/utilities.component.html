@@ -27,7 +27,18 @@
 	</table>
 
 	<br><br><br>
+	Add tags here to be assigned to the selected query.
+	<br>
+	<label for="searchTitle" class="field-label-1">Tags added:</label>
 
+	<ng-container *ngFor="let t of tagsSelected">[{{t}}]
+		<button class="button tagDelete" (click)="deleteTag(t)">X</button>
+	</ng-container>
+	<br>
+	<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class=""
+	(typeaheadOnSelect)="addTag($event)"[typeaheadOptionsLimit]="500" [typeaheadMinLength]="0" [typeaheadScrollable]="true">
+	<br>
+	<br>
 	<table>
 		<tr>
 			<td>Run Query</td>
