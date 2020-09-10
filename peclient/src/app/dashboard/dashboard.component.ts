@@ -308,39 +308,19 @@ export class DashboardComponent implements OnInit {
 	}
   }
 
-  addTag(article_id:number, tag:any) {
-	this.dashboardForm.get('typeaheadControl').setValue("");
-	let hasTag = 0;
-	for(let count = 0; count < this.articles.length;count++)
-	{
-		if(this.articles[count].id == article_id)
-		{
-			for( let count2 = 0; count2 < this.articles[count].tags.length; count2++)
-			{
-				if(this.articles[count].tags[count2].tag == tag)
-				{
-					hasTag = 1
-				}
-			}
-
-		}
-	}
-	if (hasTag == 0)
-	{
-		this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
+  addTag(article_id:number, tag:string) {
+		this.ds.addArticle(article_id, tag).subscribe((data: Article) => {
 			this.ds.getArticles().subscribe((data: Article) => {
 				this.articles = data;
 			});
 		});
-	} 
   }
 
   deleteTag(article_id:number, tag:string) {
-    console.log(article_id, tag);
-    this.ds.changeArticle(article_id, tag).subscribe((data: Article) => {
-	  this.ds.getArticles().subscribe((data: Article) => {
-		this.articles = data;
-	  });
+    this.ds.deleteArticle(article_id, tag).subscribe((data: Article) => {
+		this.ds.getArticles().subscribe((data: Article) => {
+			this.articles = data;
+	  	});
     });
   }
 

@@ -30,8 +30,13 @@ export class DashboardService {
   	return this.http.get<Status>(this.apiDest + '/status/');
   }
   
-  changeArticle(id: number, tagStr: string) {
+  addArticle(id: number, tagStr: string) {
+    //console.log(id, tagStr, "id + tag string, article added");
     return this.http.post(this.apiDest + "/article/" + id + "/tag/" + tagStr, null);
+  }
+  deleteArticle(id: number, tagStr: string) {
+    //console.log(id, tagStr, "id + tag string, article deleted");
+    return this.http.delete(this.apiDest + "/article/" + id + "/tag/" + tagStr);
   }
 
   searchByStatus(statusCode: string) {
