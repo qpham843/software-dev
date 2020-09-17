@@ -48,6 +48,14 @@ export class UtilitiesService {
   getBuzzQueries() {
     return this.http.get(this.apiDest + '/query')
   }
+//unfinished need to get links
+  addQueryTag() {
+    return this.http.get(this.apiDest + '')
+  }
+
+  deleteQueryTag() {
+    return this.http.get(this.apiDest + '')
+  }
 
 }
  
