@@ -58,20 +58,6 @@ function setPreviewURL(url) {
 	document.getElementById("websiteURL").defaultValue = url;
 }
 
-/**
- * Visualizes whether or not an article has already been submitted and audited. The logic of 
- * verification is handled by the function verifyAudit. This function focuses on only the 
- * popup visuals. This means icon visual updates are handled in background.js
- * 
- * @param {boolean} audited Whether or not an article has already been submitted and audited.
- */
-function indicateAudited(audited) {
-	if (audited) {	
-		document.getElementById("captureButton").disabled = true;
-		document.getElementById("result").innerText = "This article has already been submitted.";
-	}
-}
-
 /** When document is loaded, set up button and visualize verifyAudit. */
 document.addEventListener('DOMContentLoaded', () => {
     const capture = document.getElementById('captureButton');
@@ -80,15 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
           submitURL(getURL());
         }
 	};
-	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-		verifyAudit(tabs[0].url, audited => {
-			indicateAudited(audited);
-			openVetted(audited);
-		});
-	});
-
 });
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, tabs => {
 	setPreviewURL(tabs[0].url);
 });
+
