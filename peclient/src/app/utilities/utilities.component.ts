@@ -154,21 +154,12 @@ export class UtilitiesComponent implements OnInit {
     );
   }
 
-  addTag(tag:string) {
-    let counter = 0;
-    for(let x = 0; x < this.tagsSelected.length; x++) {
-			if(this.tagsSelected[x].toString() == tag.toString())
-			{
-				counter = 1;
-			}
-    }
-    if (counter == 0) {
-      this.tagsSelected.push(tag);
-    }
+  addTag(tag:string, queryId:string) {
+    this.us.addQueryTag(queryId, tag);
   }
 
-  deleteTag(tag:string) {
-    this.tagsSelected.splice(this.tagsSelected.indexOf(tag), 1);
+  deleteTag(tag:string, queryId:string) {
+    this.us.deleteQueryTag(queryId, tag);
   }
 }
 
