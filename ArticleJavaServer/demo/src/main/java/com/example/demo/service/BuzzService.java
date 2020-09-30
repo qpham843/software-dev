@@ -46,8 +46,9 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 	public JSONArray getTodaysTop(BuzzJobEntity bj, BuzzQueryEntity query) {
 		RestTemplate restTemplate = new RestTemplate();
 		String url = 
-				"https://api.buzzsumo.com/search/trends.json?"
-				.concat(query.getQuery())
+				//"https://api.buzzsumo.com/search/trends.json?"
+				//.concat(query.getQuery())
+				query.getQuery()
 				.concat("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
         logger.info(url);
 
