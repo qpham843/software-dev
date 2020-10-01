@@ -70,5 +70,16 @@ public class BuzzQueryController {
 		return new ResponseEntity<>(buzzQueryService.newQuery(query), HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/{id}/tag/{tag}", method = RequestMethod.DELETE)
+	public ResponseEntity deleteQueryTag(
+			HttpServletRequest request,
+			@PathVariable("id") Integer id,
+			@PathVariable("tag") String tag) {
+		if (authService.auth(request) == false) {
+			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<>(buzzQueryService.deleteTag(id, tag), HttpStatus.OK);
+	}
+
 	
 }

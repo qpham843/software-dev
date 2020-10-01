@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entities.ArticleEntity;
 import com.example.demo.entities.BuzzQueryEntity;
 import com.example.demo.entities.BuzzQueryHasTagEntity;
 import com.example.demo.entities.TagEntity;
@@ -86,5 +87,43 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzQueryServic
 		else
 			return null;		
 	}
+
+	public BuzzQueryEntity deleteTag(Integer id, String tag) {
+		Optional<BuzzQueryEntity> buzzQueryToFind = buzzQueryRepository.findById(id);
+		Optional<TagEntity> dbTagToFind = tagRepository.findByTag(tag);
 		
+		BuzzQueryEntity foundBuzzQuery = null;
+		TagEntity tagEntity = null;
+		BuzzQueryHasTagEntity bqht = null;
+		
+		if (buzzQueryToFind.isPresent()) {
+			foundBuzzQuery = buzzQueryToFind.get();
+		} else {
+			logger.info("DID NOT FIND BUZZ QUERY");
+			return null;
+		}
+		
+		if (dbTagToFind.isPresent()) {
+			tagEntity = dbTagToFind.get(); 
+		} else {
+			logger.info("DID NOT FIND TAG");
+			return null;
+		}
+		
+		Optional<BuzzQueryHasTagEntity> bqhtToFind = buzzQueryHasTagRepository.findByQueryIdAndTagId(foundBuzzQuery.getId(),tagEntity.getId());
+		
+		if (bqhtToFind.isPresent()) {
+			bqht = bqhtToFind.get();
+		}
+
+		logger.info("DELETING BQHT entry");
+		buzzQueryHasTagRepository.delete(bqht);
+
+		buzzQueryToFind = buzzQueryRepository.findById(foundBuzzQuery.getId());
+		if (buzzQueryToFind.isPresent())
+			return buzzQueryToFind.get();
+		else
+			return null;
+
+	}	
 }
