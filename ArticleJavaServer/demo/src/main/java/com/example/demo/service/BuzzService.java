@@ -21,6 +21,13 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 	@Autowired ArticleService articleService;
 	@Autowired BuzzJobService buzzJobService;
 	
+	private String apiKey = "";
+
+	//constructor
+	BuzzService() {
+		apiKey = System.getenv("buzzApiKey");
+	}
+	
 	public JSONObject getBuzz(String articleUrl) {
 
         RestTemplate restTemplate = new RestTemplate();
