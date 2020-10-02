@@ -21,4 +21,8 @@ public class EnvironmentService {
 	    }
 	    return dev;
 	}
+	
+	public String getBuzzKey() {
+		return env.getProperty("com.example.demo.buzzApiKey");
+	}
 }

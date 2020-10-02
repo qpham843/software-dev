@@ -20,20 +20,17 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 	
 	@Autowired ArticleService articleService;
 	@Autowired BuzzJobService buzzJobService;
-	
-	private String apiKey = "";
+	@Autowired EnvironmentService env;
 
-	//constructor
-	BuzzService() {
-		apiKey = System.getenv("buzzApiKey");
-	}
-	
+	private String buzzApiKey = "";
+
 	public JSONObject getBuzz(String articleUrl) {
 
         RestTemplate restTemplate = new RestTemplate();
         StringBuilder url = new StringBuilder("https://api.buzzsumo.com/search/articles.json?q=");
         url.append(articleUrl);
-        url.append("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
+        url.append("&api_key=");
+        url.append(buzzApiKey);
         
         ResponseEntity<String> response = restTemplate.getForEntity(url.toString(),String.class);
         String res = response.getBody();
@@ -51,12 +48,18 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzService.cla
 	}
 	
 	public JSONArray getTodaysTop(BuzzJobEntity bj, BuzzQueryEntity query) {
+
+		buzzApiKey = env.getBuzzKey(); 
+		logger.info("bbbbbbbbbbbbbbbbbbbbbbbb");
+		logger.info(buzzApiKey);
+
 		RestTemplate restTemplate = new RestTemplate();
 		String url = 
 				//"https://api.buzzsumo.com/search/trends.json?"
 				//.concat(query.getQuery())
 				query.getQuery()
-				.concat("&api_key=ZjO3Gfio4kfOaZ9K9iSdQcjoGsleT1Gf");
+				.concat("&api_key=")
+				.concat(buzzApiKey);
         logger.info(url);
 
         ResponseEntity<String> response = restTemplate.getForEntity(url,String.class);
