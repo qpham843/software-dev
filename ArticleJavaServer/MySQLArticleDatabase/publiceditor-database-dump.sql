@@ -468,3 +468,7 @@ insert into buzz_query
 values 
 (5, 'https://api.buzzsumo.com/search/trends.json?topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&countries=United States', 'Covid2Articles',true);
 
+update buzz_query set filename_tag = 'Covid2EvergreenArticles' where filename_tag = 'EvergreenCovidArticles';
+
+delete from article where filename_tag like '%evergreen%' and publish_date > timestamp('2020-05-05');
+update article set filename_tag = 'Covid2EvergreenArticles' where filename_tag like '%evergreen%';
