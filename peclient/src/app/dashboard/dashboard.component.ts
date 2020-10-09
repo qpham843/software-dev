@@ -324,6 +324,17 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  searchTag(tag:string) {
+	console.log("Tag:", tag.value);
+	this.ds.getArticles().subscribe((data: Article) => {
+		console.log(data);
+		this.articles = data;
+		for(let x = 0; x < this.articles.length; x++) {
+			this.articleShow[x] = false;
+		}
+	  });
+  }
+
   toggle(i:number) {
   	this.articleShow[i] = !this.articleShow[i];
   }
