@@ -156,10 +156,12 @@ export class UtilitiesComponent implements OnInit {
 
   addTag(tag:string, queryId:string) {
     this.us.addQueryTag(queryId, tag);
+    this.getQueries();
   }
 
   deleteTag(tag:string, queryId:string) {
     this.us.deleteQueryTag(queryId, tag);
+    this.getQueries();
   }
 }
 
