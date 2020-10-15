@@ -464,4 +464,17 @@ update buzz_query set query = 'https://api.buzzsumo.com/search/trends.json?topic
 
 update buzz_query set query = 'https://api.buzzsumo.com/search/articles.json?q=covid&num_days=365&result_type=evergreen_score&language=en' where filename_tag = 'EvergreenCovidArticles';
 
+insert into buzz_query 
+(id, query, filename_tag, active_flag) 
+values 
+(5, 'https://api.buzzsumo.com/search/trends.json?topic=coronavirus,covid&search_type=trending_now&hours=24&count=25&countries=United States', 'Covid2Articles',true);
 
+update buzz_query set filename_tag = 'Covid2EvergreenArticles' where filename_tag = 'EvergreenCovidArticles';
+
+delete from article where filename_tag like '%evergreen%' and publish_date > timestamp('2020-05-05');
+update article set filename_tag = 'Covid2EvergreenArticles' where filename_tag like '%evergreen%';
+
+insert into buzz_query 
+(id, query, filename_tag, active_flag) 
+values 
+(6, 'https://api.buzzsumo.com/search/trends.json?topic=coronavirus,covid&search_type=trending_now&hours=24&count=75&countries=United States', 'Covid2Articles',true);

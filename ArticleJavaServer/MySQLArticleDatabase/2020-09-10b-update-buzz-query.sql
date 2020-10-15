@@ -1,0 +1,1 @@
+update buzz_query set query='q=covid&num_days=365&result_type=evergreen_score&language=en' where id = 4;

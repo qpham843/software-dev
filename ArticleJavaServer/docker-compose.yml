@@ -19,6 +19,7 @@ services:
       DATAFILES_BUCKETNAME: ${DATAFILES_BUCKETNAME}
       DATAFILES_LOCATION: ${DATAFILES_LOCATION}
       ENVIRONMENT_FLAG: ${ENVIRONMENT_FLAG:-DEV}
+      BUZZ_API_KEY: ${BUZZ_API_KEY}
   article_db:
     build:
       context: .
