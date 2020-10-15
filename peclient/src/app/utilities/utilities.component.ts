@@ -97,6 +97,7 @@ export class UtilitiesComponent implements OnInit {
 
   getQueries() {
     this.us.getBuzzQueries().subscribe(d => {
+      console.log(d);
       this.buzzQueries = d;
     })
   }
