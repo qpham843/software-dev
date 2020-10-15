@@ -97,6 +97,7 @@ export class UtilitiesComponent implements OnInit {
 
   getQueries() {
     this.us.getBuzzQueries().subscribe(d => {
+      console.log(d);
       this.buzzQueries = d;
     })
   }
@@ -156,10 +157,12 @@ export class UtilitiesComponent implements OnInit {
 
   addTag(tag:string, queryId:string) {
     this.us.addQueryTag(queryId, tag);
+    this.getQueries();
   }
 
   deleteTag(tag:string, queryId:string) {
     this.us.deleteQueryTag(queryId, tag);
+    this.getQueries();
   }
 }
 

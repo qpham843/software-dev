@@ -324,6 +324,33 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  searchTag(tag:any) {
+	console.log("Tag:", tag.value);
+	console.log(this.articles);
+	let sent = 0;
+	this.ds.getArticles().subscribe((data: Article) => {
+		for(let i = 0; i < this.articles.length;i++) //each article
+		{
+			for( let j = 0; j < this.articles[i].tags.length;j++) //each tag
+			{
+				if(tag.value == this.articles[i].tags[j]) 
+				{
+					console.log("tag",this.articles[i]);
+					sent = 1;
+				}
+			}
+			console.log("triggered2", this.articles.length);
+			if(sent == 0)
+			{
+				console.log("triggered");
+				this.articles.splice(i, 1);
+			}
+			sent = 0;
+		}
+		this.articles = data;
+	  });
+  }
+
   toggle(i:number) {
   	this.articleShow[i] = !this.articleShow[i];
   }

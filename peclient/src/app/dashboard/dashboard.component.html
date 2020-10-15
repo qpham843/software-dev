@@ -34,10 +34,10 @@
 		<br>
 
 		<label for="searchTitle" class="field-label-2">Tag Search</label>
-		<input type="text" class="" formControlName="searchTag" (keyup.enter)="searchTag()"
+		<input type="text" class="" formControlName="searchTag" (typeaheadOnSelect)="searchTag($event)"
 		 [value]="selected" [typeahead]="tagsString" [typeaheadOptionsLimit]="500" [typeaheadMinLength]="0"
 		  [typeaheadScrollable]="true"/>
-		<button type="button" (click)="searchTag();">Search</button>
+		<button type="button" (click)="searchTag($event);">Search</button>
 	   
 	</div>
 		<select formControlName="bulkStatus">
