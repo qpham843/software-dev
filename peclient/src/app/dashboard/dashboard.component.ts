@@ -106,19 +106,6 @@ export class DashboardComponent implements OnInit {
 	  	})
 	});
   }
-
-  submitBulk() {
-  		let newStatus = this.dashboardForm.get('bulkStatus').value;
-  		console.log("submitting all checked for status change to ", newStatus);
-	 	let checkboxes = document.getElementsByName("articleCheckbox");
-	  	checkboxes.forEach(cb => {
-	  		let cbe = cb as HTMLInputElement;
-  			if (cbe.checked)  
-					// cbe.value contains the id of the checkbox (the is of the article)
-  					this.bulkChangeStatus(cbe.value, newStatus);
-	  	})
-  }
-
   
   ngOnInit() {
   	console.log("dashboard initialized");
@@ -333,26 +320,50 @@ export class DashboardComponent implements OnInit {
 	console.log(this.articles);
 	let sent = 0;
 	this.ds.getArticles().subscribe((data: Article) => {
+		this.articles = data;
 		for(let i = 0; i < this.articles.length;i++) //each article
 		{
 			for( let j = 0; j < this.articles[i].tags.length;j++) //each tag
 			{
-				if(tag.value == this.articles[i].tags[j]) 
+				if(tag.value == this.articles[i].tags[j].tag) 
 				{
-					console.log("tag",this.articles[i]);
 					sent = 1;
 				}
 			}
-			console.log("triggered2", this.articles.length);
 			if(sent == 0)
 			{
-				console.log("triggered");
 				this.articles.splice(i, 1);
 			}
 			sent = 0;
 		}
-		this.articles = data;
+		data = this.articles;
 	  });
+  }
+
+  searchTagButton() {
+	console.log("Tag:", this.dashboardForm.get("searchTag").value);
+	console.log(this.articles);
+	let sent = 0;
+	this.ds.getArticles().subscribe((data: Article) => {
+		this.articles = data;
+		if(this.dashboardForm.get("searchTag").value != "" && this.dashboardForm.get("searchTag").value != null)
+		{
+			for (let i = 0; i < this.articles.length; i++) //each article
+			{
+				for (let j = 0; j < this.articles[i].tags.length; j++) //each tag
+				{
+					if (this.dashboardForm.get("searchTag").value == this.articles[i].tags[j].tag) {
+						sent = 1;
+					}
+				}
+				if (sent == 0) {
+					this.articles.splice(i, 1);
+				}
+				sent = 0;
+			}
+		}
+		data = this.articles;
+	});
   }
 
   toggle(i:number) {
@@ -406,6 +417,15 @@ export class DashboardComponent implements OnInit {
 		});
 	}
 
-
-  
+	submitBulk() {
+		let newStatus = this.dashboardForm.get('bulkStatus').value;
+		console.log("submitting all checked for status change to ", newStatus);
+	   let checkboxes = document.getElementsByName("articleCheckbox");
+		checkboxes.forEach(cb => {
+			let cbe = cb as HTMLInputElement;
+			if (cbe.checked)  
+				  // cbe.value contains the id of the checkbox (the is of the article)
+					this.bulkChangeStatus(cbe.value, newStatus);
+		})
+	}
 }

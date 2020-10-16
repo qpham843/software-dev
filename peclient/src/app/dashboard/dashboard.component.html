@@ -33,17 +33,17 @@
 		
 		<br>
 
-		<label for="searchTitle" class="field-label-2">Tag Search</label>
+		<label for="searchTag" class="field-label-2">Tag Search</label>
 		<input type="text" class="" formControlName="searchTag" (typeaheadOnSelect)="searchTag($event)"
 		 [value]="selected" [typeahead]="tagsString" [typeaheadOptionsLimit]="500" [typeaheadMinLength]="0"
 		  [typeaheadScrollable]="true"/>
-		<button type="button" (click)="searchTag($event);">Search</button>
+		<button type="button" (click)="searchTagButton();">Search</button>
 	   
 	</div>
 		<select formControlName="bulkStatus">
 		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
 	</select>
-		<button class="button bulksubmit" (click)="submitBulk()">Submit Bulk</button>
+		<button class="button bulksubmit" (click)="submitBulk();">Submit Bulk</button>
 	</div>
 
 	<div class="section" style="display:inline; max-width: 80%">
