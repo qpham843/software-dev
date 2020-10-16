@@ -42,7 +42,7 @@
 			<td>{{q.id}}</td>
 			<td> 
 				<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class=""
-				(typeaheadOnSelect)="addTag($event, q.id)"[typeaheadOptionsLimit]="500" [typeaheadMinLength]="0" [typeaheadScrollable]="true">
+				(typeaheadOnSelect)="addTag($event, q.id)" [typeaheadOptionsLimit]="500" [typeaheadMinLength]="0" [typeaheadScrollable]="true">
 				<ng-container *ngFor="let t of q.tags">[{{t.tag}}]
 					<button class="button tagDelete" (click)="deleteTag(t, q.id)">X</button>
 				</ng-container>

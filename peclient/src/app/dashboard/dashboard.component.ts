@@ -88,6 +88,10 @@ export class DashboardComponent implements OnInit {
 			this.articles.splice(i, 1);
 			}
 		});
+
+		this.dashboardForm.get("typeaheadControl").valueChanges.subscribe(value => {
+			this.dashboardForm.get("typeaheadControl").setValue("", {emitEvent:false});
+		  });
 	});
 
 	//checkall

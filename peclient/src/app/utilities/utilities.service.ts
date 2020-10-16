@@ -49,11 +49,11 @@ export class UtilitiesService {
     return this.http.get(this.apiDest + '/query')
   }
 //unfinished need to get links
-  addQueryTag(queryId: string, tagStr: string) {
+  addQueryTag(queryId: string, tagStr: any) {
     console.log(queryId, "queryId");
-    console.log(tagStr, "tagStr");
+    console.log(tagStr.value, "tagStr");
     console.log(this.apiDest + '/query/' + queryId + '/tag/' + tagStr);
-    return this.http.post(this.apiDest + '/query/' + queryId + '/tag/' + tagStr, null)
+    return this.http.post(this.apiDest + '/query/' + queryId + '/tag/' + tagStr.value, null)
   }
 
   deleteQueryTag(queryId: string, tagStr: string) {

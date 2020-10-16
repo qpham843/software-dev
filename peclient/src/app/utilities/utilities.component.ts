@@ -39,7 +39,12 @@ export class UtilitiesComponent implements OnInit {
     this.utilitiesForm = this.fb.group({
       typeaheadControl: new FormControl()
     });
+
+    this.utilitiesForm.get("typeaheadControl").valueChanges.subscribe(value => {
+      this.utilitiesForm.get("typeaheadControl").setValue("", {emitEvent:false});
+    });
   }
+
 
   ngOnInit() {
     this.getBuzz();
@@ -156,6 +161,7 @@ export class UtilitiesComponent implements OnInit {
   }
 
   addTag(tag:string, queryId:string) {
+    console.log(this.utilitiesForm.get("typeaheadControl"));
     this.us.addQueryTag(queryId, tag);
     this.getQueries();
   }
