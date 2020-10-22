@@ -53,6 +53,7 @@ public class BuzzQueryController {
 			HttpServletRequest request,
 			@PathVariable("id") Integer id, // article ID
 			@PathVariable("tag") String tag) { // tag name
+		logger.info("query controller - add tag " + tag + " to query " + id);
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
@@ -75,6 +76,7 @@ public class BuzzQueryController {
 			HttpServletRequest request,
 			@PathVariable("id") Integer id,
 			@PathVariable("tag") String tag) {
+		logger.info("query controller - delete tag " + tag + " from query " + id);
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}

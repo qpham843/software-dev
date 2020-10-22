@@ -162,13 +162,21 @@ export class UtilitiesComponent implements OnInit {
 
   addTag(tag:string, queryId:string) {
     console.log(this.utilitiesForm.get("typeaheadControl"));
-    this.us.addQueryTag(queryId, tag);
-    this.getQueries();
+    this.us.addQueryTag(queryId, tag.value).subscribe((data: any) => {
+      this.us.getBuzzQueries().subscribe((data: any) => {
+        this.buzzQueries = data;
+      });
+    });
+    
   }
 
   deleteTag(tag:string, queryId:string) {
-    this.us.deleteQueryTag(queryId, tag);
-    this.getQueries();
+    this.us.deleteQueryTag(queryId, tag).subscribe((data: any) => {
+      this.us.getBuzzQueries().subscribe((data: any) => {
+        this.buzzQueries = data;
+      })
+    });
+    
   }
 }
 

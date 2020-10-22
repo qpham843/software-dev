@@ -45,22 +45,22 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzQueryServic
 		return buzzQueryRepository.save(newQuery);
 	}
 	public BuzzQueryEntity tagQuery(Integer queryId, String tag) {
-		System.out.println("inside tagQuery()");
-		System.out.println("query id: " + queryId);
-		System.out.println("tag name: " + tag);
+		logger.info("inside tagQuery()");
+		logger.info("query id: " + queryId);
+		logger.info("tag name: " + tag);
 		Optional<TagEntity> tagEntity = tagRepository.findByTag(tag);
 		Optional<BuzzQueryEntity> buzzQuery = buzzQueryRepository.findById(queryId);
 		Optional<BuzzQueryHasTagEntity> buzzQueryHasTag;
 		
 		if (buzzQuery.isPresent() == false){
-			System.out.println("buzzquery doesn't exist");
+			logger.info("buzzquery doesn't exist");
 			return null;
 		}
 
 		TagEntity newTag = null;
 		
 		if (tagEntity.isPresent() == false) {
-			System.out.println("tagentity doesn't exist, adding new tag entity");
+			logger.info("tagentity doesn't exist, adding new tag entity");
 			newTag = tagService.newTag(tag);
 			tagRepository.save(newTag);
 		} else {
@@ -75,10 +75,10 @@ private static org.slf4j.Logger logger = LoggerFactory.getLogger(BuzzQueryServic
 			bqht.setTagId(newTag.getId());
 			bqht.setTag(tag);
 			buzzQueryHasTagRepository.save(bqht);
-			System.out.println("Made new buzzQueryHasTagEntity: " + tag);
+			logger.info("Made new buzzQueryHasTagEntity: " + tag);
 			
 		} else {
-			System.out.println("buzzQueryHasTagEntity already exists");
+			logger.info("buzzQueryHasTagEntity already exists");
 		}
 
 		buzzQueryRepository.findById(buzzQuery.get().getId());
