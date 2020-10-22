@@ -53,11 +53,11 @@ export class UtilitiesService {
     console.log(queryId, "queryId");
     console.log(tagStr.value, "tagStr");
     console.log(this.apiDest + '/query/' + queryId + '/tag/' + tagStr);
-    return this.http.post(this.apiDest + '/query/' + queryId + '/tag/' + tagStr.value, null)
+    return this.http.post(this.apiDest + '/query/' + queryId + '/tag/' + tagStr.value, null);
   }
 
   deleteQueryTag(queryId: string, tagStr: string) {
-    return this.http.delete(this.apiDest + '/query/' + queryId + '/tag/' + tagStr)
+    return this.http.delete(this.apiDest + '/query/' + queryId + '/tag/' + tagStr);
   }
 
 }
