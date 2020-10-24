@@ -160,7 +160,7 @@ export class UtilitiesComponent implements OnInit {
     );
   }
 
-  addTag(tag:string, queryId:string) {
+  addTag(tag:any, queryId:string) {
     console.log(this.utilitiesForm.get("typeaheadControl"));
     this.us.addQueryTag(queryId, tag.value).subscribe((data: any) => {
       this.us.getBuzzQueries().subscribe((data: any) => {
