@@ -21,4 +21,6 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer
 	public ArticleEntity findOneByArticleHash(String articleHash);
 	public List<ArticleEntity> findAllByOrderByPublishDateDesc();
 	
+	public List<ArticleEntity> findByTags_tagOrderByPublishDateDesc(String tag);
+	
 }

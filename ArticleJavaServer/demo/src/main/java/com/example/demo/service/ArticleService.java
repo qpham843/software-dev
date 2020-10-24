@@ -70,6 +70,11 @@ public class ArticleService {
 		return articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode);
 	}
 
+	public List<ArticleEntity> findArticleByTag(String tag) {
+		logger.info("tag " + tag);
+		return articleRepository.findByTags_tagOrderByPublishDateDesc(tag);
+	}
+
 	public ArticleEntity findArticleByUrl(String url) {
 		logger.info("findArticleByUrl: " + url);
 		Optional<ArticleEntity> a = articleRepository.findByUrl(url);

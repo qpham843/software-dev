@@ -66,6 +66,15 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.findAllArticles(), HttpStatus.OK);
 	}
 
+       @RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
+       public ResponseEntity findArticleByTag(
+                       HttpServletRequest request,
+                       @PathVariable("tag") String tag
+       ) {
+
+               return new ResponseEntity<>(articleService.findArticleByTag(tag), HttpStatus.OK);
+       }
+
 	// /article/submit?url=https://cnn.com/asdfasdgf
 
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
