@@ -13,6 +13,9 @@ import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.example.demo.controller.ArticleController;
 import com.example.demo.entities.ArticleEntity;
@@ -548,6 +551,18 @@ public class ArticleService {
 			return article;
 		} else {
 			return null;
+		}
+	}
+
+	/*finds a given page of articles returned as a list given a page number 
+	and a page size. */
+	/*todo: find some sort of way to return the total number of pages given
+	a set page size.*/
+	public List<ArticleEntity> findPaginated(int pageNo, int pageSize) {
+		if (pageNo >= 0 && pageSize > 0) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = articleRepository.findAll(paging);
+			return pagedResult.toList();
 		}
 	}
 

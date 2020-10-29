@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.example.demo.entities.ArticleEntity;
 
-public interface ArticleRepository extends CrudRepository<ArticleEntity, Integer>{
+
+public interface ArticleRepository extends PagingAndSortingRepository<ArticleEntity, Integer>{
 	public Optional<ArticleEntity> findById(Integer id);
 	public Optional<ArticleEntity> findByUrl(String url);
 	
