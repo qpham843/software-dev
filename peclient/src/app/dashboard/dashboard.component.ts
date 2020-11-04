@@ -316,54 +316,60 @@ export class DashboardComponent implements OnInit {
   }
 
   searchTag(tag:any) {
-	console.log("Tag:", tag.value);
-	console.log(this.articles);
-	let sent = 0;
-	this.ds.getArticles().subscribe((data: Article) => {
+	// console.log("Tag:", tag.value);
+	// console.log(this.articles);
+	// let sent = 0;
+	// this.ds.getArticles().subscribe((data: Article) => {
+	// 	this.articles = data;
+	// 	for(let i = 0; i < this.articles.length;i++) //each article
+	// 	{
+	// 		for( let j = 0; j < this.articles[i].tags.length;j++) //each tag
+	// 		{
+	// 			if(tag.value == this.articles[i].tags[j].tag) 
+	// 			{
+	// 				sent = 1;
+	// 			}
+	// 		}
+	// 		if(sent == 0)
+	// 		{
+	// 			this.articles.splice(i, 1);
+	// 		}
+	// 		sent = 0;
+	// 	}
+	// 	data = this.articles;
+	// });
+	this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
 		this.articles = data;
-		for(let i = 0; i < this.articles.length;i++) //each article
-		{
-			for( let j = 0; j < this.articles[i].tags.length;j++) //each tag
-			{
-				if(tag.value == this.articles[i].tags[j].tag) 
-				{
-					sent = 1;
-				}
-			}
-			if(sent == 0)
-			{
-				this.articles.splice(i, 1);
-			}
-			sent = 0;
-		}
-		data = this.articles;
-	  });
+	})
   }
 
   searchTagButton() {
-	console.log("Tag:", this.dashboardForm.get("searchTag").value);
-	console.log(this.articles);
-	let sent = 0;
-	this.ds.getArticles().subscribe((data: Article) => {
+	// console.log("Tag:", this.dashboardForm.get("searchTag").value);
+	// console.log(this.articles);
+	// let sent = 0;
+	// this.ds.getArticles().subscribe((data: Article) => {
+	// 	this.articles = data;
+	// 	if(this.dashboardForm.get("searchTag").value != "" && this.dashboardForm.get("searchTag").value != null)
+	// 	{
+	// 		for (let i = 0; i < this.articles.length; i++) //each article
+	// 		{
+	// 			for (let j = 0; j < this.articles[i].tags.length; j++) //each tag
+	// 			{
+	// 				if (this.dashboardForm.get("searchTag").value == this.articles[i].tags[j].tag) {
+	// 					sent = 1;
+	// 				}
+	// 			}
+	// 			if (sent == 0) {
+	// 				this.articles.splice(i, 1);
+	// 			}
+	// 			sent = 0;
+	// 		}
+	// 	}
+	// 	data = this.articles;
+	// });
+	this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
 		this.articles = data;
-		if(this.dashboardForm.get("searchTag").value != "" && this.dashboardForm.get("searchTag").value != null)
-		{
-			for (let i = 0; i < this.articles.length; i++) //each article
-			{
-				for (let j = 0; j < this.articles[i].tags.length; j++) //each tag
-				{
-					if (this.dashboardForm.get("searchTag").value == this.articles[i].tags[j].tag) {
-						sent = 1;
-					}
-				}
-				if (sent == 0) {
-					this.articles.splice(i, 1);
-				}
-				sent = 0;
-			}
-		}
-		data = this.articles;
-	});
+	})
   }
 
   toggle(i:number) {
