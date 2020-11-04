@@ -55,8 +55,8 @@ export class DashboardService {
   	return this.http.get<Article>(this.apiDest + '/article?title=' + url);
   }
 
-  searchByTag(url: string) {
-  	return this.http.get<Article>(this.apiDest + '/tag?title=' + url);
+  searchByTag(tag: string) {
+  	return this.http.get<Article>(this.apiDest + '/tag?title=' + tag);
   }
 
   setStatus(id: number, status: string) {
