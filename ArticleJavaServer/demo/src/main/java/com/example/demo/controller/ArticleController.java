@@ -66,40 +66,40 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.findAllArticles(), HttpStatus.OK);
 	}
 
-	/**return a list of paginated articles for display on the dashboard. An alternative
-	 * to getAllArticles to reduce load time.
-	 */
-	@RequestMapping(value = "/{pageNo}/{pageSize}", method = RequestMethod.GET)
-	public ResponseEntity getPaginatedArticles(
-		HttpServletRequest request,
-		@RequestParam(required = false, name="status") String statusCode,
-		@RequestParam(required = false, name="title") String title,
-		@RequestParam(required = false, name="url") String url
-	) {
-		if (authService.auth(request) == false) {
-			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
-		}
+	// /**return a list of paginated articles for display on the dashboard. An alternative
+	//  * to getAllArticles to reduce load time.
+	//  */
+	// @RequestMapping(value = "/page/{pageNo}/{pageSize}", method = RequestMethod.GET)
+	// public ResponseEntity getPaginatedArticles(
+	// 	HttpServletRequest request,
+	// 	@RequestParam(required = false, name="status") String statusCode,
+	// 	@RequestParam(required = false, name="title") String title,
+	// 	@RequestParam(required = false, name="url") String url
+	// ) {
+	// 	if (authService.auth(request) == false) {
+	// 		return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
+	// 	}
 		
-		if (statusCode != null) {
-			return new ResponseEntity<>(articleService.findArticleByStatus(statusCode), HttpStatus.OK);
-		}
-		if (title != null) {
-			return new ResponseEntity<>(articleService.findArticleByTitle(title), HttpStatus.OK);
-		}
-		if (url != null) {
-			return new ResponseEntity<>(articleService.findArticleByUrl(url), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(articleService.findPaginated(pageNo, pageSize), HttpStatus.OK);
-	}
+	// 	if (statusCode != null) {
+	// 		return new ResponseEntity<>(articleService.findArticleByStatus(statusCode), HttpStatus.OK);
+	// 	}
+	// 	if (title != null) {
+	// 		return new ResponseEntity<>(articleService.findArticleByTitle(title), HttpStatus.OK);
+	// 	}
+	// 	if (url != null) {
+	// 		return new ResponseEntity<>(articleService.findArticleByUrl(url), HttpStatus.OK);
+	// 	}
+	// 	return new ResponseEntity<>(articleService.findPaginated(pageNo, pageSize), HttpStatus.OK);
+	// }
 
-       @RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
-       public ResponseEntity findArticleByTag(
-                       HttpServletRequest request,
-                       @PathVariable("tag") String tag
-       ) {
+    //    @RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
+    //    public ResponseEntity findArticleByTag(
+    //                    HttpServletRequest request,
+    //                    @PathVariable("tag") String tag
+    //    ) {
 
-               return new ResponseEntity<>(articleService.findArticleByTag(tag), HttpStatus.OK);
-       }
+    //            return new ResponseEntity<>(articleService.findArticleByTag(tag), HttpStatus.OK);
+    //    }
 
 	// /article/submit?url=https://cnn.com/asdfasdgf
 
