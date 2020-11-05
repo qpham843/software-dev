@@ -1,4 +1,7 @@
-import verifyAudit from "./verify.js";
+import verifyAudit, {vizLink} from "./verify.js";
+
+var peNewsfeedUrlPrefix = "https://newsfeed.publiceditor.io"
+
 
 /**
  * Gets the URL previewed.
@@ -58,6 +61,31 @@ function setPreviewURL(url) {
 	document.getElementById("websiteURL").defaultValue = url;
 }
 
+/**
+ * Visualizes whether or not an article has already been submitted and audited. The logic of 
+ * verification is handled by the function verifyAudit. This function focuses on only the 
+ * popup visuals. This means icon visual updates are handled in background.js
+ * 
+ * @param {boolean} audited Whether or not an article has already been submitted and audited.
+ */
+function indicateAudited(audited) {
+	if (audited) {	
+		//document.getElementById("foo").innerText = peNewsfeedUrlPrefix + vizLink;
+		document.getElementById("captureButton").disabled = true;
+		//document.getElementById("result").innerText = "This article has already been submitted.";
+		document.getElementById("isNotPublicEditorViz").style.display = "none";
+		document.getElementById("isPublicEditorViz").style.display = "inline";
+
+		document.getElementById("showVizHref").href = peNewsfeedUrlPrefix + vizLink;		
+		document.getElementById("showVizHref").innerHTML = peNewsfeedUrlPrefix + vizLink;		
+
+	} else {
+		document.getElementById("isNotPublicEditorViz").style.display = "inline";
+		document.getElementById("isPublicEditorViz").style.display = "none";
+	}
+}
+
+
 /** When document is loaded, set up button and visualize verifyAudit. */
 document.addEventListener('DOMContentLoaded', () => {
     const capture = document.getElementById('captureButton');
@@ -66,7 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
           submitURL(getURL());
         }
 	};
+	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+		verifyAudit(tabs[0].url, audited => {
+			indicateAudited(audited);
+			//openVetted(audited);
+			//chrome.tabs.create({
+			//	url: peNewsfeedUrlPrefix + vizLink
+			//})
+		});
+	});
+
 });
+
+
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, tabs => {
 	setPreviewURL(tabs[0].url);

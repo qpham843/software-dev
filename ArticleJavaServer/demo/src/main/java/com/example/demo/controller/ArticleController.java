@@ -48,7 +48,8 @@ public class ArticleController {
 		HttpServletRequest request,
 		@RequestParam(required = false, name="status") String statusCode,
 		@RequestParam(required = false, name="title") String title,
-		@RequestParam(required = false, name="url") String url
+		@RequestParam(required = false, name="url") String url,
+		@RequestParam(required = false, name="tag") String tag
 	) {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
@@ -62,6 +63,9 @@ public class ArticleController {
 		}
 		if (url != null) {
 			return new ResponseEntity<>(articleService.findArticleByUrl(url), HttpStatus.OK);
+		}
+		if (tag != null) {
+			return new ResponseEntity<>(articleService.findArticleByTag(tag), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(articleService.findAllArticles(), HttpStatus.OK);
 	}

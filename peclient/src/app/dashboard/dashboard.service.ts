@@ -52,11 +52,11 @@ export class DashboardService {
   }
 
   searchByUrl(url: string) {
-  	return this.http.get<Article>(this.apiDest + '/article?title=' + url);
+  	return this.http.get<Article>(this.apiDest + '/article?url=' + url);
   }
 
   searchByTag(tag: string) {
-  	return this.http.get<Article>(this.apiDest + '/tag?title=' + tag);
+  	return this.http.get<Article>(this.apiDest + '/article?tag=' + tag);
   }
 
   setStatus(id: number, status: string) {
