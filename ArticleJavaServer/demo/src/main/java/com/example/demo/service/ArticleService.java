@@ -42,7 +42,7 @@ import com.example.demo.entities.UpdateJobEntity;
 
 @Service
 public class ArticleService {
-	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleController.class);
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ArticleService.class);
 	
 	@Autowired private ArticleRepository articleRepository;
 	@Autowired private StatusRepository statusRepository;

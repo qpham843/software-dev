@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Query Mini-Extension",
-	"description": "This extension checks if Public Editor has the current page among it's scored articles.",
+	"description": "This extension checks if Public Editor has the current page among its scored articles.",
 	"version": "1.1",
 
 	"permissions": [
