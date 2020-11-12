@@ -48,22 +48,42 @@ public class ArticleController {
 		HttpServletRequest request,
 		@RequestParam(required = false, name="status") String statusCode,
 		@RequestParam(required = false, name="title") String title,
-		@RequestParam(required = false, name="url") String url
+		@RequestParam(required = false, name="url") String url,
+		@RequestParam(required = false, name="tag") String tag
 	) {
+		logger.info("get articles");
+		List<ArticleEntity> r = new ArrayList<ArticleEntity>();
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
-		
+		boolean searched = false;
 		if (statusCode != null) {
-			return new ResponseEntity<>(articleService.findArticleByStatus(statusCode), HttpStatus.OK);
+			logger.info("findArticleByStatus("+ statusCode + ")");
+			searched=true;
+			r = articleService.findArticleByStatus(statusCode);
 		}
 		if (title != null) {
-			return new ResponseEntity<>(articleService.findArticleByTitle(title), HttpStatus.OK);
+			logger.info("findArticleByTitle("+ title + ")");			
+			searched=true;
+			r = articleService.findArticleByTitle(title);
 		}
 		if (url != null) {
-			return new ResponseEntity<>(articleService.findArticleByUrl(url), HttpStatus.OK);
+			logger.info("findArticleByUrl("+ url + ")");
+			searched=true;
+			r = (List<ArticleEntity>) articleService.findArticleByUrl(url);
 		}
-		return new ResponseEntity<>(articleService.findAllArticles(), HttpStatus.OK);
+		if (tag != null) {
+			logger.info("findArticleByTag("+ tag + ")");
+			searched=true;
+			r = articleService.findArticleByTag(tag);
+		}
+		if (searched == false) {
+			logger.info("find all articles");
+			searched=true;
+			r = articleService.findAllArticles();	
+		}
+		logger.info("got " + r.size() + " articles");
+		return new ResponseEntity<>(r, HttpStatus.OK);
 	}
 
 	/**return a list of paginated articles for display on the dashboard. An alternative

@@ -3,27 +3,45 @@
     <link rel="stylesheet" type="text/css" href="popup-style.css">
   </head>
   <body class="container">
+
+
     <a href="http://publiceditor.io/" target="_blank">
       <span id="logo">
           <img src="images/pe32.png">
           <h1>Public Editor</h1>
       </span> 
     </a>   
+
+
+    <div style="visibility: hidden">
       <div class="inputbox shadow">
         <label><h2>website to submit</h2></label>
         <input type="text" id="websiteURL">
       </div>
     <button id="captureButton" class="button shadow"> submit </button>
-    <output id="peresult"></output>
-    <footer>
-  	  <div> 
-        Thank you for downloading the Public Editor Chrome Extension.  This Chrome extension allows you to submit articles to our Public Editor page to be scored and analyzed according to our scoring rubric. For more information, please click on the FAQ hyperlink and information page below. We look forward to working with you to create a credible working world. 
+  </div>
+
+
+    <div id="isPublicEditorViz">
+      <div> 
+        This article is available to view with visualizations on Public Editor's newsfeed.
       </div>
-    </footer>
+    <br>
+    <a href="" target="_blank" id="showVizHref"></a>
+   <br><br>
+   </div>
+
+    <div id="isNotPublicEditorViz">
+      <div> 
+        This article has not yet been through the public editor analysis process. Click to open Public Editor's newsfeed to see articles which have been visualized.
+      </div>
+    <br>
+      <a href="https://publiceditor.io/newsfeed" target="_blank" >https://publiceditor.io/newsfeed</a>
+
+    </div>
+
+    <div id="foo">
+    </div>
    <script type="module" src="popup.js"></script>
-
-   <div id="pelog"></div>
-    
-
   </body>
 </html>

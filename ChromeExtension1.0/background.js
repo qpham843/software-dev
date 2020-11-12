@@ -27,8 +27,9 @@ function changeIcon(audited) {
  */
 function changeIconBasedOnUrl() {
 	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-		console.log(tabs);
-		verifyAudit(tabs[0].url, changeIcon);
+		//console.log(tabs);
+		if (tabs.length > 0)
+			verifyAudit(tabs[0].url, changeIcon);
 	});
 }
 

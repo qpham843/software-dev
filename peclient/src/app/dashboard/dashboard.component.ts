@@ -144,8 +144,8 @@ export class DashboardComponent implements OnInit {
   sortTotal: boolean = true;
   sortChecks: boolean = true;
 
-  onClick(s:string)
-  {
+  onClick(s:string)  {
+    console.log("Sort clicked", s);
     if(s === "dateAdded")
     {
   	  	if (this.sortOrderDate) {
@@ -316,57 +316,14 @@ export class DashboardComponent implements OnInit {
   }
 
   searchTag(tag:any) {
-	// console.log("Tag:", tag.value);
-	// console.log(this.articles);
-	// let sent = 0;
-	// this.ds.getArticles().subscribe((data: Article) => {
-	// 	this.articles = data;
-	// 	for(let i = 0; i < this.articles.length;i++) //each article
-	// 	{
-	// 		for( let j = 0; j < this.articles[i].tags.length;j++) //each tag
-	// 		{
-	// 			if(tag.value == this.articles[i].tags[j].tag) 
-	// 			{
-	// 				sent = 1;
-	// 			}
-	// 		}
-	// 		if(sent == 0)
-	// 		{
-	// 			this.articles.splice(i, 1);
-	// 		}
-	// 		sent = 0;
-	// 	}
-	// 	data = this.articles;
-	// });
+    console.log("search by TAG 111 ", this.dashboardForm.get('searchTag').value);
 	this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
 		this.articles = data;
 	})
   }
 
   searchTagButton() {
-	// console.log("Tag:", this.dashboardForm.get("searchTag").value);
-	// console.log(this.articles);
-	// let sent = 0;
-	// this.ds.getArticles().subscribe((data: Article) => {
-	// 	this.articles = data;
-	// 	if(this.dashboardForm.get("searchTag").value != "" && this.dashboardForm.get("searchTag").value != null)
-	// 	{
-	// 		for (let i = 0; i < this.articles.length; i++) //each article
-	// 		{
-	// 			for (let j = 0; j < this.articles[i].tags.length; j++) //each tag
-	// 			{
-	// 				if (this.dashboardForm.get("searchTag").value == this.articles[i].tags[j].tag) {
-	// 					sent = 1;
-	// 				}
-	// 			}
-	// 			if (sent == 0) {
-	// 				this.articles.splice(i, 1);
-	// 			}
-	// 			sent = 0;
-	// 		}
-	// 	}
-	// 	data = this.articles;
-	// });
+  console.log("search by TAG button", this.dashboardForm.get('searchTag').value);
 	this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
 		this.articles = data;
 	})
@@ -383,6 +340,7 @@ export class DashboardComponent implements OnInit {
   }
 
   searchTitle() {
+  	console.log("search by title like", this.dashboardForm.get('searchTitle').value);
   	this.ds.searchByTitle(this.dashboardForm.get('searchTitle').value).subscribe((data: Article) => {
   		this.articles = data;
   	})

@@ -14,7 +14,7 @@ public interface ArticleRepository extends PagingAndSortingRepository<ArticleEnt
 	public Optional<ArticleEntity> findById(Integer id);
 	public Optional<ArticleEntity> findByUrl(String url);
 	
-	@Query(value="select * from article where title like concat('%',:title,'%') ", nativeQuery=true)
+	@Query(value="select * from article where articleTitle like concat('%',:title,'%') ", nativeQuery=true)
 	public List<ArticleEntity> findByTitle(String title);
 
 	@Query(value="select a.* from article a, article_current_status acs where acs.status_code = :statusCode and acs.id = a.id order by a.publish_date DESC", nativeQuery=true)
