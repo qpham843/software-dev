@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Streamable;
 
 import com.example.demo.controller.ArticleController;
 import com.example.demo.entities.ArticleEntity;
@@ -37,6 +38,7 @@ import com.example.demo.service.BuzzService;
 import com.example.demo.service.FileService;
 import com.example.demo.service.TagService;
 import com.example.demo.entities.UpdateJobEntity;
+
 
 
 
@@ -554,17 +556,18 @@ public class ArticleService {
 		}
 	}
 
-	// /*finds a given page of articles returned as a list given a page number 
-	// and a page size. */
-	// /*todo: find some sort of way to return the total number of pages given
-	// a set page size.*/
-	// public List<ArticleEntity> findPaginated(int pageNo, int pageSize) {
-	// 	if (pageNo >= 0 && pageSize > 0) {
-	// 		Pageable paging = PageRequest.of(pageNo, pageSize);
-	// 		Page<ArticleEntity> pagedResult = articleRepository.findAll(paging);
-	// 		return pagedResult.toList();
-	// 	}
-	// }
+	/*finds a given page of articles returned as a list given a page number 
+	and a page size. */
+	/*todo: find some sort of way to return the total number of pages given
+	a set page size.*/
+	public List<ArticleEntity> findPaginated(int pageNo, int pageSize) {
+		if (pageNo >= 0 && pageSize > 0) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = articleRepository.findAll(paging);
+			return pagedResult.getContent();
+		}
+		return null;
+	}
 
 
 }
