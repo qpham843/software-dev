@@ -556,10 +556,8 @@ public class ArticleService {
 		}
 	}
 
-	/*finds a given page of articles returned as a list given a page number 
-	and a page size. */
-	/*todo: find some sort of way to return the total number of pages given
-	a set page size.*/
+	/*finds a given page of articles using PAGENO and PAGESIZE and returns a list 
+	containing the correct articles. */
 	public List<ArticleEntity> findPaginated(int pageNo, int pageSize) {
 		if (pageNo >= 0 && pageSize > 0) {
 			Pageable paging = PageRequest.of(pageNo, pageSize);
@@ -568,6 +566,34 @@ public class ArticleService {
 		}
 		return null;
 	}
+
+	/*returns a page of articles determined by PAGENO and PAGESIZE sorted by title, 
+	url, or date, calls the related name driven query in repository layer depending 
+	on the value of SORT*/
+	public List<ArticleEntity> findPaginatedSorted(int pageNo, int pageSize, String sort) {
+		if (pageNo >= 0 && pageSize > 0) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = null;
+			switch(sort) {
+				case "title":
+					pagedResult = articleRepository.findAllByOrderByTitleDesc(paging);
+					break;
+				case "url":
+					pagedResult = articleRepository.findAllByOrderByUrlDesc(paging);
+					break;
+				case "date":
+					pagedResult = articleRepository.findAllByOrderByPublishDateDesc(paging);
+					break;
+				default:
+					pagedResult = articleRepository.findAll(paging);
+
+			}
+			return pagedResult.getContent();
+		}
+		return null;
+	}
+
+	
 
 
 }
