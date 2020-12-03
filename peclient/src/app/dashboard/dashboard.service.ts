@@ -22,12 +22,16 @@ export class DashboardService {
     }
   }
 
-  getArticles() {
-  	return this.http.get<Article>(this.apiDest + '/article/');
+  getArticles(page: number, size: number, sort: string) {
+  	return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
   }
+  //article/page?no=0&size=100&sort=date
 
   getStatuses() {
   	return this.http.get<Status>(this.apiDest + '/status/');
+  }
+  getTotNumArticles() {
+    return this.http.get<Number>(this.apiDest + '/article/totalpages?size=1');
   }
   
   addArticle(id: number, tagStr: string) {
@@ -44,6 +48,7 @@ export class DashboardService {
     {
       return this.http.get<Article>('/api/article/');
     }
+    //fix
   	return this.http.get<Article>('/api/article?status=' + statusCode);
   }
 

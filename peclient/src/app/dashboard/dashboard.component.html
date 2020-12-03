@@ -87,14 +87,14 @@
 	</table>
 	
 	<br><br>
-	
+  
 	<table class="table3" border="1px solid" style="margin: 10px; padding: 20px;">
 	    <tbody>
 			<ng-container *ngFor="let a of articles | 
-			
 			paginate: {id: 'listing_pagination', 
 			itemsPerPage: 5,
-			currentPage: page}"
+			currentPage: page,
+			totalItems: totNumArticles}"
 			>
 		    	<tr>
 		    		<td class="fifty-percent" style="padding: 20px;">
@@ -137,16 +137,16 @@
 		    		</td>
 		    	</tr>
 	    	</ng-container>
-
 	    </tbody>
 	</table>
 	<div>
 		<pagination-controls 
 			id="listing_pagination" 
 			maxSize="5" 
-			(pageChange)="page = $event" 
+			(pageChange)="page = handlePageChange($event)"
 			responsive="true">
 		</pagination-controls>
+
 	</div>
 
 	</div>

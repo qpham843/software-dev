@@ -25,8 +25,9 @@ export class DashboardComponent implements OnInit {
   statuses: any = [];
   articleDetails: any = [];
   articleShow: boolean[] = [];
-  page:Number=1
-  totalRecords:String
+  totNumArticles: Number = 0;
+  page:number=1;
+  totalRecords:String;
   
   selected: string = "";
   tags: any = [];
@@ -75,7 +76,7 @@ export class DashboardComponent implements OnInit {
 			if(!val || val == "null")
 			{
 				console.log("hiii");
-				this.ds.getArticles().subscribe((data: Article) => {
+				this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
 				this.articles = data;
 					for(let x = 0; x < this.articles.size; x++) {
 						this.articleShow[x] = true;
@@ -108,9 +109,12 @@ export class DashboardComponent implements OnInit {
   }
   
   ngOnInit() {
-  	console.log("dashboard initialized");
-
-	this.ds.getArticles().subscribe((data: Article) => {
+	  console.log("dashboard initialized");
+	  this.ds.getTotNumArticles().subscribe((data: Number) => {
+		  this.totNumArticles = data;
+	  });
+	
+	  this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
 		console.log(data);
 		this.articles = data;
 		for(let x = 0; x < this.articles.length; x++) {
@@ -299,9 +303,19 @@ export class DashboardComponent implements OnInit {
 	}
   }
 
+  handlePageChange(page: any) {
+	this.ds.getArticles(page - 1, 5, "date").subscribe((data: Article) => {
+		this.articles = data;
+		for(let x = 0; x < this.articles.length; x++) {
+			this.articleShow[x] = false;
+		}
+  	});
+	return page;
+  }
+
   addTag(article_id:number, tag:string) {
 		this.ds.addArticle(article_id, tag).subscribe((data: Article) => {
-			this.ds.getArticles().subscribe((data: Article) => {
+			this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
 				this.articles = data;
 			});
 		});
@@ -309,7 +323,7 @@ export class DashboardComponent implements OnInit {
 
   deleteTag(article_id:number, tag:string) {
     this.ds.deleteArticle(article_id, tag).subscribe((data: Article) => {
-		this.ds.getArticles().subscribe((data: Article) => {
+		this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
 			this.articles = data;
 	  	});
     });
@@ -349,7 +363,7 @@ export class DashboardComponent implements OnInit {
   filterByStatus(filterVal: any) {
 	this.stringSearched = '';
 	if (filterVal == "all")
-		this.ds.getArticles().subscribe((data: Article) => {
+	this.ds.getArticles((this.page - 1), 100, "date").subscribe((data: Article) => {
 			this.articles = data;
   		});
 	else
@@ -365,7 +379,7 @@ export class DashboardComponent implements OnInit {
 	// this object's value is the new value 
 	changeStatus(id: number, val) {
 		this.ds.setStatus(id, val.srcElement.value).subscribe((data: Article) => {
-			this.ds.getArticles().subscribe((data: Article) => {
+			this.ds.getArticles((this.page - 1), 100, "date").subscribe((data: Article) => {
 				this.articles = data;
   			});
 		});
@@ -375,7 +389,7 @@ export class DashboardComponent implements OnInit {
 
 	bulkChangeStatus(number, val) {
 		this.ds.setStatus(number, val).subscribe((data: Article) => {
-			this.ds.getArticles().subscribe((data: Article) => {
+			this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
 				this.articles = data;
   			});
 		});
