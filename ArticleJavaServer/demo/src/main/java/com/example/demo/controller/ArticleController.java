@@ -118,6 +118,18 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.findPaginated(pageNo, pageSize), HttpStatus.OK);
 	}
 
+	/*given a page size returns total number of pages in data base */
+	@RequestMapping(value = "/totalpages", method = RequestMethod.GET)
+	public ResponseEntity getPaginatedArticles(
+		HttpServletRequest request,
+		@RequestParam(required = true, name="size") int pageSize
+	) {
+		if (authService.auth(request) == false) {
+			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<>(articleService.getTotalPages(pageSize), HttpStatus.OK);
+	}
+
        @RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
        public ResponseEntity findArticleByTag(
                        HttpServletRequest request,

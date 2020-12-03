@@ -593,7 +593,14 @@ public class ArticleService {
 		return null;
 	}
 
-	
+	public int getTotalPages(int pageSize) {
+		if (pageSize > 0) {
+			Pageable paging = PageRequest.of(0, pageSize);
+			Page<ArticleEntity> pagedResult = articleRepository.findAll(paging);
+			return pagedResult.getTotalPages();
+		}
+		return -1;
+	}
 
 
 }
