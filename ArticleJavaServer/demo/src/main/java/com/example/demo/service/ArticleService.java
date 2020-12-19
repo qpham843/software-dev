@@ -75,6 +75,14 @@ public class ArticleService {
 		return articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode);
 	}
 
+	/**does the same as find article by status except returns a paginated result */
+	public List<ArticleEntity> findArticleByStatusPaginated(String statusCode, int pageNo, int pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<ArticleEntity> pagedResult = null;
+		pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
+		return pagedResult.getContent();
+	}
+
 	public List<ArticleEntity> findArticleByTag(String tag) {
 		logger.info("tag " + tag);
 		return articleRepository.findByTags_tagOrderByPublishDateDesc(tag);
@@ -570,8 +578,8 @@ public class ArticleService {
 	/*returns a page of articles determined by PAGENO and PAGESIZE sorted by title, 
 	url, or date, calls the related name driven query in repository layer depending 
 	on the value of SORT*/
-	public List<ArticleEntity> findPaginatedSorted(int pageNo, int pageSize, String sort) {
-		if (pageNo >= 0 && pageSize > 0) {
+	public List<ArticleEntity> findPaginatedSorted(int pageNo, int pageSize, String sort, Boolean desc ) {
+		if (pageNo >= 0 && pageSize > 0 && desc) {
 			Pageable paging = PageRequest.of(pageNo, pageSize);
 			Page<ArticleEntity> pagedResult = null;
 			switch(sort) {
@@ -584,15 +592,40 @@ public class ArticleService {
 				case "date":
 					pagedResult = articleRepository.findAllByOrderByPublishDateDesc(paging);
 					break;
+				case "totalShares":
+					pagedResult = articleRepository.findAllByOrderByTotalSharesDesc(paging);
+					break;
 				default:
 					pagedResult = articleRepository.findAll(paging);
 
+			}
+			return pagedResult.getContent();
+		} else  if (pageNo >= 0 && pageSize > 0 && !desc) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = null;
+			switch(sort) {
+				case "title":
+					pagedResult = articleRepository.findAllByOrderByTitleAsc(paging);
+					break;
+				case "url":
+					pagedResult = articleRepository.findAllByOrderByUrlAsc(paging);
+					break;
+				case "date":
+					pagedResult = articleRepository.findAllByOrderByPublishDateAsc(paging);
+					break;
+				case "totalShares":
+					pagedResult = articleRepository.findAllByOrderByTotalSharesAsc(paging);
+					break;
+				default:
+					pagedResult = articleRepository.findAll(paging);
 			}
 			return pagedResult.getContent();
 		}
 		return null;
 	}
 
+
+	/*returns total number of pages in a repository given a pagesize */
 	public int getTotalPages(int pageSize) {
 		if (pageSize > 0) {
 			Pageable paging = PageRequest.of(0, pageSize);

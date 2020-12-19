@@ -97,23 +97,24 @@ public class ArticleController {
 		@RequestParam(required = false, name="url") String url,
 		@RequestParam(required = true, name="size") int pageSize,
 		@RequestParam(required = true, name="no") int pageNo,
-		@RequestParam(required = false, name="sort") String sort
+		@RequestParam(required = false, name="sort") String sort,
+		@RequestParam(required = false, name="order") Boolean desc
 	) {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
 		
-		if (statusCode != null) {
-			return new ResponseEntity<>(articleService.findArticleByStatus(statusCode), HttpStatus.OK);
+		else if (statusCode != null) {
+			return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize), HttpStatus.OK);
 		}
-		if (title != null) {
+		else if (title != null) {
 			return new ResponseEntity<>(articleService.findArticleByTitle(title), HttpStatus.OK);
 		}
-		if (url != null) {
+		else if (url != null) {
 			return new ResponseEntity<>(articleService.findArticleByUrl(url), HttpStatus.OK);
 		}
-		if (sort != null) {
-			return new ResponseEntity<>(articleService.findPaginatedSorted(pageNo, pageSize, sort), HttpStatus.OK);
+		else if (sort != null && desc != null) {
+			return new ResponseEntity<>(articleService.findPaginatedSorted(pageNo, pageSize, sort, desc), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(articleService.findPaginated(pageNo, pageSize), HttpStatus.OK);
 	}
