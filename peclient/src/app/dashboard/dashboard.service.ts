@@ -22,10 +22,14 @@ export class DashboardService {
     }
   }
 
-  getArticles(page: number, size: number, sort: string) {
-  	return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
+  getArticles(page: number, size: number, sort: string, order:Boolean) {
+    if (order == null) {
+      return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
+    } else {
+      return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
+    }
   }
-  //article/page?no=0&size=100&sort=date
+  //example: article/page?no=0&size=100&sort=date
 
   getStatuses() {
   	return this.http.get<Status>(this.apiDest + '/status/');
@@ -35,21 +39,19 @@ export class DashboardService {
   }
   
   addArticle(id: number, tagStr: string) {
-    //console.log(id, tagStr, "id + tag string, article added");
     return this.http.post(this.apiDest + "/article/" + id + "/tag/" + tagStr, null);
   }
   deleteArticle(id: number, tagStr: string) {
-    //console.log(id, tagStr, "id + tag string, article deleted");
     return this.http.delete(this.apiDest + "/article/" + id + "/tag/" + tagStr);
   }
 
-  searchByStatus(statusCode: string) {
+  searchByStatus(statusCode: string, page: number, size: number, sort: string, order:Boolean) {
     if(!statusCode || statusCode == "popular")
     {
       return this.http.get<Article>('/api/article/');
     }
     //fix
-  	return this.http.get<Article>('/api/article?status=' + statusCode);
+  	return this.http.get<Article>('/api/article?page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
   }
 
   searchByTitle(title: string) {

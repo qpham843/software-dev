@@ -26,8 +26,11 @@ export class DashboardComponent implements OnInit {
   articleDetails: any = [];
   articleShow: boolean[] = [];
   totNumArticles: Number = 0;
+  CONST_NUM_ARTICLES_PER_PAGE: number = 10;
   page:number=1;
   totalRecords:String;
+  sort:string = "date";
+  sortOrder: boolean = true; //main booleon others will be eliminated later
   
   selected: string = "";
   tags: any = [];
@@ -56,7 +59,7 @@ export class DashboardComponent implements OnInit {
 	});
 	this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
 		console.log("filter value has changed", val)
-		this.ds.searchByStatus(val).subscribe((data: Article) => {
+		this.ds.searchByStatus(val, this.page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder).subscribe((data: Article) => {
 			this.articles = data;
 			if(val == "popular")
 			{
@@ -76,7 +79,7 @@ export class DashboardComponent implements OnInit {
 			if(!val || val == "null")
 			{
 				console.log("hiii");
-				this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
+				this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder).subscribe((data: Article) => {
 				this.articles = data;
 					for(let x = 0; x < this.articles.size; x++) {
 						this.articleShow[x] = true;
@@ -114,7 +117,7 @@ export class DashboardComponent implements OnInit {
 		  this.totNumArticles = data;
 	  });
 	
-	  this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
+	  this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder).subscribe((data: Article) => {
 		console.log(data);
 		this.articles = data;
 		for(let x = 0; x < this.articles.length; x++) {
@@ -141,7 +144,7 @@ export class DashboardComponent implements OnInit {
   		this.articleText.nativeElement.innerHTML = art.articleText;
   }
   
-  sortOrderDate: boolean = true;
+
   sortTitle: boolean = true;
   sortURL: boolean = true;
   sortStatus: boolean = true;
@@ -149,90 +152,76 @@ export class DashboardComponent implements OnInit {
   sortChecks: boolean = true;
 
   onClick(s:string)  {
-    console.log("Sort clicked", s);
-    if(s === "dateAdded")
-    {
-  	  	if (this.sortOrderDate) {
-	  		this.articles.sort(
-	  	  		function(a, b) {
-					if (a.publishDate < b.publishDate) {
-						return -1;
-					}
-					if (a.publishDate > b.publishDate) {
-						return 1;
-					}
-					return 0;
-			});
-		} else {
-			this.articles.sort(
-	  	  		function(a, b) {
-					if (a.publishDate < b.publishDate) {
-						return 1;
-					}
-					if (a.publishDate > b.publishDate) {
-						return -1;
-					}
-					return 0;
-			});
+	  console.log("s=", s, "sort=", this.sort);
+	  if (this.sort != s) {
+		  this.sortOrder = true;
+	  }
+	  this.sort = s
+	  this.sortOrder = !this.sortOrder;
+	console.log("Sort clicked", this.sort);
+	this.ds.getArticles(this.page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder).subscribe((data: Article) => {
+		this.articles = data;
+		for(let x = 0; x < this.articles.length; x++) {
+			this.articleShow[x] = false;
 		}
-		this.sortOrderDate = !this.sortOrderDate;
-	}
-	if(s === "title")
-    {
-  	  	
-  	  	if (this.sortTitle) {
-	  		this.articles.sort(function(a, b) {
-					if (a.articleTitle < b.articleTitle) {
+	});
 
-						return -1;
-					}
-					if (a.articleTitle > b.articleTitle) {
-						return 1;
-					}
-					return 0;
-			});
-		} else {
-			this.articles.sort(
-	  	  		function(a, b) {
-					if (a.articleTitle < b.articleTitle) {
-						return 1;
-					}
-					if (a.articleTitle > b.articleTitle) {
-						return -1;
-					}
-					return 0;
-			});
-		}
-		this.sortTitle = !this.sortTitle;
-	}
-	if(s === "URL")
-    {
+	// if(s === "title")
+    // {
   	  	
-  	  	if (this.sortURL) {
-	  		this.articles.sort(function(a, b) {
-					if (a.url < b.url) {
+  	//   	if (this.sortTitle) {
+	//   		this.articles.sort(function(a, b) {
+	// 				if (a.articleTitle < b.articleTitle) {
 
-						return -1;
-					}
-					if (a.url > b.url) {
-						return 1;
-					}
-					return 0;
-			});
-		} else {
-			this.articles.sort(
-	  	  		function(a, b) {
-					if (a.url < b.url) {
-						return 1;
-					}
-					if (a.url > b.url) {
-						return -1;
-					}
-					return 0;
-			});
-		}
-		this.sortURL = !this.sortURL;
-	}
+	// 					return -1;
+	// 				}
+	// 				if (a.articleTitle > b.articleTitle) {
+	// 					return 1;
+	// 				}
+	// 				return 0;
+	// 		});
+	// 	} else {
+	// 		this.articles.sort(
+	//   	  		function(a, b) {
+	// 				if (a.articleTitle < b.articleTitle) {
+	// 					return 1;
+	// 				}
+	// 				if (a.articleTitle > b.articleTitle) {
+	// 					return -1;
+	// 				}
+	// 				return 0;
+	// 		});
+	// 	}
+	// 	this.sortTitle = !this.sortTitle;
+	// }
+	// if(s === "URL")
+    // {
+  	  	
+  	//   	if (this.sortURL) {
+	//   		this.articles.sort(function(a, b) {
+	// 				if (a.url < b.url) {
+
+	// 					return -1;
+	// 				}
+	// 				if (a.url > b.url) {
+	// 					return 1;
+	// 				}
+	// 				return 0;
+	// 		});
+	// 	} else {
+	// 		this.articles.sort(
+	//   	  		function(a, b) {
+	// 				if (a.url < b.url) {
+	// 					return 1;
+	// 				}
+	// 				if (a.url > b.url) {
+	// 					return -1;
+	// 				}
+	// 				return 0;
+	// 		});
+	// 	}
+	// 	this.sortURL = !this.sortURL;
+	// }
 	if(s === "status")
     {
   	  	
@@ -260,33 +249,33 @@ export class DashboardComponent implements OnInit {
 		}
 		this.sortStatus = !this.sortStatus;
 	}
-		if(s === "totalShares")
-    {
+	// 	if(s === "totalShares")
+    // {
   	  	
-  	  	if (this.sortTotal) {
-	  		this.articles.sort(function(a, b) {
-					if (a.totalShares < b.totalShares) {
-						return -1;
-					}
-					if (a.totalShares > b.totalShares) {
-						return 1;
-					}
-					return 0;
-			});
-		} else {
-			this.articles.sort(
-	  	  		function(a, b) {
-					if (a.totalShares < b.totalShares) {
-						return 1;
-					}
-					if (a.totalShares > b.totalShares) {
-						return -1;
-					}
-					return 0;
-			});
-		}
-		this.sortTotal = !this.sortTotal;
-	}
+  	//   	if (this.sortTotal) {
+	//   		this.articles.sort(function(a, b) {
+	// 				if (a.totalShares < b.totalShares) {
+	// 					return -1;
+	// 				}
+	// 				if (a.totalShares > b.totalShares) {
+	// 					return 1;
+	// 				}
+	// 				return 0;
+	// 		});
+	// 	} else {
+	// 		this.articles.sort(
+	//   	  		function(a, b) {
+	// 				if (a.totalShares < b.totalShares) {
+	// 					return 1;
+	// 				}
+	// 				if (a.totalShares > b.totalShares) {
+	// 					return -1;
+	// 				}
+	// 				return 0;
+	// 		});
+	// 	}
+	// 	this.sortTotal = !this.sortTotal;
+	// }
 	if(s === "sortChecks")
     {
 		let checkboxes = document.getElementsByName("articleCheckbox");
@@ -304,7 +293,7 @@ export class DashboardComponent implements OnInit {
   }
 
   handlePageChange(page: any) {
-	this.ds.getArticles(page - 1, 5, "date").subscribe((data: Article) => {
+	this.ds.getArticles(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder).subscribe((data: Article) => {
 		this.articles = data;
 		for(let x = 0; x < this.articles.length; x++) {
 			this.articleShow[x] = false;
@@ -315,7 +304,7 @@ export class DashboardComponent implements OnInit {
 
   addTag(article_id:number, tag:string) {
 		this.ds.addArticle(article_id, tag).subscribe((data: Article) => {
-			this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
+			this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder).subscribe((data: Article) => {
 				this.articles = data;
 			});
 		});
@@ -323,7 +312,7 @@ export class DashboardComponent implements OnInit {
 
   deleteTag(article_id:number, tag:string) {
     this.ds.deleteArticle(article_id, tag).subscribe((data: Article) => {
-		this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
+		this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder).subscribe((data: Article) => {
 			this.articles = data;
 	  	});
     });
@@ -363,11 +352,11 @@ export class DashboardComponent implements OnInit {
   filterByStatus(filterVal: any) {
 	this.stringSearched = '';
 	if (filterVal == "all")
-	this.ds.getArticles((this.page - 1), 100, "date").subscribe((data: Article) => {
+	this.ds.getArticles((this.page - 1), 100, "date", this.sortOrder).subscribe((data: Article) => {
 			this.articles = data;
   		});
 	else
-		this.ds.searchByStatus(this.dashboardForm.get('statusFilter').value)
+		this.ds.searchByStatus(this.dashboardForm.get('statusFilter').value, this.page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder)
 			.subscribe((data: Article) => {
 				this.articles = data;
 			}
@@ -379,7 +368,7 @@ export class DashboardComponent implements OnInit {
 	// this object's value is the new value 
 	changeStatus(id: number, val) {
 		this.ds.setStatus(id, val.srcElement.value).subscribe((data: Article) => {
-			this.ds.getArticles((this.page - 1), 100, "date").subscribe((data: Article) => {
+			this.ds.getArticles((this.page - 1), 100, "date", this.sortOrder).subscribe((data: Article) => {
 				this.articles = data;
   			});
 		});
@@ -389,7 +378,7 @@ export class DashboardComponent implements OnInit {
 
 	bulkChangeStatus(number, val) {
 		this.ds.setStatus(number, val).subscribe((data: Article) => {
-			this.ds.getArticles((this.page - 1), 5, "date").subscribe((data: Article) => {
+			this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder).subscribe((data: Article) => {
 				this.articles = data;
   			});
 		});

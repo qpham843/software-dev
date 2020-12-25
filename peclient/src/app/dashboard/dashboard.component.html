@@ -59,28 +59,26 @@
 					<button aria-label="Sort Object Select column descending" class="sorting" (click) = "onClick('sortChecks')"></button>
 				</th>
 				<th>Date Added
-					<button aria-label="Sort Object Date Added column descending" class="sorting" (click) = "onClick('dateAdded')"></button>
+					<button aria-label="Sort Object Date Added column descending" class="sorting" (click) = "onClick('date')"></button>
 				</th>
 				<th>Title
 					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('title')"></button>
 				</th>
 				<th>URL
-					<button aria-label="Sort Object URL column descending" class="sorting" (click) = "onClick('URL')"></button>
+					<button aria-label="Sort Object URL column descending" class="sorting" (click) = "onClick('url')"></button>
 				</th>
 				<th>Status
-					<button aria-label="Sort Object Status column descending" class="sorting" (click) = "onClick('status')"> </button>
+					<!-- <button aria-label="Sort Object Status column descending" class="sorting" (click) = "onClick('status')"> </button> --> 
 				</th>
 				<th>Action
-					<button aria-label="Sort Object Action column descending" class="sorting" (click) = "onClick('status')"></button>
+					<!-- button aria-label="Sort Object Action column descending" class="sorting" (click) = "onClick('status')"></button> -->
 
 				</th>
 				<th>Total Shares
 					<button aria-label="Sort Object Total Shares column descending" class="sorting" (click) = "onClick('totalShares')"></button>
 				</th>
 				<th> Text</th>
-				<th>Tags
-					<button aria-label="Sort Object Total Shares column descending" class="sorting" (click) = "onClick('totalShares')"></button>
-				</th>
+				<th>Tags</th>
 
 			</tr>
 		</thead>
@@ -92,7 +90,7 @@
 	    <tbody>
 			<ng-container *ngFor="let a of articles | 
 			paginate: {id: 'listing_pagination', 
-			itemsPerPage: 5,
+			itemsPerPage: CONST_NUM_ARTICLES_PER_PAGE,
 			currentPage: page,
 			totalItems: totNumArticles}"
 			>
@@ -101,7 +99,7 @@
 		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value="a.id"><br>
 	    				Date: {{a.publishDate | date: 'shortDate'}}<br>
 	    				Title: {{a.articleTitle}}<br>
-	    				url: {{a.url}}<br>
+	    				URL: {{a.url}}<br>
 	    				Total Shares: {{a.totalShares}}<br>
 						Tags: <ng-container *ngFor="let t of a.tags">[{{t.tag}}]
 							<button class="button tagDelete" (click)="deleteTag(a.id, t.tag)">X</button>
