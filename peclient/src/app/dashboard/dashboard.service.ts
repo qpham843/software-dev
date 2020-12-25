@@ -22,11 +22,17 @@ export class DashboardService {
     }
   }
 
-  getArticles(page: number, size: number, sort: string, order:Boolean) {
-    if (order == null) {
+  getArticles(page: number, size: number, sort: string, order:Boolean, statusCode: string) {
+    if(!statusCode || statusCode == "popular")
+    {
+      return this.http.get<Article>('/api/article/');
+    }
+    if (order == null && statusCode == "null") {
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
-    } else {
+    } else if (statusCode == "null"){
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
+    } else {
+      return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
     }
   }
   //example: article/page?no=0&size=100&sort=date
@@ -46,12 +52,22 @@ export class DashboardService {
   }
 
   searchByStatus(statusCode: string, page: number, size: number, sort: string, order:Boolean) {
+    //fix
     if(!statusCode || statusCode == "popular")
     {
       return this.http.get<Article>('/api/article/');
     }
-    //fix
-  	return this.http.get<Article>('/api/article?page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
+    if (order == null && statusCode == "null") {
+      console.log("1");
+      return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
+    } else if (statusCode == "null"){
+      console.log("2");
+      return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
+    } else {
+      console.log("3", this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
+      return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
+    }
+  	//return this.http.get<Article>('/api/article/?page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
   }
 
   searchByTitle(title: string) {
