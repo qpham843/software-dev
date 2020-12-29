@@ -103,9 +103,11 @@ public class ArticleController {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
-		
 		else if (statusCode != null) {
-			return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize), HttpStatus.OK);
+			if (sort != null && desc != null) {
+				return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize, sort, desc), HttpStatus.OK);
+			}
+			return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize, "", false), HttpStatus.OK);
 		}
 		else if (title != null) {
 			return new ResponseEntity<>(articleService.findArticleByTitle(title), HttpStatus.OK);
@@ -131,14 +133,26 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.getTotalPages(pageSize), HttpStatus.OK);
 	}
 
-       @RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
-       public ResponseEntity findArticleByTag(
-                       HttpServletRequest request,
-                       @PathVariable("tag") String tag
-       ) {
 
-               return new ResponseEntity<>(articleService.findArticleByTag(tag), HttpStatus.OK);
-       }
+	/*given a status returns total number of articles with that status in data base */
+	@RequestMapping(value = "/statusamount", method = RequestMethod.GET)
+	public ResponseEntity getNumberArticlesStatus(
+		HttpServletRequest request,
+		@RequestParam(required = true, name="status") String statusCode
+	) {
+		if (authService.auth(request) == false) {
+			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
+		}
+		return new ResponseEntity<>(articleService.getTotalArticles(statusCode), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
+	public ResponseEntity findArticleByTag(
+		HttpServletRequest request,
+		@PathVariable("tag") String tag
+	) {
+		return new ResponseEntity<>(articleService.findArticleByTag(tag), HttpStatus.OK);
+	}
 
 	// /article/submit?url=https://cnn.com/asdfasdgf
 

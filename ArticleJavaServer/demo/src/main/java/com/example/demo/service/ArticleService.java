@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.util.Streamable;
 
 import com.example.demo.controller.ArticleController;
@@ -75,12 +76,56 @@ public class ArticleService {
 		return articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode);
 	}
 
-	/**does the same as find article by status except returns a paginated result */
-	public List<ArticleEntity> findArticleByStatusPaginated(String statusCode, int pageNo, int pageSize) {
-		Pageable paging = PageRequest.of(pageNo, pageSize);
-		Page<ArticleEntity> pagedResult = null;
-		pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
-		return pagedResult.getContent();
+	/**does the same as find article by status except returns a paginated result. Structured similarly to 
+	 * the other pagination method, look at that for reference.
+	 */
+	public List<ArticleEntity> findArticleByStatusPaginated(String statusCode, int pageNo, int pageSize, String sort, Boolean desc) {
+		// Pageable paging = PageRequest.of(pageNo, pageSize);
+		// Page<ArticleEntity> pagedResult = null;
+		// pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
+		// return pagedResult.getContent();
+		if (pageNo >= 0 && pageSize > 0 && desc) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = null;
+			switch(sort) {
+				case "title":
+					pagedResult = articleRepository.findByStatusCodeOrderByArticleTitleDesc(statusCode, paging);
+					break;
+				case "url":
+					pagedResult = articleRepository.findByStatusCodeOrderByUrlDesc(statusCode, paging);
+					break;
+				case "date":
+					pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
+					break;
+				case "totalShares":
+					pagedResult = articleRepository.findByStatusCodeOrderByTotalSharesDesc(statusCode, paging);
+					break;
+				default:
+					pagedResult = articleRepository.findByStatusCode(statusCode, paging);
+			}
+			return pagedResult.getContent();
+		} else  if (pageNo >= 0 && pageSize > 0 && !desc) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = null;
+			switch(sort) {
+				case "title":
+					pagedResult = articleRepository.findByStatusCodeOrderByArticleTitleAsc(statusCode, paging);
+					break;
+				case "url":
+					pagedResult = articleRepository.findByStatusCodeOrderByUrlAsc(statusCode, paging);
+					break;
+				case "date":
+					pagedResult = articleRepository.findByStatusCodeOrderByPublishDateAsc(statusCode, paging);
+					break;
+				case "totalShares":
+					pagedResult = articleRepository.findByStatusCodeOrderByTotalSharesAsc(statusCode, paging);
+					break;
+				default:
+					pagedResult = articleRepository.findByStatusCode(statusCode, paging);
+			}
+			return pagedResult.getContent();
+		}
+		return null;
 	}
 
 	public List<ArticleEntity> findArticleByTag(String tag) {
@@ -584,7 +629,7 @@ public class ArticleService {
 			Page<ArticleEntity> pagedResult = null;
 			switch(sort) {
 				case "title":
-					pagedResult = articleRepository.findAllByOrderByTitleDesc(paging);
+					pagedResult = articleRepository.findAllByOrderByArticleTitleDesc(paging);
 					break;
 				case "url":
 					pagedResult = articleRepository.findAllByOrderByUrlDesc(paging);
@@ -605,7 +650,7 @@ public class ArticleService {
 			Page<ArticleEntity> pagedResult = null;
 			switch(sort) {
 				case "title":
-					pagedResult = articleRepository.findAllByOrderByTitleAsc(paging);
+					pagedResult = articleRepository.findAllByOrderByArticleTitleAsc(paging);
 					break;
 				case "url":
 					pagedResult = articleRepository.findAllByOrderByUrlAsc(paging);
@@ -635,5 +680,12 @@ public class ArticleService {
 		return -1;
 	}
 
-
+	/**returns number of articles with given status code. Assumes valid status code. */
+	public int getTotalArticles(String statusCode) {
+		if (statusCode != null) {
+			List<ArticleEntity> number = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode);
+			return number.size();
+		}
+		return -1;
+	}
 }
