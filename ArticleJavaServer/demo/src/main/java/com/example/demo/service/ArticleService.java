@@ -56,6 +56,7 @@ public class ArticleService {
 	@Autowired private BuzzJobService buzzJobService;
 	@Autowired private FileService fileService;
 	@Autowired private ScrapeService scrapeService;
+	@Autowired private StatusService statusService;
 	@Autowired private AWSService awsService;
 	@Autowired private S3JobService s3JobService;
 	@Autowired private TagRepository tagRepository;
@@ -80,6 +81,27 @@ public class ArticleService {
 	 * the other pagination method, look at that for reference.
 	 */
 	public List<ArticleEntity> findArticleByStatusPaginated(String statusCode, int pageNo, int pageSize, String sort, Boolean desc) {
+
+		logger.info("IN FINDARTICLEBYSTATUSPAGINATED statusCode:" + statusCode + " pageNo:" + pageNo + " pageSize:" + pageSize + " sort:" + sort + " desc:" + desc.toString());
+		
+		// instead of using a 'native sql' well
+		// first find the id of the status code using the status service
+		// then find the articleId of all the records in the article-has-status table with that status
+		// then find all the article records whose ID is IN that set
+		
+		// find the ID of the status by code - if none, zero articleIds will be returned. Zero articles will be found.
+		StatusEntity s = statusService.getStatusByCode(statusCode);
+		logger.info("BBBBBBBBBBB id:" + s.getId() + " Text:" + s.getStatusText() + " Code:" + s.getStatusCode());
+		List<Integer> articleIds = new ArrayList<Integer>();
+		if (s != null) {
+			
+			articleIds = articleHasStatusRepository.findDistinctArticleIdByArticleStatusId(s.getId());
+			logger.info("CCCCCCCCCCC number oif articles:" + articleIds.size());
+			for (Integer a : articleIds) {
+				logger.info("DDDDDDDDDDDD articleId:" + a);
+			}
+		}
+		
 		// Pageable paging = PageRequest.of(pageNo, pageSize);
 		// Page<ArticleEntity> pagedResult = null;
 		// pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
@@ -87,42 +109,57 @@ public class ArticleService {
 		if (pageNo >= 0 && pageSize > 0 && desc) {
 			Pageable paging = PageRequest.of(pageNo, pageSize);
 			Page<ArticleEntity> pagedResult = null;
-			switch(sort) {
-				case "title":
-					pagedResult = articleRepository.findByStatusCodeOrderByArticleTitleDesc(statusCode, paging);
-					break;
-				case "url":
-					pagedResult = articleRepository.findByStatusCodeOrderByUrlDesc(statusCode, paging);
-					break;
-				case "date":
-					pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
-					break;
-				case "totalShares":
-					pagedResult = articleRepository.findByStatusCodeOrderByTotalSharesDesc(statusCode, paging);
-					break;
-				default:
-					pagedResult = articleRepository.findByStatusCode(statusCode, paging);
-			}
+
+			pagedResult = articleRepository.findByIdIn(articleIds, paging);
+			logger.info("EEEEEEEEEEEEEEE " + pagedResult.toString());
+			// I think there are provisions to handle sorting within pageable object - you've implemented using switch - also GOOD
+			// To adapt the above to sort order, all "OrderBy" clauses as below
+			//			pagedResult = articleRepository.findByArticleIdInOrderByArticleTitleDesc(articleIds, paging);
+
+//			switch(sort) {
+//				case "title":
+//					pagedResult = articleRepository.findByStatusCodeOrderByArticleTitleDesc(statusCode, paging);
+//					break;
+//				case "url":
+//					pagedResult = articleRepository.findByStatusCodeOrderByUrlDesc(statusCode, paging);
+//					break;
+//				case "date":
+//					pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
+//					break;
+//				case "totalShares":
+//					pagedResult = articleRepository.findByStatusCodeOrderByTotalSharesDesc(statusCode, paging);
+//					break;
+//				default:
+//					pagedResult = articleRepository.findByStatusCode(statusCode, paging);
+//			}
 			return pagedResult.getContent();
 		} else  if (pageNo >= 0 && pageSize > 0 && !desc) {
 			Pageable paging = PageRequest.of(pageNo, pageSize);
+			logger.info("PAGING:" + paging.toString());
 			Page<ArticleEntity> pagedResult = null;
-			switch(sort) {
-				case "title":
-					pagedResult = articleRepository.findByStatusCodeOrderByArticleTitleAsc(statusCode, paging);
-					break;
-				case "url":
-					pagedResult = articleRepository.findByStatusCodeOrderByUrlAsc(statusCode, paging);
-					break;
-				case "date":
-					pagedResult = articleRepository.findByStatusCodeOrderByPublishDateAsc(statusCode, paging);
-					break;
-				case "totalShares":
-					pagedResult = articleRepository.findByStatusCodeOrderByTotalSharesAsc(statusCode, paging);
-					break;
-				default:
-					pagedResult = articleRepository.findByStatusCode(statusCode, paging);
-			}
+			
+			pagedResult = articleRepository.findByIdIn(articleIds, paging);
+			logger.info("FFFFFFFFFFFFFFFFFF " + pagedResult.toString());
+			// I think there are provisions to handle sorting within pageable object - you've implemented using switch - also GOOD
+			// To adapt the above to sort order, all "OrderBy" clauses as below
+			//			pagedResult = articleRepository.findByArticleIdInOrderByArticleTitleDesc(articleIds, paging);
+
+//			switch(sort) {
+//				case "title":
+//					pagedResult = articleRepository.findByStatusCodeOrderByArticleTitleAsc(statusCode, paging);
+//					break;
+//				case "url":
+//					pagedResult = articleRepository.findByStatusCodeOrderByUrlAsc(statusCode, paging);
+//					break;
+//				case "date":
+//					pagedResult = articleRepository.findByStatusCodeOrderByPublishDateAsc(statusCode, paging);
+//					break;
+//				case "totalShares":
+//					pagedResult = articleRepository.findByStatusCodeOrderByTotalSharesAsc(statusCode, paging);
+//					break;
+//				default:
+//					pagedResult = articleRepository.findByStatusCode(statusCode, paging);
+//			}
 			return pagedResult.getContent();
 		}
 		return null;

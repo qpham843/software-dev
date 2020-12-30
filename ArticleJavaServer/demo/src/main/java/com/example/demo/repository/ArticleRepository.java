@@ -40,6 +40,8 @@ public interface ArticleRepository extends PagingAndSortingRepository<ArticleEnt
 	public Page<ArticleEntity> findAllByOrderByArticleTitleAsc(Pageable pageable);
 	public Page<ArticleEntity> findAllByOrderByUrlAsc(Pageable pageable);
 	public Page<ArticleEntity> findAllByOrderByTotalSharesAsc(Pageable pageable);
+	
+	public Page<ArticleEntity> findByIdIn(List<Integer> articleIds, Pageable pageable);
 
 	@Query(value="select a.* from article a, article_current_status acs where acs.status_code = :statusCode and acs.id = a.id", nativeQuery=true)
 	public Page<ArticleEntity> findByStatusCodeOrderByPublishDateDesc(String statusCode, Pageable pageable);
