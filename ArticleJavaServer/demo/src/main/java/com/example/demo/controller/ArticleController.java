@@ -105,10 +105,8 @@ public class ArticleController {
 		}
 		else if (statusCode != null) {
 			if (sort != null && desc != null) {
-				logger.info("AAAAAAAAAAAAAAA " + statusCode);
 				return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize, sort, desc), HttpStatus.OK);
 			}
-			logger.info("a2a2a2a2a2a2a2a2 " + statusCode);
 			return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize, "", false), HttpStatus.OK);
 		}
 		else if (title != null) {
