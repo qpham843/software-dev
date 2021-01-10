@@ -85,7 +85,12 @@
 	</table>
 	
 	<br><br>
-  
+	<pagination-controls 
+	id="listing_pagination" 
+	maxSize="5" 
+	(pageChange)="page = handlePageChange($event)"
+	responsive="true">
+	</pagination-controls>
 	<table class="table3" border="1px solid" style="margin: 10px; padding: 20px;">
 	    <tbody>
 			<ng-container *ngFor="let a of articles | 
@@ -144,7 +149,6 @@
 			(pageChange)="page = handlePageChange($event)"
 			responsive="true">
 		</pagination-controls>
-
 	</div>
 
 	</div>

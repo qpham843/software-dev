@@ -23,13 +23,13 @@ export class DashboardService {
   }
 
   getArticles(page: number, size: number, sort: string, order:Boolean, statusCode: string) {
-    if(!statusCode || statusCode == "popular")
+    if(statusCode == "popular")
     {
       return this.http.get<Article>('/api/article/');
     }
-    if (order == null && statusCode == "null") {
+    if (order == null && statusCode == null) {
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
-    } else if (statusCode == "null"){
+    } else if (statusCode == null){
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
     } else {
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
@@ -53,15 +53,15 @@ export class DashboardService {
 
   searchByStatus(statusCode: string, page: number, size: number, sort: string, order:Boolean) {
     //fix
-    if(!statusCode || statusCode == "popular")
+    if(statusCode == "popular")
     {
       return this.http.get<Article>('/api/article/');
     }
     if (order == null && statusCode == "null") {
       console.log("1");
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
-    } else if (statusCode == "null"){
-      console.log("2");
+    } else if (statusCode == "null" || statusCode == null){
+      console.log("2", this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
     } else {
       console.log("3", this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
@@ -71,11 +71,11 @@ export class DashboardService {
   }
 
   searchByTitle(title: string) {
-  	return this.http.get<Article>(this.apiDest + '/article?title=' + title);
+  	return this.http.get<Article>(this.apiDest + '/article/page?title=' + title + '&no=' + 0 + '&size=' + 10);
   }
 
   searchByUrl(url: string) {
-  	return this.http.get<Article>(this.apiDest + '/article?url=' + url);
+  	return this.http.get<Article>(this.apiDest + '/article/page?url=' + url + '&no=' + 0 + '&size=' + 10);
   }
 
   searchByTag(tag: string) {

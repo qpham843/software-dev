@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TagService } from '../manage-tags/manage-tags.service';
 import { DashboardService } from './dashboard.service';
@@ -60,11 +60,13 @@ export class DashboardComponent implements OnInit {
 	this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
 		console.log("filter value has changed", val)
 		this.ds.searchByStatus(val, this.page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder).subscribe((data: Article) => {
+			console.log("data from changing status", data, "val=", val);
 			this.articles = data;
 			if(val == "popular")
 			{
 			//there's no field for publishedDate so I'm using publishDate instead
 			//sorting by date
+				console.log("popular sort");
 				this.articles.sort(
 	  	  			function(a, b) {
 						if (a.publishDate < b.publishDate) {
@@ -76,16 +78,18 @@ export class DashboardComponent implements OnInit {
 					return 0;
 			});
 			}
-			if(!val || val == "null")
-			{
-				console.log("hiii");
-				this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder, this.dashboardForm.get('statusFilter').value).subscribe((data: Article) => {
-				this.articles = data;
-					for(let x = 0; x < this.articles.size; x++) {
-						this.articleShow[x] = true;
-					}
-  				});
-			}
+			//not needed idk why here
+			// if(!val || val == "null")
+			// {
+			// 	console.log("hiii");
+			// 	this.ds.getArticles((this.page - 1), this.CONST_NUM_ARTICLES_PER_PAGE, "date", this.sortOrder, this.dashboardForm.get('statusFilter').value).subscribe((data: Article) => {
+			// 	this.articles = data;
+			// 		for(let x = 0; x < this.articles.size; x++) {
+			// 			this.articleShow[x] = true;
+			// 		}
+  			// 	});
+			// }
+
 			//showing articles 0-49
 			for(let i = this.articles.length - 1; i >= 50;i--) 
 			{
@@ -209,26 +213,41 @@ export class DashboardComponent implements OnInit {
   }
 
   searchTag(tag:any) {
-    console.log("search by TAG 111 ", this.dashboardForm.get('searchTag').value);
-	this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
-		this.articles = data;
-	})
+	console.log("search by TAG 1111 ", this.dashboardForm.get('searchTag').value);
+	if(this.dashboardForm.get('searchTag').value != null) 
+	{
+		this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
+			this.articles = data;
+		})
+	}
+
   }
 
   searchTagButton() {
   console.log("search by TAG button", this.dashboardForm.get('searchTag').value);
-	this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
-		this.articles = data;
-	})
+  if(this.dashboardForm.get('searchTag').value != null) 
+  {
+	  this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
+		  this.articles = data;
+	  })
+  }
   }
 
   toggle(i:number) {
   	this.articleShow[i] = !this.articleShow[i];
   }
 
+  //only works for EXACT URLS rn
   searchUrl() {
   	this.ds.searchByUrl(this.dashboardForm.get('searchUrl').value).subscribe((data: Article) => {
-  		this.articles = data;
+		if(data != null) 
+		{
+			let data2: Article[] = [data]; //switching one article element to an array
+			this.totNumArticles = 1;
+			this.articles = data2;	 
+		} else {
+			console.log("Invalid URL");
+		}
   	})
   }
 
