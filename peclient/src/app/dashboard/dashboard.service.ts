@@ -23,13 +23,14 @@ export class DashboardService {
   }
 
   getArticles(page: number, size: number, sort: string, order:Boolean, statusCode: string) {
+    
     if(statusCode == "popular")
     {
       return this.http.get<Article>('/api/article/');
     }
-    if (order == null && statusCode == null) {
+    if (order == null && (statusCode == null || statusCode == "null")) {
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort);
-    } else if (statusCode == null){
+    } else if (statusCode == null || statusCode == "null"){
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&sort=' + sort + '&order=' + order);
     } else {
       return this.http.get<Article>(this.apiDest + '/article/' + 'page?no=' + page + '&size=' + size + '&status=' + statusCode + '&sort=' + sort + '&order=' + order);
@@ -42,6 +43,9 @@ export class DashboardService {
   }
   getTotNumArticles() {
     return this.http.get<Number>(this.apiDest + '/article/totalpages?size=1');
+  }
+  totNumArticlesStatus(status: string) { //article/statusamount?status=<status>
+    return this.http.get<Number>(this.apiDest + '/article/statusamount?status=' + status);
   }
   
   addArticle(id: number, tagStr: string) {

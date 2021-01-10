@@ -96,6 +96,18 @@ export class DashboardComponent implements OnInit {
 			this.articles.splice(i, 1);
 			}
 		});
+		if(val != "null" && val != null) {
+			this.ds.totNumArticlesStatus(val).subscribe((data: Number) => {
+				console.log("number of articles for ", val,"status", data);
+				this.totNumArticles = data;
+
+			});
+		} else {
+			this.ds.getTotNumArticles().subscribe((data: Number) => {
+				this.totNumArticles = data;
+			});
+		}
+
 
 		this.dashboardForm.get("typeaheadControl").valueChanges.subscribe(value => {
 			this.dashboardForm.get("typeaheadControl").setValue("", {emitEvent:false});
@@ -188,6 +200,7 @@ export class DashboardComponent implements OnInit {
 
   handlePageChange(page: any) {
 	this.ds.getArticles(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder, this.dashboardForm.get('statusFilter').value).subscribe((data: Article) => {
+		console.log(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder, this.dashboardForm.get('statusFilter').value);
 		this.articles = data;
 		for(let x = 0; x < this.articles.length; x++) {
 			this.articleShow[x] = false;
