@@ -18,7 +18,7 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 export class DashboardComponent implements OnInit {
 
-  @ViewChild('articleText', {static: false}) articleText: ElementRef;
+  @ViewChild('articleText') articleText: ElementRef;
   dashboardForm: FormGroup;
   articles: any = [];
   stringSearched: string = "";
