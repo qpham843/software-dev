@@ -24,7 +24,7 @@
     "@types/node": "^10.12.30",
     "aws-amplify": "^3.0.7",
     "aws-amplify-angular": "^5.0.7",
-    "bootstrap": "4.1.1",
+    "bootstrap": "^4.5.3",
     "ngx-bootstrap": "^5.6.1",
     "ngx-pagination": "^5.0.0",
     "ngx-typeahead": "^9.1.0",
@@ -33,7 +33,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.23",
+    "@angular-devkit/build-angular": "^0.1100.6",
     "@angular/cli": "^8.3.23",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",
