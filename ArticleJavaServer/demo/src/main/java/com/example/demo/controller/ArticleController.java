@@ -93,6 +93,7 @@ public class ArticleController {
 	public ResponseEntity getPaginatedArticles(
 		HttpServletRequest request,
 		@RequestParam(required = false, name="status") String statusCode,
+		@RequestParam(required = false, name="tag") String tag,
 		@RequestParam(required = false, name="title") String title,
 		@RequestParam(required = false, name="url") String url,
 		@RequestParam(required = true, name="size") int pageSize,
@@ -103,21 +104,33 @@ public class ArticleController {
 		if (authService.auth(request) == false) {
 			return new ResponseEntity<String>("Not Authorized", HttpStatus.UNAUTHORIZED);
 		}
-		else if (statusCode != null) {
+		
+		if (statusCode != null) {
 			if (sort != null && desc != null) {
 				return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize, sort, desc), HttpStatus.OK);
 			}
 			return new ResponseEntity<>(articleService.findArticleByStatusPaginated(statusCode, pageNo, pageSize, "", false), HttpStatus.OK);
 		}
-		else if (title != null) {
+		
+		if (tag != null) {
+			if (sort != null && desc != null) {
+				return new ResponseEntity<>(articleService.findArticleByTagPaginated(tag, pageNo, pageSize, sort, desc), HttpStatus.OK);
+			}
+			return new ResponseEntity<>(articleService.findArticleByTagPaginated(tag, pageNo, pageSize, "", false), HttpStatus.OK);
+		}
+		
+		if (title != null) {
 			return new ResponseEntity<>(articleService.findArticleByTitle(title), HttpStatus.OK);
 		}
-		else if (url != null) {
+		
+		if (url != null) {
 			return new ResponseEntity<>(articleService.findArticleByUrl(url), HttpStatus.OK);
 		}
-		else if (sort != null && desc != null) {
+		
+		if (sort != null && desc != null) {
 			return new ResponseEntity<>(articleService.findPaginatedSorted(pageNo, pageSize, sort, desc), HttpStatus.OK);
 		}
+		
 		return new ResponseEntity<>(articleService.findPaginated(pageNo, pageSize), HttpStatus.OK);
 	}
 

@@ -154,6 +154,83 @@ public class ArticleService {
 		return null;
 	}
 
+	/**does the same as find article by status except returns a paginated result. Structured similarly to 
+	 * the other pagination method, look at that for reference.
+	 */
+	public List<ArticleEntity> findArticleByTagPaginated(String tag, int pageNo, int pageSize, String sort, Boolean desc) {
+		
+		// instead of using a 'native sql' well
+		// first find the id of the status code using the status service
+		// then find the articleId of all the records in the article-has-status table with that status
+		// then find all the article records whose ID is IN that set
+		
+		// find the ID of the tag by code - if none, zero articleIds will be returned. Zero articles will be found.
+		TagEntity t = tagService.getTag(tag);
+		List<Integer> articleIds = new ArrayList<Integer>();
+		if (t != null) {
+			articleIds = articleHasTagRepository.findDistinctArticleIdByTagId(t.getId());
+		}
+		
+		// Pageable paging = PageRequest.of(pageNo, pageSize);
+		// Page<ArticleEntity> pagedResult = null;
+		// pagedResult = articleRepository.findByStatusCodeOrderByPublishDateDesc(statusCode, paging);
+		// return pagedResult.getContent();
+		if (pageNo >= 0 && pageSize > 0 && desc) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = null;
+
+			pagedResult = articleRepository.findByIdIn(articleIds, paging);
+			// I think there are provisions to handle sorting within pageable object - you've implemented using switch - also GOOD
+			// To adapt the above to sort order, all "OrderBy" clauses as below
+			//			pagedResult = articleRepository.findByArticleIdInOrderByArticleTitleDesc(articleIds, paging);
+
+			switch(sort) {
+				case "title":
+					pagedResult = articleRepository.findByIdInOrderByArticleTitleDesc(articleIds, paging);
+					break;
+				case "url":
+					pagedResult = articleRepository.findByIdInOrderByUrlDesc(articleIds, paging);
+					break;
+				case "date":
+					pagedResult = articleRepository.findByIdInOrderByPublishDateDesc(articleIds, paging);
+					break;
+				case "totalShares":
+					pagedResult = articleRepository.findByIdInOrderByTotalSharesDesc(articleIds, paging);
+					break;
+				default:
+					pagedResult = articleRepository.findByIdIn(articleIds, paging);
+			}
+			return pagedResult.getContent();
+		} else  if (pageNo >= 0 && pageSize > 0 && !desc) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<ArticleEntity> pagedResult = null;
+			
+			pagedResult = articleRepository.findByIdIn(articleIds, paging);
+			// I think there are provisions to handle sorting within pageable object - you've implemented using switch - also GOOD
+			// To adapt the above to sort order, all "OrderBy" clauses as below
+			//			pagedResult = articleRepository.findByArticleIdInOrderByArticleTitleDesc(articleIds, paging);
+
+			switch(sort) {
+				case "title":
+					pagedResult = articleRepository.findByIdInOrderByArticleTitleAsc(articleIds, paging);
+					break;
+				case "url":
+					pagedResult = articleRepository.findByIdInOrderByUrlAsc(articleIds, paging);
+					break;
+				case "date":
+					pagedResult = articleRepository.findByIdInOrderByPublishDateAsc(articleIds, paging);
+					break;
+				case "totalShares":
+					pagedResult = articleRepository.findByIdInOrderByTotalSharesAsc(articleIds, paging);
+					break;
+				default:
+					pagedResult = articleRepository.findByIdIn(articleIds, paging);
+			}
+			return pagedResult.getContent();
+		}
+		return null;
+	}
+
 	public List<ArticleEntity> findArticleByTag(String tag) {
 		logger.info("tag " + tag);
 		return articleRepository.findByTags_tagOrderByPublishDateDesc(tag);
