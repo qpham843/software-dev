@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
   totalRecords:String;
   sort:string = "date";
   sortOrder: boolean = true; //main booleon others will be eliminated later
+  tagSearchActive: boolean = false;
   
   selected: string = "";
   tags: any = [];
@@ -58,7 +59,8 @@ export class DashboardComponent implements OnInit {
 		console.log(this.statuses);
 	});
 	this.dashboardForm.get('statusFilter').valueChanges.subscribe(val => {
-		console.log("filter value has changed", val)
+		console.log("filter value has changed", val);
+		this.tagSearchActive = false;
 		this.ds.searchByStatus(val, this.page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder).subscribe((data: Article) => {
 			console.log("data from changing status", data, "val=", val);
 			this.articles = data;
@@ -141,6 +143,7 @@ export class DashboardComponent implements OnInit {
 		}
   	});
 	this.dashboardForm.get('statusFilter').setValue(null);
+	this.tagSearchActive = false;
 	this.ts.getTags().subscribe((data: Tag) => {
 		this.tags = data;
 		for(let x = 0; x < this.tags.length; x++) {
@@ -199,13 +202,17 @@ export class DashboardComponent implements OnInit {
   }
 
   handlePageChange(page: any) {
-	this.ds.getArticles(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder, this.dashboardForm.get('statusFilter').value).subscribe((data: Article) => {
-		console.log(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder, this.dashboardForm.get('statusFilter').value);
-		this.articles = data;
-		for(let x = 0; x < this.articles.length; x++) {
-			this.articleShow[x] = false;
-		}
-  	});
+	this.dashboardForm.get('checkAll').setValue(false);
+	console.log(this.tagSearchActive);
+	if (this.tagSearchActive == false) {
+		this.ds.getArticles(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder, this.dashboardForm.get('statusFilter').value).subscribe((data: Article) => {
+			console.log(page - 1, this.CONST_NUM_ARTICLES_PER_PAGE, this.sort, this.sortOrder, this.dashboardForm.get('statusFilter').value);
+			this.articles = data;
+			for(let x = 0; x < this.articles.length; x++) {
+				this.articleShow[x] = false;
+			}
+		  });
+	}
 	return page;
   }
 
@@ -231,6 +238,8 @@ export class DashboardComponent implements OnInit {
 	{
 		this.ds.searchByTag(this.dashboardForm.get('searchTag').value).subscribe((data: Article) => {
 			this.articles = data;
+			this.totNumArticles = this.articles.length;
+			this.tagSearchActive = true;
 		})
 	}
 
@@ -308,10 +317,11 @@ export class DashboardComponent implements OnInit {
 
 	submitBulk() {
 		let newStatus = this.dashboardForm.get('bulkStatus').value;
-		console.log("submitting all checked for status change to ", newStatus);
-	   let checkboxes = document.getElementsByName("articleCheckbox");
+		this.dashboardForm.get('checkAll').setValue(false);
+	    let checkboxes = document.getElementsByName("articleCheckbox");
 		checkboxes.forEach(cb => {
 			let cbe = cb as HTMLInputElement;
+			console.log(cbe);
 			if (cbe.checked)  
 				  // cbe.value contains the id of the checkbox (the is of the article)
 					this.bulkChangeStatus(cbe.value, newStatus);

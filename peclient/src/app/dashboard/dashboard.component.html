@@ -52,8 +52,8 @@
 			<tr>
 				<th>Select
 					<label class="container">
-  					<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
-  					<span class="checkmark"></span>
+  						<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
+  						<span class="checkmark"></span>
 					</label>
 
 					<button aria-label="Sort Object Select column descending" class="sorting" (click) = "onClick('sortChecks')"></button>
@@ -101,7 +101,7 @@
 			>
 		    	<tr>
 		    		<td class="fifty-percent" style="padding: 20px;">
-		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value="a.id"><br>
+		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value={{a.id}}><br>
 	    				Date: {{a.publishDate | date: 'shortDate'}}<br>
 	    				Title: {{a.articleTitle}}<br>
 	    				URL: {{a.url}}<br>
