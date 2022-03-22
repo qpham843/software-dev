@@ -35,6 +35,9 @@ a:hover * {
 	color: #3f69af;
 }
 
+footer {
+	font-size: 10px;
+}
 
 footer > a {
 	color: darkgray;
@@ -80,6 +83,14 @@ footer > a:hover {
     text-transform: uppercase;
 }
 
+.button[disabled], 
+.button[disabled]:hover, 
+.button[disabled]:focus, 
+.button[disabled]:active {
+	background: lightgray;
+	pointer-events: none;
+}
+
 /* -- website url -- */
 
 input {
@@ -104,7 +115,7 @@ input {
 /* -- layout -- */
 
 .container {
-	display: grid;
+	
 	justify-items: center;
 	grid-template-columns: 1fr;
 }

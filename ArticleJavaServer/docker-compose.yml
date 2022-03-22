@@ -13,11 +13,19 @@ services:
       MYSQL_DATABASE: "publiceditor"
       MYSQL_USER: "ArticleFunnelDev"
       MYSQL_PASSWORD: "TheQuickBrownFox!!123"
-
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME}
+      DATAFILES_BUCKETNAME: ${DATAFILES_BUCKETNAME}
+      DATAFILES_LOCATION: ${DATAFILES_LOCATION}
+      ENVIRONMENT_FLAG: ${ENVIRONMENT_FLAG:-DEV}
+      BUZZ_API_KEY: ${BUZZ_API_KEY}
   article_db:
     build:
       context: .
       dockerfile: docker/Dockerfile-mysql
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "CLoTbYDEmdNbfSxb"

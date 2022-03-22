@@ -1,19 +1,13 @@
 package com.example.demo.service;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.*;
@@ -26,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.controller.BuzzController;
 import com.example.demo.entities.ArticleEntity;
 import com.example.demo.repository.ArticleRepository;
 
@@ -51,28 +44,71 @@ public class FileService {
 	@Autowired ArticleService articleService;
 	@Autowired ArticleRepository articleRepository;
 	
-	public void makeFile(ArticleEntity article) {
+	public boolean fileExists(String pathAndName) {
+		return Files.exists(Paths.get(pathAndName)); 
+	}
+	
+	public ArticleEntity makeFile(ArticleEntity article) {
 
+		//filename of files inside tgz are in format
+		//sha256.tgz/CovidArticles/filename.txt
+		//sha256.tgz/CovidArticles/metadata.json
+		
 		String sha256hex = DigestUtils.sha256Hex(article.getArticleText());
+		// set HASH
 		article.setArticleHash(sha256hex);
-		articleRepository.save(article);
-				
-		// strip off https:// or http://
-		String tempURL = article.getUrl();
-		String tempURL2 = tempURL.replace("https://", "");
-		String URLNoProtocol = tempURL2.replace("http://","");
+		
+		//drop everything including and after ?
+		String[] q = article.getUrl().split(Pattern.quote("?"));
+		String firstPart = q[0];
+		
+		//set filename (first 60 chars AFTER last slash plus ".txt"
+		String[] parts = firstPart.split("/");
+		String filename = parts[parts.length - 1];
+		if (filename.length() == 0) filename = "noname";
 
+		if (Character.isDigit(filename.charAt(0))) {
+			filename = "a-".concat(filename);
+		}
+		
+		int endChar = filename.length();
+		if (endChar > 60) 
+			endChar = 59;
+		else 
+			endChar = endChar - 1;
+		
+		filename = filename.substring(0, endChar).concat(".txt");
+						
+		// strip off https:// or http:// (from url string WITHOUT question-mark)
+		String tempURL2 = firstPart.replace("https://", "");
+		String URLNoProtocol = tempURL2.replace("http://","");
+		
+
+		//String filenameTag = "CovidArticles/";
+		String filenameTag = article.getFilenameTag();
+		if (filenameTag == null) {
+			filenameTag = "UnknownArticles/";
+		} else {
+			filenameTag= filenameTag + "/";
+		}
 		String articleDir = "/var/article/temp/";
+		//delete temp dir
+		FileUtils.deleteQuietly(new File(articleDir));
+
 		String zipDestDir = "/var/article/";
 		String zipDestFilename = "article";
-		String articleFilename = articleDir + "text.txt";
-		String metadataFilename = articleDir + "metadata.json";
+		String articleFilename = articleDir + filenameTag + filename;
+		String metadataFilename = articleDir + filenameTag + "metadata.json";
+		
+		File destFile = new File(zipDestDir + URLNoProtocol + "/" + sha256hex + ".tgz");
+		article.setFilename(destFile.toString());
+
 
 		//*******************************************************
 		// CREATE ARTICLE FILE (text.txt)
 		File articleFile = new File(articleFilename);
 		try {
-			FileUtils.writeStringToFile(articleFile, article.getArticleText(), true);
+			FileUtils.writeStringToFile(articleFile, article.getArticleText(), Charset.defaultCharset(), false);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,13 +118,18 @@ public class FileService {
 		// CREATE METADATA FILE (metadata.json)
 		JSONObject metadata = new JSONObject();
 		
-		metadata.put("extra", new JSONObject(article));
+		JSONObject tempMeta = new JSONObject(article);
+
+		//override filename for tagworks
+		tempMeta.put("filename", filenameTag + filename);
+		
+		metadata.put("extra", tempMeta);
 		metadata.put("file_sha256", sha256hex);
-		metadata.put("filename", articleFile.getName());
+		metadata.put("filename", filename);
 
 		File metadataFile = new File(metadataFilename);
 		try {
-			FileUtils.writeStringToFile(metadataFile, metadata.toString(4), false);
+			FileUtils.writeStringToFile(metadataFile, metadata.toString(4), Charset.defaultCharset(), false);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,10 +144,10 @@ public class FileService {
 		
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP);
 		
+			
 		try {
 			
 			File archive = archiver.create(zipDestFilename, zipDestDirFile, zipSourceDirFile);
-			File destFile = new File(zipDestDir + URLNoProtocol + sha256hex + ".tgz");
 			destFile.getParentFile().mkdirs();
 			
 			logger.info(archive.toPath().toString());
@@ -120,6 +161,18 @@ public class FileService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//delete temp file
+		FileUtils.deleteQuietly(articleFile);
+		
+		//delete metadata file
+		FileUtils.deleteQuietly(metadataFile);
+
+		//delete temp dir
+		FileUtils.deleteQuietly(new File(articleDir));
+
+		return article;
+
 	}
 	
 }

@@ -14,20 +14,19 @@ class ArticleData {
 
     getCredibilityScore() {
         var article = this;
-        $.get("https://cors-anywhere.herokuapp.com/" + article.highlightData).done(function(data) {
+        $.get(article.highlightData).done(function(data) {
             data = csvJSON(data);
             for (var i = 0; i < Object.keys(data).length - 1; i++) {
                 var highlightEntry = data[i];
-                article.credibilityScore += highlightEntry["Points"];
+                article.credibilityScore += parseInt(highlightEntry["Points"]);
             }
         });
     }
 
     getPreviewText() {
         var article = this;
-        $.get("https://cors-anywhere.herokuapp.com/" + article.plainText).done(function(data) {
+        $.get(article.plainText).done(function(data) {
             article.previewText = data.toString().substring(0, 200);
-            console.log("Preview Text is: " + article.previewText);
         });
     }
 }

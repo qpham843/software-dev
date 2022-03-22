@@ -22,6 +22,10 @@ RUN apt-get update -q && apt-get install -y --no-install-recommends \
         dbus libdbus-1-dev libdbus-glib-1-dev \
         libsasl2-dev libldap2-dev libssl-dev
 
+# for admin convenience - MariaDB client and mysqldump
+RUN apt-get update -q && apt-get install -y --no-install-recommends \
+        default-mysql-client
+
 ARG VIRTUAL_ENV=/home/python3_env
 ARG ACTIVATE=${VIRTUAL_ENV}/bin/activate
 WORKDIR ${VIRTUAL_ENV}
@@ -33,15 +37,24 @@ WORKDIR /home/scraper
 COPY ./docker/requirements.txt .
 RUN . ${ACTIVATE} && pip3 install -r requirements.txt
 COPY ./scraper/scrape.py .
+COPY ./scraper/s3-put.py .
 
 RUN rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home
-COPY /demo article_funnel
 # Maven wants to run in this dir
 WORKDIR /home/article_funnel
+COPY /demo/pom.xml .
+# build all dependencies for offline use
+RUN mvn dependency:go-offline -B
+
+# Now copy rest of source
+COPY /demo .
+RUN mvn clean
 RUN mvn --batch-mode install
 RUN cp -av target/demo-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps
+
+WORKDIR /home/data_migration
+COPY MySQLArticleDatabase/ .
 
 WORKDIR $CATALINA_HOME
 WORKDIR /home/article_funnel

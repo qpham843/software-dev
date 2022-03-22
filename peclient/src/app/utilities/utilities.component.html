@@ -1,0 +1,115 @@
+<form [formGroup]="utilitiesForm">
+	<div>
+		<button type="button" [disabled]="disableS3" (click)="sendAcceptedToS3()">Send Accepted Articles to s3</button>
+
+	</div>
+
+	<table>
+		<tr>
+			<td>start</td>
+			<td>finished</td>
+			<td>seconds</td>
+			<td># To Send</td>
+			<td># sent</td>
+			<td>Details</td>
+		</tr>
+		<tr *ngFor="let s3j of s3Jobs">
+			<td>{{ s3j.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
+			<td>
+				<span style="background-color: green;" *ngIf="s3j.finished == 1">DONE</span>
+				<span *ngIf="s3j.finished == 0">Processing</span>
+			</td>			
+			<td>{{ s3j.elapsedSeconds }}</td>
+			<td>{{ s3j.articlesToSend }}</td>
+			<td>{{ s3j.articlesSent }}</td>
+			<td [innerHTML]="s3j.articles | replaceLineBreaks" style="text-align:left;"></td>
+		</tr>
+	</table>
+
+
+	<br>
+	<table>
+		<tr>
+			<td>Run Query</td>
+			<td>ID</td>
+			<td>Tags</td>
+			<td>Query</td>
+		</tr>
+		<tr *ngFor="let q of buzzQueries">
+			<td>
+				<button type="button" [disabled]="disableBuzz" (click)="getBuzzSumo(q.id)">Run {{q.filenameTag}}</button>
+			</td>
+			<td>{{q.id}}</td>
+			<td> 
+				<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class=""
+				(typeaheadOnSelect)="addTag($event, q.id)" [typeaheadOptionsLimit]="500" [typeaheadMinLength]="0" [typeaheadScrollable]="true">
+				<br>
+				<ng-container *ngFor="let t of q.tags">[{{t.tag}}]
+					<button class="button tagDelete" (click)="deleteTag(t.tag, q.id)">X</button>
+				</ng-container>
+			</td>
+			<td>{{q.query}}</td>
+
+		</tr>
+	</table>
+	
+	<br><br><br>
+
+	<table style="">
+		<tr>
+			<td>start</td>
+			<td>finished</td>
+			<td>seconds</td>
+			<td># from buzz</td>
+			<td># youtube</td>
+			<td># > 700</td>
+			<td># dropped</td>
+			<td># created</td>
+			<td># updated</td>
+			<td>Query</td>
+		</tr>
+		<tr *ngFor="let bj of buzzJobs">
+			<td>{{ bj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
+			<td>
+				<span style="background-color: green;" *ngIf="bj.finished == 1">DONE</span>
+				<span *ngIf="bj.finished == 0">Processing</span>
+			</td>			
+			<td>{{ bj.elapsedSeconds }}</td>
+			<td>{{ bj.articlesReturned }}</td>
+			<td>{{ bj.articlesYoutube }}</td>
+			<td>{{ bj.articles700 }}</td>
+			<td>{{ bj.articlesDropped }}</td>
+			<td>{{ bj.articlesCreated }}</td>
+			<td>{{ bj.articlesUpdated }}</td>
+			<td>{{ bj.query }}</td>
+		</tr>
+	</table>
+
+	<br><br><br>
+
+	<div>
+		<button type="button" [disabled]="disableMetrics" (click)="getUpdateMetrics()"> Update Articles</button>
+	</div>
+
+	<table style="">
+		<tr>
+			<td>start</td>
+			<td>finished</td>
+			<td>seconds</td>
+			<td># from buzz</td>
+			<td># user</td>
+			<td># total updated</td>
+		</tr>
+		<tr *ngFor="let uj of metricsJobs">
+			<td>{{ uj.startDate | date: 'M/d/yyyy h:mm:ss a' }}</td>
+			<td>
+				<span style="background-color: green;" *ngIf="uj.finished == 1">DONE</span>
+				<span *ngIf="uj.finished == 0">Processing</span>
+			</td>			
+			<td>{{ uj.elapsedSeconds }}</td>
+			<td>{{ uj.articlesBuzz }}</td>
+			<td>{{ uj.articlesUser }}</td>
+			<td>{{ uj.articlesUpdated }}</td>
+		</tr>
+	</table>
+</form>

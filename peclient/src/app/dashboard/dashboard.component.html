@@ -8,13 +8,14 @@
 </div>
 </div>
 <div class="section">
-	<div class="user-container w-container"><a href="#" class="paragraph-small">Log Out</a></div>
+	<div class="user-container w-container"><a href="/logout" class="paragraph-small">Log Out</a></div>
 </div>
 <form [formGroup]="dashboardForm">
 	<div class="section">
 		<label for="statusFilter">Filter</label>
 		<select id="statusFilter" name="statusFilter" formControlName="statusFilter" class="select-field w-select">
-			<option [value]="all">All</option>
+			<option value=null>All</option>
+			<option value="popular">Popular</option>
 			<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
 		</select>
 	</div>
@@ -28,69 +29,132 @@
 		<label for="searchTitle" class="field-label-2">TITLE Search</label>
 
 		<input type="text" class="" formControlName="searchTitle" (keyup.enter)="searchTitle()" />
-		<button type="button" (click)="searchTitle();">Search</button>
+		<button type="button" (click)="searchTitle();">Search</button>	
+		
+		<br>
+
+		<label for="searchTag" class="field-label-2">Tag Search</label>
+		<input type="text" class="" formControlName="searchTag" (typeaheadOnSelect)="searchTag($event)"
+		 [value]="selected" [typeahead]="tagsString" [typeaheadOptionsLimit]="500" [typeaheadMinLength]="0"
+		  [typeaheadScrollable]="true"/>
+		<button type="button" (click)="searchTagButton();">Search</button>
+	   
 	</div>
+		<select formControlName="bulkStatus">
+		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
+	</select>
+		<button class="button bulksubmit" (click)="submitBulk();">Submit Bulk</button>
 	</div>
 
-	<div class="section">
+	<div class="section" style="display:inline; max-width: 80%">
 	 <table class="table3" border="1px solid">
 		<thead>
 			<tr>
+				<th>Select
+					<label class="container">
+  						<input name="checkAllArticles" formControlName="checkAll" type="checkbox" style="vertical-align: middle;" aria-label="On selection all articles will be selected," title="On selection all articles will be selected.">
+  						<span class="checkmark"></span>
+					</label>
+
+					<button aria-label="Sort Object Select column descending" class="sorting" (click) = "onClick('sortChecks')"></button>
+				</th>
 				<th>Date Added
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('dateAdded')"></button>
+					<button aria-label="Sort Object Date Added column descending" class="sorting" (click) = "onClick('date')"></button>
 				</th>
 				<th>Title
-					<button aria-label="Sort Object Title column descending" class="sort__desc" (click) = "onClick('title')"></button>
+					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('title')"></button>
 				</th>
 				<th>URL
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('URL')"></button>
+					<button aria-label="Sort Object URL column descending" class="sorting" (click) = "onClick('url')"></button>
 				</th>
 				<th>Status
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"> </button>
+					<!-- <button aria-label="Sort Object Status column descending" class="sorting" (click) = "onClick('status')"> </button> --> 
 				</th>
 				<th>Action
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('status')"></button>
+					<!-- button aria-label="Sort Object Action column descending" class="sorting" (click) = "onClick('status')"></button> -->
+
 				</th>
 				<th>Total Shares
-					<button aria-label="Sort Object Title column descending" class="sorting" (click) = "onClick('totalShares')"></button>
+					<button aria-label="Sort Object Total Shares column descending" class="sorting" (click) = "onClick('totalShares')"></button>
 				</th>
+				<th> Text</th>
+				<th>Tags</th>
+
 			</tr>
 		</thead>
+	</table>
+	
+	<br><br>
+	<pagination-controls 
+	id="listing_pagination" 
+	maxSize="5" 
+	(pageChange)="page = handlePageChange($event)"
+	responsive="true">
+	</pagination-controls>
+	<table class="table3" border="1px solid" style="margin: 10px; padding: 20px;">
 	    <tbody>
-	    	<ng-container *ngFor="let a of articles">
+			<ng-container *ngFor="let a of articles | 
+			paginate: {id: 'listing_pagination', 
+			itemsPerPage: CONST_NUM_ARTICLES_PER_PAGE,
+			currentPage: page,
+			totalItems: totNumArticles}"
+			>
 		    	<tr>
-		    		<td class="ten-percent">{{a.publishDate | date: 'shortDate'}}</td>
-		    		<td class="fifteen-percent">
-		    			{{a.articleTitle}}
-		    			<button type="button" (click)="toggle(a.id)">details</button>
-		    		</td>
-		    		<td class="ten-percent">{{a.url}}</td>
-		    		<td class="ten-percent">{{a.statuses[0].statusCode}}</td>
-		    		<td class="ten-percent">
-		    			<!-- change per filter dropdown and what we discussed today -->
-		    			<!-- ps - didn't use the onValueChange subscribe 'cause it's a repeated element - simpler to call a function with the id -->
+		    		<td class="fifty-percent" style="padding: 20px;">
+		    			<input name="articleCheckbox" type="checkbox" style="vertical-align: middle;" value={{a.id}}><br>
+	    				Date: {{a.publishDate | date: 'shortDate'}}<br>
+	    				Title: {{a.articleTitle}}<br>
+	    				URL: {{a.url}}<br>
+	    				Total Shares: {{a.totalShares}}<br>
+						Tags: <ng-container *ngFor="let t of a.tags">[{{t.tag}}]
+							<button class="button tagDelete" (click)="deleteTag(a.id, t.tag)">X</button>
+						</ng-container><br>
+						Add Tag: 
+						<input formControlName = "typeaheadControl" [value]="selected" [typeahead]="tagsString" class=""
+						(typeaheadOnSelect)="addTag(a.id, $event)"[typeaheadOptionsLimit]="500" [typeaheadMinLength]="0"
+						 [typeaheadScrollable]="true">
+						<br>
+						Filename Tag: {{a.filenameTag}}<br>
+	    				Status Code: {{a.statuses[0].statusCode}}<br>
+	    				Article ID: {{a.id}} <br>
+
 		    			<select (change)="changeStatus(a.id, $event)">
 							<option [value]="a.statuses[0].statusCode">
 								{{a.statuses[0].statusCode}} - {{a.statuses[0].statusText}}
 							</option>
- 							<ng-container *ngFor="let status of statuses">
-								<option *ngIf="a.statuses[0].statusCode != status.statusCode" [value]="status.statusCode">
+								<ng-container *ngFor="let status of statuses">
+								<option *ngIf="a.statuses[0].statusCode != status.statusCode" [value]="	status.statusCode">
 									{{status.statusCode}} - {{status.statusText}}
 								</option>
 							</ng-container>
 						</select>
 		    		</td>
-						<td class="ten-percent"> {{a.totalShares}}</td>
+					<td class="fifty-percent" >
+						<div [innerHTML]="a.articleText | replaceLineBreaks" style="overflow: scroll; max-height: 400px;">
+						</div>
+					</td>
 		    	</tr>
 		    	<tr>
-		    		<td *ngIf="articleShow[a.id]" style="overflow:hidden" colspan="5">
+		    		<td *ngIf="articleShow[a.id]" style="overflow:hidden" colspan="2">
 		    			<pre>{{ a | json }}</pre>
 		    		</td>
 		    	</tr>
 	    	</ng-container>
-
 	    </tbody>
-	    </table>
+	</table>
+	<div>
+		<pagination-controls 
+			id="listing_pagination" 
+			maxSize="5" 
+			(pageChange)="page = handlePageChange($event)"
+			responsive="true">
+		</pagination-controls>
 	</div>
 
+	</div>
+
+	<select formControlName="bulkStatus">
+		<option *ngFor="let status of statuses" [value]="status.statusCode">{{status.statusCode}} - {{status.statusText}}</option>
+	</select>
+	<button class="button bulksubmit" (click)="submitBulk()">Submit Bulk</button>
 </form>

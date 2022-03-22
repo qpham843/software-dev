@@ -1,0 +1,20 @@
+<th>Manage Tags
+</th><br><br>
+	<button type="button button2" (click) = "deleteTags()" style= "background-color: red">Delete Tags Selected</button><br>
+	<input #box type="text" class="" (keyup.enter)="addTags(box.value)"/>
+	<button type="button button1" (click) = "addTags(box.value)" style= "background-color: #008CBA">Add Tag</button>
+	<table class="table" border="1px solid" style="margin: 1px; padding: 5px;">
+	    <tbody>
+	    	<ng-container *ngFor="let t of tags">
+	    		<tr>
+		    		<td class="fifty-percent" style="padding: 1px; text-align:center;">
+		    			<input name="articleCheckbox" type="checkbox"style="float: left; margin: 7px 5px;" value={{t.tag}}>
+	    				{{t.tag}}
+	    			</td>
+	    		</tr>
+	    	</ng-container>
+	    </tbody>
+	</table>
+		<button type="button button2" (click) = "deleteTags()" style= "background-color: red">Delete Tags Selected</button><br>
+		<input #box2 type="text" class="" (keyup.enter)="addTags(box2.value)"/>
+	<button type="button button1" (click) = "addTags(box2.value)" style= "background-color: #008CBA">Add Tag</button>

@@ -7,8 +7,6 @@ user = ${MYSQL_ROOT_USER}
 password = ${MYSQL_ROOT_PASSWORD}
 EOF
 chmod 0600 my.cnf
-echo "Initializing database '${MYSQL_DATABASE}' on host '${MYSQL_HOST}' with a-users.sql"
-mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} ${MYSQL_DATABASE} < /docker-entrypoint-initdb.d/a-users.sql
 echo "Initializing database '${MYSQL_DATABASE}' on host '${MYSQL_HOST}' with publiceditor-database-dump.sql"
 mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} ${MYSQL_DATABASE} < /docker-entrypoint-initdb.d/publiceditor-database-dump.sql
 
@@ -22,6 +20,7 @@ mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} ${MYSQL_DATABASE} < /docker-
 mysql --defaults-extra-file=my.cnf -h ${MYSQL_HOST} mysql <<EOF
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, LOCK TABLES
+CREATE VIEW, SHOW VIEW
 ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 SHOW GRANTS FOR '${MYSQL_USER}'@'%';

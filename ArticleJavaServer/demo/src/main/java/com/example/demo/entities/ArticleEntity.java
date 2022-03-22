@@ -63,7 +63,8 @@ public class ArticleEntity implements Serializable {
 	protected Integer buzzsumoArticleId = 0;
 
 	@Column(name="published_date")
-	protected Integer publishedDate = 0;
+	@Temporal(TemporalType.TIMESTAMP)
+	protected Date publishedDate = new Date();
 
 	@Column(name="total_shares")
 	protected Integer totalShares = 0;
@@ -118,6 +119,15 @@ public class ArticleEntity implements Serializable {
 
 	@Column(name="article_hash")
 	protected String articleHash = "";
+	
+	@Column(name="submit_count")
+	protected Integer submitCount = 0;
+	
+	@Column(name="filename")
+	protected String filename = "";
+	
+	@Column(name="filename_tag")
+	protected String filenameTag = "";
 /*
 Table: article
 Columns:
@@ -154,11 +164,15 @@ haha_count int(11)
 vis_data mediumtext
 tagworks_id int
 article_hash char(64)
+submit_count int(11)
  */
 	
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "articleId")
-	private List<StatusViewEntity> statuses; 
+	private List<ArticleStatusViewEntity> statuses; 
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "articleId")
+	private List<ArticleTagViewEntity> tags; 
 
 	public Integer getId() {
 		return id;
@@ -192,10 +206,6 @@ article_hash char(64)
 		this.articleText = articleText;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public String getUrl() {
 		return url;
 	}
@@ -204,11 +214,11 @@ article_hash char(64)
 		this.url = url;
 	}
 
-	public List<StatusViewEntity> getStatuses() {
+	public List<ArticleStatusViewEntity> getStatuses() {
 		return statuses;
 	}
 
-	public void setStatuses(List<StatusViewEntity> statuses) {
+	public void setStatuses(List<ArticleStatusViewEntity> statuses) {
 		this.statuses = statuses;
 	}
 
@@ -260,11 +270,11 @@ article_hash char(64)
 		this.buzzsumoArticleId = buzzsumoArticleId;
 	}
 
-	public Integer getPublishedDate() {
+	public Date getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Integer publishedDate) {
+	public void setPublishedDate(Date publishedDate) {
 		this.publishedDate = publishedDate;
 	}
 
@@ -412,6 +422,37 @@ article_hash char(64)
 		this.articleHash = articleHash;
 	}
 
+	public Integer getSubmitCount() {
+		return submitCount;
+	}
+
+	public void setSubmitCount(Integer submitCount) {
+		this.submitCount = submitCount;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public List<ArticleTagViewEntity> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<ArticleTagViewEntity> tags) {
+		this.tags = tags;
+	}
+
+	public String getFilenameTag() {
+		return filenameTag;
+	}
+
+	public void setFilenameTag(String filenameTag) {
+		this.filenameTag = filenameTag;
+	}
 	
-	
+
 }
