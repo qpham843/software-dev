@@ -115,7 +115,7 @@ input {
 /* -- layout -- */
 
 .container {
-	display: grid;
+	
 	justify-items: center;
 	grid-template-columns: 1fr;
 }
